@@ -1,0 +1,1239 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+#__next {
+    height: 100%;
+}
+
+#main {
+    margin-top: 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+
+}
+
+.leftSectionActive {
+    width: 28%;
+}
+
+#main .buttonContainer {
+    width: 100%;
+    padding-top: 10%;
+    padding-bottom: 10%;
+    margin-bottom: 20px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f5f6f7;
+    border-radius: 9px;
+}
+
+#main .buttonContainer button {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 47px;
+    border: none;
+    border-radius: 9px;
+    background-color: #1465e7;
+    color: white;
+    font-family: 'Ubuntu';
+    font-size: 1.5em;
+}
+
+#main .buttonContainer button:hover {
+    background-color: #125bd2;
+}
+
+#main .buttonContainer button:not(:last-child) {
+    margin-bottom: 25px;
+}
+
+#main .buttonContainer button img, svg {
+    height: 70%;
+    margin-right: 10px;
+}
+
+
+#main input {
+    margin-bottom: 20px;
+}
+
+.one-or-all {
+    display: flex;
+}
+
+
+#parentWrapper {
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100%;
+}
+
+/* Toggle Button */
+.toggle {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+    margin-bottom: 20px;
+}
+
+.toggle input[type="checkbox"] {
+    display: none;
+}
+
+.toggle label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #1465e7;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.toggle label:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 19px;
+    height: 19px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease-in-out;
+}
+
+.toggle input[type="checkbox"]:checked + label {
+    background-color: #1465e7;
+}
+
+.toggle input[type="checkbox"]:checked + label:after {
+    transform: translateX(25px);
+}
+
+
+/* Toggle Button 1 */
+.toggle1 {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+}
+
+.toggle1 input[type="checkbox"] {
+    display: none;
+}
+
+.toggle1 label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #1465e7;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.toggle1 label:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 19px;
+    height: 19px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease-in-out;
+}
+
+.toggle1 input[type="checkbox"]:checked + label {
+    background-color: #1465e7;
+}
+
+.toggle1 input[type="checkbox"]:checked + label:after {
+    transform: translateX(25px);
+}
+
+
+/* area */
+#content-area {
+    width: 50%;
+    padding: 35px;
+    font-family: 'Ubuntu';
+    line-height: 1.9;
+    font-size: larger;
+    background-color: #f5f6f7;
+    color: #1c1c57;
+    border-radius: 9px;
+}
+
+#content-area img {
+    width: 100%;
+    border-radius: 7px;
+}
+
+#content-area h1 {
+    margin-top: 0px;
+}
+
+#content-area p {
+    font-weight: 500;
+}
+
+#content-area pre code {
+    overflow:auto;
+    padding: 20px;
+    margin: 0;
+    display: block;
+    white-space: pre;
+    border-radius: 5px;
+}
+
+#content-area pre code::-webkit-scrollbar {
+    height: 10px;
+}
+
+#content-area pre code::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+#content-area pre code::-webkit-scrollbar-thumb {
+    background: #b9b9b9;
+    border-radius: 4px;
+}
+
+/* Handle on hover */
+#content-area pre code::-webkit-scrollbar-thumb:hover {
+    background: #a6a6a6;
+}
+
+#content-area code {
+    padding: 5px;
+    border-radius: 3px;
+}
+
+/* refresh button */
+#refresh-btn {
+    cursor: pointer;
+}
+
+#modal-close-btn {
+    all: unset;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+#modal-close-btn:hover {
+    background-color: rgb(232, 232, 232);
+    cursor: pointer;
+}
+
+
+.url-validation {
+    font-family: 'Merriweather Sans';
+    font-size: 12px;
+    margin-bottom: 10px;
+    color: red;
+}
+
+
+#waveContainer {
+    height: 100px;
+    overflow: hidden hidden;
+    position: relative;
+    z-index: 0;
+}
+
+#audioHolder {
+    width: 100%;
+    background-color: #f5f6f7;
+    display: flex;
+    justify-content: center;
+    border-radius: 9px;
+}
+
+#audioContainer {
+    width: 90%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+#audioContainer #audioTracker {
+    font-family: 'Ubuntu';
+    color: #73739a;
+    font-size: 1.2em;
+}
+
+#audioContainer div:nth-of-type(1) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#audioContainer div:nth-of-type(1) div {
+    width: 46%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#playPauseBtn {
+    cursor: pointer;
+    border: none;
+    width: 50px;
+    height: 50px;
+    background-color: #1465e7;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#playPauseBtn:hover, #downloadBtn:hover {
+    background-color: #125bd2;
+}
+
+#playPauseBtn img, #downloadBtn img {
+    width: 65%;
+}
+
+#downloadBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: none;
+    width: 50px;
+    height: 50px;
+    background-color: #1465e7;
+    border-radius: 50%;
+}
+
+#header {
+    width: 93%;
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #f5f6f7;
+    border-radius: 10px;
+    box-shadow: 0px 0 5px 2px #e6e6e6;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#header img {
+    width: 230px;
+    margin-left: 10px;
+}
+
+#header div {
+    width: 30%;
+    height: 120%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-right: 10px;
+}
+
+#header p {
+    margin: 0px;
+    font-family: 'Ubuntu';
+    font-weight: 400;
+    font-size: 17pt;
+    color: #73739a;
+    cursor: pointer;
+}
+
+#header p:hover {
+    color: #5d5d85;
+}
+
+a {
+    all: unset;
+}
+
+#heroSection {
+    width: 93%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#heroSection h1 {
+    width: 60%;
+    color: #1c1c57;
+    font-family: 'Ubuntu';
+    font-weight: 500;
+    font-size: 28pt;
+    line-height: 1.6;
+    margin-top: 38px;
+}
+
+#heroSection p {
+    width: 50%;
+    color: #73739a;
+    margin: 0px;
+    font-family: 'Ubuntu';
+    font-weight: 400;
+    font-size: 15pt;
+    line-height: 1.3;
+}
+
+#heroSection button {
+    all: unset;
+    width: 32%;
+    padding: 13px;
+    border-radius: 10px;
+    color: white;
+    background-color: #1465e7;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    cursor: pointer;
+    font-family: 'Ubuntu';
+    font-weight: 500;
+    font-size: 25pt;
+    margin-top: 20px;
+}
+
+#heroSection span {
+    font-weight: 500;
+}
+
+#heroSection button img {
+    width: 12%;
+}
+
+#divider {
+    width: 70%;
+    margin-bottom: 100px;
+    margin-top: 100px;
+}
+
+
+#featuresContainer {
+    width: 93%;
+    display: grid;
+    grid-gap: 80px;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    padding: 10px;
+    margin-top: 40px;
+}
+
+#featuresContainer div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
+
+#featuresContainer p:not(#textBrowsers) {
+    width: 70%;
+    margin-top: 50px;
+    color: #73739a;
+    font-family: 'Ubuntu';
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+#featuresContainer img:not(#browsersGroup):not(#audioWaves) {
+    width: 27%;
+    margin-top: 40px;
+}
+
+#browsersGroup {
+    width: 55%;
+}
+
+#audioWaves {
+    width: 37%;
+    margin-top: 40px;
+}
+
+#featuresContainer h1 {
+    color: #1c1c57;
+    font-family: 'Ubuntu';
+    font-weight: 500;
+    font-size: 22pt;
+}
+
+#textBrowsers {
+    width: 70%;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    font-family: 'Ubuntu';
+    font-weight: 400;
+    color: #73739a;
+    line-height: 1.5;
+}
+
+.sectionTitle {
+    width: fit-content;
+    position: relative;
+    font-family: 'Ubuntu';
+    font-weight: 500;
+    color:#1c1c57;
+    font-size: 29pt;
+    margin: 0;
+    line-height: 0.6;
+    border-bottom: 15px solid #babace;
+}
+
+.howToSection {
+    width: 93%;
+    margin: 40px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.howToSection button {
+    all: unset;
+    width: 400px;
+    padding: 13px;
+    border-radius: 10px;
+    color: white;
+    background-color: #1465e7;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    cursor: pointer;
+    font-family: 'Ubuntu';
+    font-weight: 500;
+    font-size: 22pt;
+    margin-left: 15px;
+}
+
+.howToSection button img {
+    width: 10%;
+}
+
+.howToSection div h1 {
+    font-family: 'Ubuntu';
+    font-weight: 500;
+    font-size: 22pt;
+    color: #1c1c57;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.howToSection div {
+    width: fit-content;
+    margin-top: 80px;
+    margin-bottom: 40px;
+}
+
+
+.howToSection .steps {
+    margin-left: 20px;
+    width: 90%;
+}
+
+/* accordion */
+.accordion {
+    width: 93%;
+    max-width: 950px;
+    margin: 60px auto 60px auto;
+    flex: 1;
+}
+
+/* :not(:last-child) */
+.accordionItem {
+    border-top: 2px solid #bebed6;
+}
+
+.accordionItem:last-child {
+    border-bottom: 2px solid #bebed6;
+}
+
+.accordionTitle {
+    transition: all 0.2s;
+    cursor: pointer;
+    padding: 1rem;
+    color: #333;
+    font-weight: bold;
+    user-select: none;
+    font-family: 'Ubuntu';
+    font-weight: 400;
+    font-size: 18pt;
+    color: #1c1c57;
+}
+
+.accordionTitle:hover {
+    background-color: #bebed6;
+}
+
+.accordionContent {
+    padding: 1rem;
+    font-family: 'Ubuntu';
+    font-weight: 400;
+    color: #73739a;
+    line-height: 1.5;
+}
+
+.accordionContent p:not(:first-child) {
+    margin-left: 1em;
+}
+
+#footer {
+    font-family: 'Ubuntu';
+    font-weight: 400;
+    color: #000000;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    background-color: #f5f7fa;
+    width: 100%;
+    margin-top: 60px;
+}
+
+
+#footer div {
+    width: 40%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+#footer div a {
+    cursor: pointer;
+}
+
+.sectionContent {
+    margin-top: 30px;
+}
+
+.footerSections {
+    margin-top: 70px;
+    width: 80%;
+    height: 100%;
+    flex: 1;
+    font-family: 'Ubuntu';
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.footerSectionsWrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*** Sign Up ***/
+
+.signup-container {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signUpForm {
+    background-color: white;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+    height: fit-content;
+    width: 400px;
+    border-radius: 18px;
+    box-shadow: 2px 1px 12px 0px rgba(0,0,0,0.20);
+}
+
+#signUpTxt {
+    color: #6B6B6B;
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.signUpForm .userName input,
+.signUpForm .emailSCont input,
+.signUpForm .passwCont input
+ {
+    outline: 2px solid #6B6B6B;
+    font-family: 'Ubuntu';
+    border: none;
+    border-radius: 7px;
+    padding: 5px;
+    font-size: medium;
+}
+
+.signUpForm .userName, .emailSCont, .passwCont {
+    display: flex;
+    align-items:flex-end;
+    position: relative;
+    width: 100%;
+    justify-content: space-between;
+    color: #6B6B6B;
+    font-size: larger;
+    font-weight: 400;
+    margin-top: 30px;
+}
+
+.signUpForm .emailSCont input {
+    margin-left: 43px;
+}
+
+.signUpForm .passwCont input {
+    margin-left: 5px;
+}
+
+.signUpForm Button {
+    width: 100%;
+    cursor: pointer;
+    border: none;
+    font-family: 'Ubuntu';
+    font-size: 20px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    margin-top: 30px;
+    border-radius: 8px;
+    background-color: #1465e7;
+    color: white;
+    transition: all 0.5s;
+}
+
+.signed-up-container-holder {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.signed-up-container {
+    background-color: white;
+    display: flex;
+    font-family: 'Ubuntu';
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: larger;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 2px 1px 12px 0px rgba(0,0,0,0.20);
+}
+
+
+/*** Login ***/
+
+.login-container, .pass-change-container {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container .forgot-pass {
+    margin-top: 15px;
+    color: #6B6B6B;
+    cursor: pointer;
+}
+
+.loginForm {
+    background-color: white;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 0px 25px 25px 25px;
+    height: fit-content;
+    width: 330px;
+    border-radius: 18px;
+    box-shadow: 2px 1px 12px 0px rgba(0,0,0,0.20);
+}
+
+#loginUpTxt {
+    color: #6B6B6B;
+    font-size: 30px;
+    font-weight: 600;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+.loginForm .email-cont input,
+.loginForm .pass-cont input
+{
+    outline: 2px solid #6B6B6B;
+    font-family: 'Ubuntu';
+    padding: 5px;
+    font-size: medium;
+    border: none;
+    border-radius: 7px;
+}
+
+.email-cont, .pass-cont {
+    display: flex;
+    position: relative;
+    align-items: flex-end;
+    width: 100%;
+    justify-content: space-between;
+    color: #6B6B6B;
+    font-size: larger;
+    font-weight: 400;
+    margin-top: 30px;
+}
+
+.loginForm Button {
+    width: 100%;
+    cursor: pointer;
+    border: none;
+    font-family: 'Ubuntu';
+    font-size: 20px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    margin-top: 30px;
+    border-radius: 8px;
+    background-color: #1465e7;
+    color: white;
+    transition: all 0.5s;
+}
+
+.forgot-pass-container {
+    background-color: white;
+    display: flex;
+    font-family: 'Ubuntu';
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 250px;
+    height: fit-content;
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: 2px 1px 12px 0px rgba(0,0,0,0.20);
+}
+
+.forgot-pass-container div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+
+.forgot-pass-container label {
+    font-size: larger;
+    color: #6B6B6B;
+}
+
+.forgot-pass-container input {
+    outline: 2px solid #6B6B6B;
+    font-family: 'Ubuntu';
+    height: 24px;
+    border: none;
+    margin-top: 25px;
+    border-radius: 7px;
+}
+
+.forgot-pass-container .pass-error {
+    color: red;
+    margin-top: 13px;
+}
+
+.forgot-pass-container .pass-sent {
+    color: #3f3f3f;
+    line-height: 1.5;
+}
+
+.forgot-pass-container button {
+    width: 100%;
+    cursor: pointer;
+    border: none;
+    font-family: 'Ubuntu';
+    font-size: 20px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    margin-top: 25px;
+    border-radius: 8px;
+    background-color: #1465e7;
+    color: white;
+}
+
+.loader-holder {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #1465e7;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg) }
+    100% { transform: rotate(360deg) }
+}
+
+.signed-up-container-holder {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.signed-up-container {
+    background-color: white;
+    display: flex;
+    font-family: 'Ubuntu';
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: larger;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 2px 1px 12px 0px rgba(0,0,0,0.20);
+}
+
+
+.resultsSection {
+    width: 95%;
+    margin-top: 60px;
+}
+
+.resultsSection .homeContainer {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 50px;
+}
+
+.resultsSection .homeContainer .leftSectionHome {
+    width: 25%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    background-color: #f5f6f7;
+    border-radius: 9px;
+}
+
+.resultsSection .homeContainer .leftSectionHome button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 47px;
+    border: none;
+    border-radius: 9px;
+    background-color: #73739a;
+    color: white;
+    font-family: 'Ubuntu';
+    font-size: 1.5em;
+}
+
+.resultsSection .homeContainer .leftSectionHome button img {
+    height: 70%;
+    margin-right: 10px;
+}
+
+.resultsSection .homeContainer .leftSectionHome button:not(:last-child) {
+    margin-bottom: 25px;
+}
+
+.resultsSection .homeContainer .rightSectionHome {
+    background-color: #f5f6f7;
+    width: 53%;
+    border-radius: 9px;
+    display: flex;
+    justify-content: center;
+    padding-top: 10%;
+    padding-bottom: 10%;
+}
+
+.resultsSection .homeContainer .rightSectionHome img {
+    width: 60%;
+}
+
+.ItemsOfModal {
+    margin-bottom: 20px;
+    font-size: larger;
+    color: #1c1c57;
+}
+
+.ItemsOfModal button {
+    display: flex;
+    margin: none;
+    margin-right: 5px;
+    background-color: #1465e7;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: 'Ubuntu';
+    padding: 5px;
+}
+
+.ItemsOfModal div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.ItemsOfModal button img, .ItemsOfModal button svg {
+    height: 16px;
+    margin-right: 4px;
+}
+
+.annualMonthly {
+    width: 20%;
+    height: 25px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    font-family: 'Ubuntu';
+    font-size: 1.3em;
+    font-weight: 500;
+    color: #1c1c57;
+}
+
+.annualMonthly .toggle {
+    margin-bottom: 0px;
+}
+
+.pricingTablesContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    font-family: 'Ubuntu';
+}
+
+.pricingTablesContainer .table1, .pricingTablesContainer .table2, .pricingTablesContainer .table3 {
+    box-shadow: 0px 0 5px 2px #e6e6e6;
+    width: 23%;
+    height: fit-content;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.pricingTablesContainer .table1:hover,
+.pricingTablesContainer .table2:hover,
+.pricingTablesContainer .table3:hover {
+    outline: 4px solid #1465e7;
+}
+
+.pricingTablesContainer .table1 p:nth-of-type(1),
+.pricingTablesContainer .table2 p:nth-of-type(1),
+.pricingTablesContainer .table3 p:nth-of-type(1) {
+    margin-top: 0px;
+    font-size: 0.9em;
+    color: #73739a;
+}
+
+.pricingTablesContainer .table1 p:nth-of-type(2) img {
+    width: 20px;
+}
+
+.pricingTablesContainer p:not(#tooltipText) {
+    text-align: center;
+    line-height: 1.5;
+    color: #1c1c57;
+    font-weight: 500;
+    width: 80%;
+    margin-bottom: 5px;
+}
+
+.pricingTablesContainer button {
+    font-size: 1.35em;
+    padding: 7px 10px 7px 10px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    border: 3px solid #1465e7;
+    background-color: #ebf5ff;
+    font-family: 'Ubuntu';
+    font-weight: 500;
+    border-radius: 9px;
+    color: #1465e7;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.pricingTablesContainer button:hover {
+    background-color: #d3e9ff;
+}
+
+.pricingTablesContainer h1 {
+    color: #1c1c57;
+    margin-bottom: 5px;
+    font-size: 2.5em;
+}
+
+.planTypeContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 80px;
+    margin-top: 60px;
+}
+
+.strikethrough {
+    position: relative;
+    display: inline-block;
+    margin-top: 30px;
+    color: #73739a;
+    font-size: 1.2em;
+}
+
+.strikethrough::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 10px;
+    background: #73739a;
+    transform: rotate(-42deg);
+    transform-origin: center;
+}
+
+.saveRibbon {
+    position: absolute;
+    top: -40px;
+    background-color: #1c1c57;
+    color: white;
+    font-size: 1.3em;
+    padding: 8px;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
+
+.pricingParent .pricingTitle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.5;
+    font-family: 'Ubuntu';
+    color: #1c1c57;
+    margin-top: 50px;
+    margin-left: 30px;
+}
+
+.pricingParent .pricingTitle h1 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-size: 2.3em;
+}
+
+.pricingParent .pricingTitle p {
+    width: 70%;
+    text-align: center;
+    margin-bottom: 0px;
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
+.info-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.question-mark {
+    background-color: #1c1c57;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    display: inline-block;
+}
+
+.tooltip-content {
+    display: none;
+    position: absolute;
+    background: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    width: 200px;
+    left: -120%;
+    transform: translateX(-50%);
+    bottom: 100%;
+    margin-bottom: 10px;
+}
+
+.tooltip-content p {
+    margin: 0px;
+}
+
+.info-tooltip:hover .tooltip-content {
+    display: block;
+}
+
+.pricingParent .next-page {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 60px;
+    margin-bottom: 100px;
+}
+
+.pricingParent .next-page button {
+    width: 30%;
+    position: relative;
+    cursor: pointer;
+    font-family: 'Ubuntu';
+    font-size: 2.5em;
+    padding: 8px 30px 8px 30px;
+    border-radius: 9px;
+    border: none;
+    color: white;
+    background-color: #1465e7;
+    transition: all 0.5s;
+}
