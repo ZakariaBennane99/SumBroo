@@ -167,24 +167,38 @@ export async function getServerSideProps(context) {
 
       const token = context.query.token;
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET_FOR_LINK);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
   
       if (decoded.action !== 'onboarding' || decoded.action !== 'payment') {
         throw new Error('Invalid action');
       }
 
-      console.log('The righ token', decoded.userId)
+
+      await connectUserDB()
+      if (decoded.action === 'onboarding') { 
+        // assuming onboardingStep is 0
+        const sanitizedUserId = mongoSanitize.sanitize(decoded.userId);
+        let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
+        if (!user) throw new Error('User not found');
+
+        return {
+          props: {
+            userId
+          }
+        };
+
+      }
   
+      if (decoded.action === 'payment') {
+
+      }
+
       const userId = decoded.userId
 
-      const sanitizedUserId = mongoSanitize.sanitize(userId);
+      
 
       console.log(userId === sanitizedUserId)
-  
-      await connectUserDB()
 
-      let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
-      if (!user) throw new Error('User not found');
 
       const onboardingStep = user.onboardingStep;
       if (onboardingStep !== 0) {
