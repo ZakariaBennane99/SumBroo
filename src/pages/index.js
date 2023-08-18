@@ -5,9 +5,11 @@ import Bowser from "bowser";
 import { Tadpole } from "react-svg-spinners";
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import Head from 'next/head';
+import { useRouter } from 'next/router';
+
 
 const AccordionItem = ({ title, content }) => {
+
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleAccordion = () => {
@@ -26,12 +28,11 @@ const AccordionItem = ({ title, content }) => {
 
 const Accordion = () => {
   const items = [
-    { title: 'Are the generated notes and summaries editable?', content: 'Absolutely! You have full control over the generated notes and summaries created by our extension. You can easily edit the content to suit your preferences before downloading them or sending them to your Kindle.' },
-    { title: 'Is the extension available on mobile devices as well?', content: 'Unfortunately, our extension is not available on mobile devices at the moment. We have designed it specifically for desktop use to provide the best experience and functionality for users on major browsers like Chrome, Safari, Mozilla Firefox, and Microsoft Edge. But we may develop an option for mobile based on demand.' },
-    { title: 'How can I upgrade, downgrade, or cancel my subscription?', content: '<p>Managing your subscription is simple and hassle-free. To upgrade, downgrade, or cancel your subscription, just follow these steps:</p>\n <p>1. Click on <strong>Account Settings</strong> if you have the extension opened or Go to <strong>Settings</strong> on the website.</p>\n <p>2. Click on the <strong>Billing</strong> tab.</p>\n<p>3. From there, you can easily choose to upgrade or downgrade your subscription plan, or select the option to cancel your subscription altogether.</p>'},
-    { title: 'How often is the extension updated with new features or improvements?', content: 'Our extension is continuously evolving, and we are committed to providing the best possible experience for our users. We typically release updates with new features, improvements, and bug fixes every 4-6 weeks' },
-    { title: 'Are there any plans for future integrations with other learning platforms?', content: 'Yes, we understand the importance of catering to a diverse range of learning platforms to provide a comprehensive learning experience for our users. While our extension currently focuses on LinkedIn Learning courses, we have plans to explore and integrate with other popular learning platforms in the future.' },
-    { title: 'Is there a free trial or a free version available for the extension?', content: 'Certainly! We offer a free trial with 20 minutes of credit upon sign up, allowing you to explore the extension\'s features. After the trial, you can choose from our subscription plans to continue using the extension.' },
+    { title: 'What is SumBroo?', content: 'SumBroo is a unique platform that facilitates connections between micro-influencers, allowing for collaborative growth and reach.' },
+    { title: 'Why should I join SumBroo?', content: `If you're a micro-influencer looking to expand your influence, acquire daily high-quality content, and grow in a cost-effective manner, SumBroo is for you. With an opportunity to reach up to 500k high-quality people per month per platform, detailed analytics, and a vetted community, you’re set for success.`},
+    { title: 'How do I join the network?', content: 'Joining is simple. Apply, get approved, select your preferred plan, make your payment, connect your social media accounts and start guest posting!' },
+    { title: 'How do I connect my social media accounts?', content: 'Once you’re approved, you’ll be guided through an easy process to connect your social media accounts to SumBroo.' },
+    { title: 'What does the vetting process involve?', content: 'To ensure quality, all micro-influencers are carefully vetted before joining our network. This includes reviewing your content quality, consistency, engagement, and followers.' },
   ];
 
   return (
@@ -44,6 +45,8 @@ const Accordion = () => {
 };
 
 const Landing = () => {
+
+  const router = useRouter();
 
   const [browserName, setBrowserName] = useState("");
   const [token, setToken] = useState("")
@@ -59,62 +62,77 @@ const Landing = () => {
   // send the token to the backend
   return (
     <div id='parentWrapper'>
-      <Header singedIn={token !== ''} />
+      <Header singedIn={false} />
       <div id='heroSection'>
-        <h1>Generate Powerful Notes & Summaries For Your LinkedIn Courses And Accelerate Your Learning</h1>
-        <p>Revolutionize Your Learning Experience with the <span>SwiftNotion</span> Extension Delivers AI-Powered Smart Notes & Precise Screenshot</p>
-        <button>Try It Now For Free { browserName === '' ? '' : <img src={`./${browserName}.svg`} alt='Call to action button' /> } </button>
+        <h1>Efficiently Maximize Your Impact with SumBroo and Grow Faster & Cheaper Than Ever</h1>
+        <p>Enjoy a surge in your <span>growth rate</span> and <span>audience reach</span>, experience a daily dose of <span>high-quality content</span>, and keep your wallet happy with our <span>very affordable plans</span>.</p>
+        <button onClick={() => router.push('/pricing')}>Join Us Today</button>
       </div>
       <img id='divider' src='./divider.svg' />
       <h1 className='sectionTitle'>Key Features</h1>
       <div id='featuresContainer'>
         <div>
-          <h1>Automatic Screenshots At 80% Accuracy</h1>
-          <img src='./picFeature.svg' alt='' />
-          <p>Let the extension handle capturing and integrating screenshots into your notes, ensuring a richer and more engaging learning experience</p>
+          <h1>Guest Post with Targeting</h1>
+          <img src='/feature_targeting.svg' alt='' />
+          <p>Choose your target sub-niche and let our advanced system select the ideal micro-influencer to showcase your post. Our platform goes the extra mile by offering audience targeting not just within your niche, but also to adjacent sub-niches for maximum impact.</p>
         </div>
         <div>
-          <h1>Natural-Sounding Audio</h1>
-          <img id='audioWaves' src='./audioWaves.svg' alt='' />
-          <p>Create lifelike audio versions of all your summaries and notes, enabling you to listen anytime and anywhere at your convenience.</p>
+          <h1>High-Quality Content</h1>
+          <img src='/feature_content.svg' alt='' />
+          <p>Each post made by you or shared on your account feed undergoes a review to uphold the integrity and quality of the content. This ensures only top-notch content is shared across the network, benefiting both you and your target audience.</p>
         </div>
         <div>
-          <h1>Smart Notes & Summaries</h1>
-          <img src='./feather.svg' alt='' />
-          <p>Generate smart notes and summaries and
-download them as PDF or send them directly
-to your Kindle with one Click</p>
+          <h1>Reach & Growth</h1>
+          <img src='/feather_growth.svg' alt='' />
+          <p>Expand your influence with SumBroo's network to reach between 300-500k high-quality individuals per month. With our platform, audience growth isn't only about numbers, but about engaging the right people.</p>
         </div>
         <div>
-          <h1>Available For All Major Browsers</h1>
-          <img id='browsersGroup' src='./majorBrowsers.svg' alt='' />
-          <p id='textBrowsers'>Effortlessly download it in your favorite
-browser, for a seamless note-generating
-experience wherever you go</p>
+          <h1>Very Affordable Pricing</h1>
+          <img src='/feature_cheap.svg' alt='' />
+          <p id='textBrowsers'>Experience outstanding services without a hefty price tag. With a low monthly fee, you gain access to a suite of premium benefits designed to enhance your micro-influencer status.</p>
+        </div>
+        <div>
+          <h1>Analytical Reports</h1>
+          <img src='/featured_analytics.svg' alt='' />
+          <p>Stay informed and strategize effectively with our in-depth, seven-day post analytics. Get better insights into your audience's behavior and preferences to fine-tune your future content and strategies.</p>
+        </div>
+        <div>
+          <h1>Quality Assurance</h1>
+          <img src='/feature_quality.svg' alt='' />
+          <p>Every member of our network goes through a thorough vetting process before gaining access. This allows us to maintain a high standard of content, ensuring satisfying and performance-boosting interactions for everyone.</p>
         </div>
       </div>
       <img id='divider' src='./divider.svg' />
       <h1 className='sectionTitle'>How It Works?</h1>
       <div className='howToSection'>
         <div>
-          <h1>Step 1: Add the extension & Sign up</h1>
+          <h1>Step 1: Apply, Get Approved, and Pay</h1>
           <img src='./stepsUnderline.svg' />
         </div>
-        <button>Add It To Your { browserName === '' ? '' : <img src={`./${browserName}.svg`} alt='Call to action button' /> } Browser</button>
+        <button onClick={() => router.push('/pricing')}>Apply Now</button>
         <div>
-          <h1>Step 2: Choose your preferences</h1>
+          <h1>Step 2: Connect Your Social Media Accounts</h1>
           <img src='./stepsUnderline.svg' />
         </div>
         <img className='steps' src='./step2.svg' />
         <div>
-          <h1>Step 3: Download your notes/summary</h1>
+          <h1>Step 3: Start Guest-Posting and Receiving Content</h1>
           <img src='./stepsUnderline.svg' />
         </div>
         <img className='steps' src='./step3.svg' />
+        <div>
+          <h1>Step 4: Monitor Your Growth with Detailed Analytics</h1>
+          <img src='./stepsUnderline.svg' />
+        </div>
+        <img style={{ marginTop: '0px', marginBottom: '0px' }} className='steps' src='./step4.svg' />
       </div>
-      <img id='divider' src='./divider.svg' />
+      <img style={{ marginTop: '60px' }} id='divider' src='./divider.svg' />
       <h1 className='sectionTitle'>Frequently Asked Questions</h1>
       <Accordion />
+      <div className='landin-last-section'>
+        <h1>Ready to take your influence<br/> to the next level?</h1>
+        <button onClick={() => router.push('/pricing')}>Start Today!</button>
+      </div>
       <Footer />
     </div>
   )

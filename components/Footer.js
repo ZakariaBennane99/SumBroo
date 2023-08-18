@@ -7,16 +7,43 @@ import Link from 'next/link';
 
 const Header = () => {
 
-    return (
-      <div id='footer'>
-        <p>© 2023 <a href='https://thelibertagroup.co.uk' target="_blank" style={{ color: '#003ea1', cursor: 'pointer' }}>Liberta Group Ltd</a>. All rights reserved.</p>
-        <div>
-          <Link href='/contact-us'><p>Contact Us</p></Link>
-          <Link href='/privacy-policy'><p>Privacy Policy</p></Link>
-          <Link href='/terms-and-conditions'><p>Terms & Conditions</p></Link>
+  const [windowWidth, setWindowWidth] = useState(null);
+
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+    // Update the window width when the window is resized
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    }
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup: remove the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+
+  return (
+        windowWidth <= 865 ? 
+        <div id='footer'>
+          <div>
+            <Link href='/contact-us'><p>Contact Us</p></Link>
+            <Link href='/privacy-policy'><p>Privacy Policy</p></Link>
+            <Link href='/terms-and-conditions'><p>Terms & Conditions</p></Link>
+          </div>
+          <p id='company'>© 2023 <a href='https://thelibertagroup.co.uk' target="_blank" style={{ color: '#003ea1', cursor: 'pointer' }}>Driven Dynamics Limited</a>. All rights reserved.</p>
         </div>
-      </div>
-    )
+         :
+        <div id='footer'>
+          <p id='company'>© 2023 <a href='https://thelibertagroup.co.uk' target="_blank" style={{ color: '#003ea1', cursor: 'pointer' }}>Driven Dynamics Limited</a>. All rights reserved.</p>
+          <div>
+            <Link href='/contact-us'><p>Contact Us</p></Link>
+            <Link href='/privacy-policy'><p>Privacy Policy</p></Link>
+            <Link href='/terms-and-conditions'><p>Terms & Conditions</p></Link>
+          </div>
+        </div>
+  )
 };
 
 export default Header;

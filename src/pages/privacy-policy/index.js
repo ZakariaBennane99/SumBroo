@@ -11,74 +11,53 @@ const Privacy = () => {
         <div className='footerSections'>
             <h1 className="sectionTitle">Privacy Policy</h1>
             <div className="sectionContent">
-  <p><strong><em>Last updated: April 21, 2023</em></strong></p>
+  <p><strong><em>Last updated: August 13, 2023</em></strong></p>
 
-  <p>This Privacy Policy describes how SwiftNotion (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) collects, uses, manages, and shares user data for the SwiftNotion browser extension and related services. The extension is not associated with LinkedIn in any way. By using our extension and website, you agree to the collection and use of information in accordance with this policy.</p>
+  <p>SumBroo, operated and owned by Driven Dynamics Limited, is committed to protecting and respecting the privacy of all its users. This Privacy Policy explains how we use any personal data collected from you through our website i.e., under the operations of SumBroo. We advise you to read this Privacy Policy carefully and make sure you understand it.</p>
 
-  <h2>1. Information Collection</h2>
-  <p>We collect the following types of personal information from users:</p>
-  <ul>
-    <li>Username (unique identifier chosen by the user)</li>
-    <li>Email address</li>
-    <li>Device information (collected by our partner Fingerprint.com)</li>
-  </ul>
+  <h2>&#73;. Data Collection</h2>
+  <p>When you apply to use the services of SumBroo we collect certain necessary data about you, which primarily include:</p>
+    <ul>
+      <li>Name</li>
+      <li>Email Address</li>
+      <li>social media profile links</li>
+    </ul>
 
-  <h2>2. How Information is Collected</h2>
-  <p>We collect personal information through a signup form submission on our website.</p>
+  <h2>&#73;&#73;. Storage, Use, And Security of Data</h2>  
+  <p>The collected data is stored in our database for the key purpose of verifying accounts. After the vetting process, social media profile links are deleted from our system. </p>
+  <p>However, we associate certain tags and a short description with the accepted user for targeting. Throughout the entire process, we employ strict security measures to avoid any unauthorized access to your data.</p>
+  <p>Payment details are handled and hosted exclusively by Stripe, which governs the handling of this data according to its own Privacy Policy.</p>
+  <p>We store a token in your browser to keep you signed in and improve your user experience with SumBroo.</p>
 
-  <h2>3. Purpose of Information Collection</h2>
-  <p>We collect user data for the following purposes:</p>
-  <ul>
-    <li>To enable users to sign in to their accounts</li>
-    <li>To personalize the user experience</li>
-    <li>To improve the functionality of our extension and services</li>
-  </ul>
+  <h2>&#73;&#73;&#73;. Data Used For Communication</h2>
+  <p>Your email address is used to communicate essential information such as payment links and details, updates about your onboarding process, and other necessary service-related information.</p>
 
-  <h2>4. Information Sharing</h2>
-  <p>We share user data with the following third parties:</p>
-  <ul>
-    <li>MailChimp: We share email addresses with MailChimp to organize our email lists and store user email addresses on their secure servers.</li>
-    <li>Fingerprint.com: We share device information with Fingerprint.com to deter fraudulent sign-ups and prevent users from creating multiple accounts. Fingerprint.com retains this information on their servers.</li>
-  </ul>
+  <h2>&#73;&#86;. Temporary Hosting of Post Content</h2>
+  <p>For the purpose of post verification, the post content is temporarily hosted on AWS Servers until it is approved (usually within a few hours). Post this process, the content hosted in AWS Servers is deleted.</p>
 
-  <h2>5. Data Retention</h2>
-  <p>We retain user data indefinitely, unless a user chooses to delete their account. Upon account deletion, we will destroy all associated user data.</p>
+  <h2>&#86;. Data Sharing</h2>
+  <p>As a connecting platform between micro-influencers, SumBroo and Driven Dynamics Limited does not share any of your personal data with any third party or the micro-influencers connected through this web app.</p>
 
-  <h2>6. Data Security</h2>
-  <p>We use Secure Socket Layer (SSL) technology to protect user payment information and other data. We also partner with secure server providers to store user data safely.</p>
+  <h2>&#86;&#73;. Your Data Protection Rights</h2>
+  <p>Under data protection law, you have rights including your right to access, correct, erase, restrict, and object to the processing of your personal data. If you would like to exercise any of these rights, please contact us via the contact details provided on our website.</p>
 
-  <h2>7. User Rights</h2>
-  <p>Users have the following rights regarding their personal data:</p>
-  <ul>
-    <li>The right to access their personal information</li>
-    <li>The right to correct inaccuracies in their personal information</li>
-    <li>The right to request the deletion of their personal information</li>
-    <li>The right to object to the processing of their personal information</li>
-    <li>The right to request the restriction of the processing of their personal information</li>
-    <li>The right to data portability</li>
-  </ul>
-  <p>To exercise any of these rights, please contact us at hey@swiftnotion.co.</p>
+  <h2>&#86;&#73;&#73;. Changes To The Privacy Policy</h2>
+  <p>We reserve the right to modify this Privacy Policy as necessary, for instance, to comply with changes in laws and regulation or changes in our practices and procedures. Any changes will be duly made known on this platform.</p>
 
-  <h2>8. Children&apos;s Privacy</h2>
+  <h2>&#86;&#73;&#73;&#73;. Children&apos;s Privacy</h2>
   <p>Our extension and services are not intended for use by children under the age of 13. We do not knowingly collect personal information from children under 13.</p>
-  <h2>9. Changes to This Privacy Policy</h2>
-  <p>We may update our Privacy Policy from time to time. We will notify users of any changes via email. By continuing to use our extension and services after being notified of changes to this Privacy Policy, users accept the revised policy.</p>
-  <h2>10. User Rights</h2>
-  <p>As a user, you have the following rights concerning your personal information:</p>
-  <ul>
-    <li>Right to access: You have the right to access the personal information we hold about you.</li>
-    <li>Right to rectification: You have the right to correct any inaccurate or incomplete personal information we hold about you.</li>
-    <li>Right to erasure: You have the right to request that we delete your personal information from our records, subject to certain exceptions.</li>
-    <li>Right to restrict processing: You have the right to request that we restrict the processing of your personal information under certain circumstances.</li>
-    <li>Right to data portability: You have the right to request a copy of your personal information in a structured, commonly used, and machine-readable format.</li>
-    <li>Right to object: You have the right to object to the processing of your personal information for direct marketing purposes or when our processing is based on legitimate interests.</li>
-  </ul>
-  <h2>11. Third-Party Links</h2>
-  <p>Our website and extension do not include any third-party links. We are not responsible for the privacy policies, practices, or content of any external websites or services. We encourage users to read the privacy policies of any third-party websites or services they may visit.</p>
-  <h2>12. Contact Us</h2>
-  <p>If you have any questions or concerns about this Privacy Policy, please contact us at hey@swiftnotion.co.</p>
-  </div>
 
+  <h2>&#73;&#88;. Third-Party Links</h2>
+  <p>We are not responsible for the privacy policies, practices, or content of any external websites or services. We encourage users to read the privacy policies of any third-party websites or services they may visit.</p>
+  
+  <h2>&#88;. Contact Us</h2>
+  <p>If you have any questions or concerns about this Privacy Policy, please contact us at hey@sumbroo.com</p>
+
+  <p>By using our services, you consent to the terms of this privacy policy. If at any point you do not agree with the terms outlined in this privacy policy, refrain from using our services.</p>
+
+  <p>This privacy policy was last updated on <b>August 13, 2023</b>. Please check back frequently to see any updates or changes to our privacy policy.</p>
+
+  </div>
         </div>
         <Footer />
     </div>

@@ -10,7 +10,7 @@ const ContactUs = () => {
         <Header />
         <div className='footerSections'>
             <h1 className="sectionTitle">Contact Us</h1>
-            <p>Have a question, drop us an email at hey@swiftnotion.co</p>
+            <p style={{ fontFamily: 'IBM Plex Sans' }}>Have a question, drop us an email at <b>hey@sumbroo.com</b>, and we will respond as soon as possible.</p>
         </div>
         <Footer />
     </div>

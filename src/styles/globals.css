@@ -9,19 +9,6 @@ html, body {
     height: 100%;
 }
 
-#main {
-    margin-top: 50px;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-
-}
-
-.leftSectionActive {
-    width: 28%;
-}
-
 #main .buttonContainer {
     width: 100%;
     padding-top: 10%;
@@ -58,10 +45,6 @@ html, body {
     margin-bottom: 25px;
 }
 
-#main .buttonContainer button img, svg {
-    height: 70%;
-    margin-right: 10px;
-}
 
 
 #main input {
@@ -78,8 +61,21 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
     min-height: 100%;
+    font-family: 'Ubuntu';
 }
+
+#parentWrapper .sectionTitle {
+    text-align: center;
+    font-size: 30pt;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 60px;
+    color: #1c1c57;
+}
+
 
 /* Toggle Button */
 .toggle {
@@ -186,10 +182,6 @@ html, body {
     border-radius: 9px;
 }
 
-#content-area img {
-    width: 100%;
-    border-radius: 7px;
-}
 
 #content-area h1 {
     margin-top: 0px;
@@ -261,79 +253,6 @@ html, body {
     color: red;
 }
 
-
-#waveContainer {
-    height: 100px;
-    overflow: hidden hidden;
-    position: relative;
-    z-index: 0;
-}
-
-#audioHolder {
-    width: 100%;
-    background-color: #f5f6f7;
-    display: flex;
-    justify-content: center;
-    border-radius: 9px;
-}
-
-#audioContainer {
-    width: 90%;
-    margin-top: 5%;
-    margin-bottom: 5%;
-}
-
-#audioContainer #audioTracker {
-    font-family: 'Ubuntu';
-    color: #73739a;
-    font-size: 1.2em;
-}
-
-#audioContainer div:nth-of-type(1) {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-#audioContainer div:nth-of-type(1) div {
-    width: 46%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-#playPauseBtn {
-    cursor: pointer;
-    border: none;
-    width: 50px;
-    height: 50px;
-    background-color: #1465e7;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#playPauseBtn:hover, #downloadBtn:hover {
-    background-color: #125bd2;
-}
-
-#playPauseBtn img, #downloadBtn img {
-    width: 65%;
-}
-
-#downloadBtn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    border: none;
-    width: 50px;
-    height: 50px;
-    background-color: #1465e7;
-    border-radius: 50%;
-}
-
 #header {
     width: 93%;
     padding: 20px;
@@ -347,18 +266,40 @@ html, body {
     align-items: center;
 }
 
-#header img {
-    width: 230px;
-    margin-left: 10px;
-}
-
-#header div {
-    width: 30%;
-    height: 120%;
+#header .desktop-menu {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    width: 20%;
     margin-right: 10px;
+}
+
+#header img {
+    width: 50px;
+    margin-left: 0px;
+    margin-right: 10px;
+}
+
+#header .mobile-menu.open,
+#header .slide-menu {
+    width: fit-content;
+    display: flex;
+    flex-direction:row;
+    justify-content: space-between;
+    margin-right: 10px;
+}
+
+#header .logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+#header .logo-text {
+    color: #1465e7;
+    font-family: 'Ubuntu';
+    font-size: 2.4em;
 }
 
 #header p {
@@ -368,10 +309,11 @@ html, body {
     font-size: 17pt;
     color: #73739a;
     cursor: pointer;
+    transition: all 0.2s;
 }
 
 #header p:hover {
-    color: #5d5d85;
+    color: #484876;
 }
 
 a {
@@ -401,15 +343,17 @@ a {
     width: 50%;
     color: #73739a;
     margin: 0px;
-    font-family: 'Ubuntu';
+    font-family: 'IBM Plex Sans';
     font-weight: 400;
-    font-size: 15pt;
-    line-height: 1.3;
+    font-size: 1.4em;
+    line-height: 1.6;
 }
 
-#heroSection button {
+#heroSection button,
+.Error-container button,
+.onboarding-container .payment-container button {
     all: unset;
-    width: 32%;
+    width: 300px;
     padding: 13px;
     border-radius: 10px;
     color: white;
@@ -422,15 +366,47 @@ a {
     font-family: 'Ubuntu';
     font-weight: 500;
     font-size: 25pt;
-    margin-top: 20px;
+    margin-top: 30px;
+    transition: all 0.25s;
+}
+
+#heroSection button:hover,
+.Error-container button:hover {
+    margin-top: 26px;
+    margin-bottom: 4px;
+    background-color: #1c1c57;
 }
 
 #heroSection span {
     font-weight: 500;
 }
 
-#heroSection button img {
-    width: 12%;
+@media screen and (max-width: 1000px) and (min-width: 600px) {
+
+    #heroSection h1 {
+        width: 85%;
+    }
+
+    #heroSection p {
+        width: 75%;
+    }
+
+}
+
+@media screen and (max-width: 400px) {
+
+    #heroSection h1 {
+        width: 100%;
+    }
+
+    #heroSection p {
+        width: 95%;
+    }
+
+    #heroSection button {
+        width: 80%;
+    }
+
 }
 
 #divider {
@@ -439,36 +415,73 @@ a {
     margin-top: 100px;
 }
 
+@media screen and (max-width: 599px) {
+
+    #heroSection h1 {
+        width: 95%;
+    }
+
+    #heroSection p {
+        width: 90%;
+    }
+
+    #divider {
+        width: 80%;
+    }
+
+}
+
 
 #featuresContainer {
-    width: 93%;
     display: grid;
     grid-gap: 80px;
-    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     padding: 10px;
-    margin-top: 40px;
+}
+
+.howToSection button {
+    all: unset;
+    width: 300px;
+    padding: 13px;
+    border-radius: 10px;
+    color: white;
+    background-color: #1465e7;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    cursor: pointer;
+    font-family: 'Ubuntu';
+    font-weight: 500;
+    font-size: 22pt;
+    margin-left: 15px;
+    margin-top: 60px;
+    margin-bottom: 80px;
+    transition: all .25s;
 }
 
 #featuresContainer div {
+    height: fit-content;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
     text-align: center;
 }
 
-#featuresContainer p:not(#textBrowsers) {
-    width: 70%;
-    margin-top: 50px;
+#featuresContainer p {
+    width: 80%;
+    margin: 0px;
     color: #73739a;
-    font-family: 'Ubuntu';
+    font-family: 'IBM Plex Sans';
     font-weight: 400;
     line-height: 1.5;
+    font-size: 1.11em;
 }
 
 #featuresContainer img:not(#browsersGroup):not(#audioWaves) {
-    width: 27%;
+    height: 250px;
     margin-top: 40px;
+    margin-bottom: 40px;
 }
 
 #browsersGroup {
@@ -485,29 +498,7 @@ a {
     font-family: 'Ubuntu';
     font-weight: 500;
     font-size: 22pt;
-}
-
-#textBrowsers {
-    width: 70%;
-    margin-top: 0px;
-    margin-bottom: 20px;
-    font-family: 'Ubuntu';
-    font-weight: 400;
-    color: #73739a;
-    line-height: 1.5;
-}
-
-.sectionTitle {
-    width: fit-content;
-    position: relative;
-    font-family: 'Ubuntu';
-    font-weight: 500;
-    color:#1c1c57;
-    font-size: 29pt;
-    margin: 0;
-    line-height: 0.6;
-    border-bottom: 15px solid #babace;
-}
+}#parentWrapper
 
 .howToSection {
     width: 93%;
@@ -516,22 +507,11 @@ a {
     margin-bottom: 0px;
 }
 
-.howToSection button {
-    all: unset;
-    width: 400px;
-    padding: 13px;
-    border-radius: 10px;
-    color: white;
-    background-color: #1465e7;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-    cursor: pointer;
-    font-family: 'Ubuntu';
-    font-weight: 500;
-    font-size: 22pt;
-    margin-left: 15px;
+
+.howToSection button:hover {
+    margin-top: 56px;
+    margin-bottom: 84px;
+    background-color: #1c1c57;
 }
 
 .howToSection button img {
@@ -549,12 +529,16 @@ a {
 
 .howToSection div {
     width: fit-content;
-    margin-top: 80px;
-    margin-bottom: 40px;
+    margin-top: 0px;
 }
 
+.howToSection div img {
+    width: fit-content;
+}
 
 .howToSection .steps {
+    margin-top: 40px;
+    margin-bottom: 30px;
     margin-left: 20px;
     width: 90%;
 }
@@ -595,7 +579,8 @@ a {
 
 .accordionContent {
     padding: 1rem;
-    font-family: 'Ubuntu';
+    font-size: 1.1em;
+    font-family: 'IBM Plex Sans';
     font-weight: 400;
     color: #73739a;
     line-height: 1.5;
@@ -606,57 +591,115 @@ a {
 }
 
 #footer {
-    font-family: 'Ubuntu';
+    font-family: 'IBM Plex Sans';
     font-weight: 400;
-    color: #000000;
+    color:#12123b;
     line-height: 1.5;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     background-color: #f5f7fa;
     width: 100%;
-    margin-top: 60px;
+    margin-top: 120px;
+}
+
+#footer div p {
+    cursor: pointer;
+    transition: all .2s;
+}
+
+
+#footer div p:hover {
+    color: #125bd2;
 }
 
 
 #footer div {
     width: 40%;
     display: flex;
-    flex-direction: row;
     justify-content: space-evenly;
+    flex-wrap: wrap;
 }
 
-#footer div a {
-    cursor: pointer;
+#footer div p {
+    margin-right: 10px;
+    text-align: center;
+}
+
+#footer #company {
+    text-align: center;
+}
+
+@media screen and (max-width: 865px) {
+
+    .accordion {
+        margin-top: 0px;
+    }
+
+    #footer {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-left: 35px;
+        padding-right: 35px;
+    }
+
+    #footer div {
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+        height: 150px;
+    }
+
+    #footer div p {
+        margin: 0px;
+    }
+
+}
+
+@media screen and (min-width: 1467px) {
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #__next {
+        width: 1457px;
+    }
+
 }
 
 .sectionContent {
     margin-top: 30px;
 }
 
+.sectionContent ul, .sectionContent ol {
+    font-family: 'IBM Plex Sans';
+}
+
+.sectionContent p {
+    font-family: 'IBM Plex Sans';
+}
+
 .footerSections {
-    margin-top: 70px;
-    width: 80%;
-    height: 100%;
+    margin-top: 25px;
+    width: 90%;
+    height: 80vh;
     flex: 1;
     font-family: 'Ubuntu';
     font-weight: 400;
     line-height: 1.5;
+    color: #12123b;
 }
 
-.footerSectionsWrapper {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 
 /*** Sign Up ***/
 
 .signup-container {
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: fit-content;
+    margin-top: 80px;
+    margin-bottom: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -666,49 +709,59 @@ a {
     background-color: white;
     position: relative;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     flex-direction: column;
+    font-family: 'Ubuntu';
     padding: 20px;
     height: fit-content;
-    width: 400px;
-    border-radius: 18px;
-    box-shadow: 2px 1px 12px 0px rgba(0,0,0,0.20);
+    width: 370px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 3px 1px #e7e7e7;
+    color: #1c1c57;
+}
+
+.signUpForm label {
+    font-size: 1.15em;
 }
 
 #signUpTxt {
-    color: #6B6B6B;
-    font-size: 30px;
-    font-weight: 600;
-    margin-bottom: 10px;
+    font-size: 2.1em;
+    font-weight: 500;
 }
 
 .signUpForm .userName input,
 .signUpForm .emailSCont input,
-.signUpForm .passwCont input
+.signUpForm .passwCont input,
+.signUpForm .platformCont input
  {
-    outline: 2px solid #6B6B6B;
-    font-family: 'Ubuntu';
+    outline: 1.5px solid hsl(0, 0%, 80%);
+    font-family: 'IBM Plex Sans';
     border: none;
-    border-radius: 7px;
+    border-radius: 4px;
     padding: 5px;
-    font-size: medium;
+    font-size: .8em;
+    color: #12123b;
 }
 
-.signUpForm .userName, .emailSCont, .passwCont {
+.signUpForm .userName input:focus,
+.signUpForm .emailSCont input:focus,
+.signUpForm .passwCont input:focus,
+.signUpForm .platformCont input:focus {
+    outline: 2px solid #1c1c57;
+    box-shadow: 0px 0px 2px 1px #1c1c57;
+}
+
+
+.signUpForm .userName, .emailSCont, .passwCont, .platformCont {
     display: flex;
-    align-items:flex-end;
     position: relative;
+    align-items: flex-end;
     width: 100%;
     justify-content: space-between;
-    color: #6B6B6B;
     font-size: larger;
     font-weight: 400;
     margin-top: 30px;
-}
-
-.signUpForm .emailSCont input {
-    margin-left: 43px;
 }
 
 .signUpForm .passwCont input {
@@ -720,21 +773,28 @@ a {
     cursor: pointer;
     border: none;
     font-family: 'Ubuntu';
-    font-size: 20px;
+    font-size: 1.6em;
     padding-top: 6px;
     padding-bottom: 6px;
     margin-top: 30px;
     border-radius: 8px;
     background-color: #1465e7;
     color: white;
-    transition: all 0.5s;
+    transition: all 0.3s;
 }
 
-.signed-up-container-holder {
-    display: flex;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
+.signUpForm .button.loading,
+.payment-container .button.loading {
+    background: #73739a;
+    cursor: auto;
+}
+
+.payment-container .button.loading:hover {
+    background: #73739a;
+}
+
+.signUpForm Button[type="button"]:hover {
+    background-color: #12123b;
 }
 
 .signed-up-container {
@@ -753,10 +813,12 @@ a {
 
 /*** Login ***/
 
-.login-container, .pass-change-container {
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
+.login-container, 
+.pass-change-container {
+    width: 100%;
+    margin-top: 80px;
+    margin-bottom: 50px;
+    height: fit-content;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -764,66 +826,80 @@ a {
 
 .login-container .forgot-pass {
     margin-top: 15px;
+    margin-bottom: 0px;
     color: #6B6B6B;
     cursor: pointer;
 }
 
+.login-container .forgot-pass:hover {
+    color: #515151;
+}
+
 .loginForm {
     background-color: white;
-    position: relative;
     display: flex;
-    justify-content: center;
     align-items: center;
     flex-direction: column;
+    justify-content: center;
     padding: 0px 25px 25px 25px;
     height: fit-content;
-    width: 330px;
-    border-radius: 18px;
-    box-shadow: 2px 1px 12px 0px rgba(0,0,0,0.20);
+    width: 350px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 3px 1px #e7e7e7;
+    color: #1c1c57;
+    font-family: 'Ubuntu';
 }
 
 #loginUpTxt {
-    color: #6B6B6B;
-    font-size: 30px;
+    font-size: 2.1em;
     font-weight: 600;
     margin-top: 25px;
     margin-bottom: 10px;
 }
 
+.loginForm label {
+    font-size: 1.15em;
+}
+
 .loginForm .email-cont input,
-.loginForm .pass-cont input
-{
-    outline: 2px solid #6B6B6B;
-    font-family: 'Ubuntu';
+.loginForm .pass-cont input {
+    font-size: .8em;
+    color: #12123b;
+    font-family: 'IBM Plex Sans';
+    outline: 1.5px solid hsl(0, 0%, 80%);
     padding: 5px;
     font-size: medium;
     border: none;
-    border-radius: 7px;
+    border-radius: 4px;
+}
+
+.loginForm .email-cont input:focus,
+.loginForm .pass-cont input:focus {
+    outline: 2px solid #1c1c57;
+    box-shadow: 0px 0px 2px 1px #1c1c57;
 }
 
 .email-cont, .pass-cont {
     display: flex;
     position: relative;
-    align-items: flex-end;
     width: 100%;
     justify-content: space-between;
-    color: #6B6B6B;
     font-size: larger;
     font-weight: 400;
-    margin-top: 30px;
+    margin-top: 32px;
 }
 
 .loginForm Button {
     width: 100%;
     cursor: pointer;
     border: none;
-    font-family: 'Ubuntu';
-    font-size: 20px;
+    font-size: 1.6em;
     padding-top: 6px;
     padding-bottom: 6px;
     margin-top: 30px;
-    border-radius: 8px;
+    border-radius: 5px;
     background-color: #1465e7;
+    font-family: 'Ubuntu';
     color: white;
     transition: all 0.5s;
 }
@@ -931,63 +1007,184 @@ a {
 
 .resultsSection {
     width: 95%;
-    margin-top: 60px;
+    margin-top: 10px;
 }
 
 .resultsSection .homeContainer {
     width: 100%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     margin-top: 50px;
 }
 
 .resultsSection .homeContainer .leftSectionHome {
-    width: 25%;
+    width: 13%;
     height: fit-content;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 30px;
+    padding: 25px 35px 25px 35px;
     background-color: #f5f6f7;
-    border-radius: 9px;
+    box-shadow: 0px 0px 5px 2px #e6e6e6;
+    border-radius: 7px;
 }
 
-.resultsSection .homeContainer .leftSectionHome button {
+.resultsSection .homeContainer .leftSectionHome a:not(.sign-out) {
     display: flex;
-    justify-content: center;
+    justify-content:flex-start;
     align-items: center;
     width: 100%;
-    height: 47px;
+    line-height: 1.3;
+    padding: 10px;
     border: none;
-    border-radius: 9px;
-    background-color: #73739a;
-    color: white;
+    border-radius: 8px;
+    color: #73739a;
     font-family: 'Ubuntu';
-    font-size: 1.5em;
+    font-size: 1.4em;
+    cursor: pointer;
+    transition: all 0.15s;
 }
 
-.resultsSection .homeContainer .leftSectionHome button img {
-    height: 70%;
-    margin-right: 10px;
+.resultsSection .homeContainer .leftSectionHome .sign-out {
+    cursor: pointer;
+    width: 100%;
+    line-height: 1.3;
+    color: red;
+    font-family: 'Ubuntu';
+    font-size: 1.4em;
+    margin-bottom: 10px;
+    margin-top: 8px;
 }
 
-.resultsSection .homeContainer .leftSectionHome button:not(:last-child) {
+.resultsSection .homeContainer .leftSectionHome .sign-out:hover {
+    color: rgb(209, 0, 0);
+}
+
+.resultsSection .homeContainer .leftSectionHome a:hover:not(.sign-out) {
+    background-color: #e4e4eb;
+}
+
+/* #dcdcdc */
+
+.resultsSection .homeContainer .leftSectionHome a:not(:last-child) {
     margin-bottom: 25px;
 }
 
 .resultsSection .homeContainer .rightSectionHome {
-    background-color: #f5f6f7;
-    width: 53%;
-    border-radius: 9px;
+    width: 44%;
+    padding: none;
+    margin: none;
+}
+
+
+.resultsSection .homeContainer .farRightSectionHome {
     display: flex;
-    justify-content: center;
-    padding-top: 10%;
-    padding-bottom: 10%;
+    flex-direction: column;
+    width: 30%;
+    margin: none;
+    padding: none;
+}
+
+.resultsSection .homeContainer .rightSectionHome .publishBodyContainer {
+    padding: 10px;
+}
+
+.resultsSection .homeContainer .rightSectionHome .publishBodyContainer ul li,
+.targetingBodyContainer ul li,
+.reqs-container ul li, .reqs-container {
+    font-family: 'IBM Plex Sans';
+    line-height: 1.5;
+    margin-bottom: 5px;
+    padding-right: 15px;
+}
+
+.resultsSection .homeContainer .rightSectionHome .publishForm {
+    padding: 0px 10px 0px 10px;
+}
+
+.resultsSection .homeContainer .rightSectionHome .publishForm label {
+    font-size: 1.3em;
+    font-weight: 500;
+    margin-bottom: 7px;
+}
+
+.resultsSection .homeContainer .rightSectionHome .publishForm .inputElements {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+}
+
+.resultsSection .homeContainer .rightSectionHome .publishForm .inputPinElement {
+    margin-bottom: 25px;
+}
+
+.resultsSection .homeContainer .rightSectionHome .publishForm div p:not(.file-name-wrapper p),
+.resultsSection .homeContainer .rightSectionHome .publishForm div p:not(.file-name-wrapper p) {
+    margin: 0px 0px 8px 0px;
+    font-family: 'IBM Plex Sans';
+    color: #474790;
+    font-size: 0.87em;
+}
+
+.resultsSection .homeContainer .rightSectionHome .publishForm div input {
+    padding: 8px 37px 8px 10px;
+    font-family: 'IBM Plex Sans';
+    font-size: medium;
+    border: none;
+    color: #1c1c57;
+    outline: 1px solid hsl(0, 0%, 80%);
+    border-radius: 4px;
+    transition: all .1s;
+
+}
+
+.resultsSection .homeContainer .rightSectionHome .publishForm div textarea {
+    overflow: hidden;
+    resize: none;
+    padding: 10px;
+    height: 250px;
+    font-family: 'IBM Plex Sans';
+    font-size: medium;
+    border: none;
+    color: #1c1c57;
+    outline: 1px solid hsl(0, 0%, 80%);
+    border-radius: 4px;
+    transition: all .1s;
+}
+
+.resultsSection .homeContainer .rightSectionHome .publishForm div textarea:focus,
+.resultsSection .homeContainer .rightSectionHome .publishForm div input:focus:not(#noBoxShadow input) {
+    outline: 2px solid #1c1c57;
+    box-shadow: 0px 0px 2px 1px #1c1c57;
+}
+
+
+.homeContainer .postPreview {
+    width: 90%;
+    height: fit-content;
+    background-color: #f5f6f7;
+    border-radius: 7px;
+    padding: 5%;
+}
+
+
+.homeContainer .postPreview h2, .homeContainer .audienceReached h2 {
+    margin-top: 0px;
+    color: #12123b;
+}
+
+.homeContainer .audienceReached {
+    width: 90%;
+    background-color: #f5f6f7;
+    border-radius: 7px;
+    margin-top: 30px;
+    padding: 5%;
 }
 
 .resultsSection .homeContainer .rightSectionHome img {
-    width: 60%;
+    width: 40%;
 }
+
 
 .ItemsOfModal {
     margin-bottom: 20px;
@@ -1039,13 +1236,13 @@ a {
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: center;
     font-family: 'Ubuntu';
 }
 
-.pricingTablesContainer .table1, .pricingTablesContainer .table2, .pricingTablesContainer .table3 {
+.pricingTablesContainer .table1, .pricingTablesContainer .table2 {
     box-shadow: 0px 0 5px 2px #e6e6e6;
-    width: 23%;
+    width: 300px;
     height: fit-content;
     border-radius: 12px;
     display: flex;
@@ -1053,6 +1250,10 @@ a {
     align-items: center;
     transition: all 0.3s;
     position: relative;
+}
+
+.pricingTablesContainer .table2 {
+    margin-left: 100px;
 }
 
 .pricingTablesContainer .table1:hover,
@@ -1078,8 +1279,16 @@ a {
     line-height: 1.5;
     color: #1c1c57;
     font-weight: 500;
+    font-family: 'IBM Plex Sans';
     width: 80%;
     margin-bottom: 5px;
+}
+
+
+.pricingTablesContainer #tooltipText {
+    width: 100%;
+    font-weight: 400;
+    color: #1c1c57;
 }
 
 .pricingTablesContainer button {
@@ -1107,16 +1316,48 @@ a {
     font-size: 2.5em;
 }
 
+.pricingTablesContainer .value-tag {
+    background-color: #eee;  
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin-left: 8px;
+    font-size: 0.8em;
+    color: #1465e7;  
+}
+
+.planTypeContainer > div {
+    width: 400px;
+}
+
 .planTypeContainer {
     width: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
     margin-bottom: 80px;
     margin-top: 60px;
+    font-family: 'Ubuntu';
+}
+
+.planTypeContainer #social-reqs {
+    width: 400px;
+    margin-top: 5px;
+    font-family: 'IBM Plex Sans';
+    color: #7c7c7c;
+    cursor: pointer;
+    font-size: .9em;
+    transition: all .2s;
+}
+
+.planTypeContainer #social-reqs:hover {
+    color:#1465e7;
 }
 
 .strikethrough {
     position: relative;
+    margin-bottom: 8px;
     display: inline-block;
     margin-top: 30px;
     color: #73739a;
@@ -1156,21 +1397,24 @@ a {
     font-family: 'Ubuntu';
     color: #1c1c57;
     margin-top: 50px;
-    margin-left: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
 .pricingParent .pricingTitle h1 {
     margin-top: 0px;
     margin-bottom: 0px;
     font-size: 2.3em;
+    text-align: center;
 }
 
 .pricingParent .pricingTitle p {
-    width: 70%;
+    width: 60%;
     text-align: center;
     margin-bottom: 0px;
+    font-family: 'IBM Plex Sans';
     font-size: 1.2em;
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .info-tooltip {
@@ -1192,6 +1436,7 @@ a {
 }
 
 .tooltip-content {
+    cursor: auto;
     display: none;
     position: absolute;
     background: #fff;
@@ -1204,19 +1449,27 @@ a {
     left: -120%;
     transform: translateX(-50%);
     bottom: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
+}
+
+.tooltip-content #value-source {
+    color: #1465e7;
+    cursor: pointer;
+}
+
+.tooltip-content #value-source:hover {
+    border-bottom: 2px solid #1465e7;
 }
 
 .tooltip-content p {
     margin: 0px;
 }
 
-.info-tooltip:hover .tooltip-content {
+.tooltip-content.active {
     display: block;
-}
+} 
 
 .pricingParent .next-page {
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1225,7 +1478,7 @@ a {
 }
 
 .pricingParent .next-page button {
-    width: 30%;
+    width: 300px;
     position: relative;
     cursor: pointer;
     font-family: 'Ubuntu';
@@ -1236,4 +1489,2550 @@ a {
     color: white;
     background-color: #1465e7;
     transition: all 0.5s;
+}
+
+.activeAccountsDiv {
+    user-select: none;
+    width: 100%;
+    padding: 0% 0% 0% 0%;
+    background-color: #f5f6f7;
+    color:#1c1c57;
+    border-radius: 7px;
+    margin-bottom: 30px;
+}
+
+.activeAccountsDiv .platformsContainer {
+    user-select: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 20px;
+    padding: 3%;
+}
+
+.activeAccountsDiv .platformsContainer .cell-content {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    padding: 7px;
+    border-radius: 3.5px;
+    transition: all 0.1s;
+}
+
+.cell-content:not(.notAvailable):not(.notApplied) {
+    cursor: pointer;
+}
+
+.activeAccountsDiv .platformsContainer .cell-content:not(.notAvailable):not(.notApplied):hover {
+    background-color:#b9b9c6;
+}
+
+.activeAccountsDiv .platformsContainer img {
+    height: 100%;
+    max-width: 20%;
+    margin-right: 6px;
+}
+
+.activeAccountsDiv .platformsContainer .notAvailableImg, .activeAccountsDiv .platformsContainer .notAvailable span {
+    filter: grayscale(100%);
+    opacity: 0.6;
+}
+
+.platformsContainer .cell-content {
+    position: relative;
+}
+
+.platformsContainer .tooltip {
+    visibility: hidden;
+    background-color:#1c1c57;
+    color: #fff;
+    text-align: center;
+    padding: 6px;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -60px;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.platformsContainer .tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%; /* Below the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1c1c57 transparent transparent transparent;
+}
+
+/* Show the tooltip when hovering */
+.platformsContainer .cell-content:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+    background-color: #1c1c57 !important;
+}
+
+.platformsContainer .notApplied .linkAccount {
+    cursor: pointer;
+    border: none;
+    border-radius: 1px;
+    font-family: 'Ubuntu';
+}
+
+.cell-content #checkmark {
+    width: 18px;
+    position: absolute;
+    right: 1%;
+}
+
+.cell-content:not(.notAvailable):not(.notApplied):active {
+    background-color: #a3a3b0 !important; /* Use a darker shade here */
+}
+
+.targetPlatformsTitle {
+    cursor: pointer;
+    background-color: #e7e7e7;
+    color: #1c1c57;
+    padding: 3%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
+.targetPlatformsTitle h1 {
+    margin: 0px;
+}
+
+.targetPlatformsTitle div:nth-of-type(2) img {
+    display: inline-block;
+    height: 40px;
+    transition: transform 0.2s linear;
+}
+
+.targetPlatformsTitle div:nth-of-type(2) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.requirementsDiv {
+    user-select: none;
+    width: 100%;
+    padding: 0% 0% 0% 0%;
+    background-color: #f5f6f7;
+    color:#1c1c57;
+    border-radius: 7px;
+    margin-bottom: 30px;
+}
+
+.reqsTitle {
+    position: relative;
+    cursor: pointer;
+    background-color: #e7e7e7;
+    color: #1c1c57;
+    padding: 3%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
+.reqsTitle .reqsTooltip {
+    position: absolute;
+    color: white;
+    background-color: #1c1c57;
+    top: 0px;
+    left: -45%;
+    padding: 8px;
+    border-radius: 3px;
+}
+
+.reqsTitle h1 {
+    margin: 0px;
+}
+
+.reqsTitle div:nth-of-type(2) img {
+    display: inline-block;
+    height: 40px;
+    transition: transform 0.2s linear;
+}
+
+.reqsTitle div:nth-of-type(2) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.requirementsDiv .postLinkDiv {
+    padding: 4%;
+}
+
+.requirementsDiv .postLinkDiv p {
+    line-height: 1.5;
+    margin-top: 0px;
+}
+
+.requirementsDiv .postLinkDiv input {
+    width: 50%;
+    height: fit-content;
+    border-radius: 3px;
+    border: none;
+    outline: 1.5px solid #12123b;
+    padding: 5px 7px;
+}
+
+.requirementsDiv .postLinkDiv input:focus {
+    outline: 2px solid #12123b;
+}
+
+.rightSectionHome #publish-btn {
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    border: none;
+    border-radius: 6px;
+    background: rgb(20,101,224);
+    color: white;
+    font-family: 'Ubuntu';
+    font-size: 2em;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+
+.instagramPostPreview, .facebookPostPreview {
+    background-color: #ffffff;
+    border-radius: 4px;
+    filter: drop-shadow(0px 0px 6px #e4e4e4);
+    margin-top: 15px;
+}
+
+.instagramPostPreview p, .facebookPostPreview p {
+    margin: 0px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.facebookPostPreview .fb-head {
+    display: flex;
+    justify-content: space-between;
+    padding: 18px;
+}
+
+.instagramPostPreview .insta-head {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+}
+
+.instagramPostPreview .insta-head .logo, .facebookPostPreview .fb-head .logo {
+    display: flex;
+}
+
+.instagramPostPreview .insta-head .logo div p:nth-of-type(2) {
+    font-weight: 100;
+    font-size: x-small;
+}
+
+.instagramPostPreview .insta-head .logo div p:nth-of-type(1) img {
+    width: 12px;
+    height: fit-content;
+    margin-right: 3px;
+}
+
+
+.facebookPostPreview .fb-head p:nth-of-type(2),
+.instagramPostPreview .insta-head .logo div p:nth-of-type(1) span {
+    color: rgb(161, 161, 161);
+    font-weight: 100;
+    font-size: smaller;
+}
+
+.facebookPostPreview .fb-head .logo img,
+.instagramPostPreview .insta-head .logo img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 8px;
+}
+
+.facebookPostPreview .fb-head #dots,
+.instagramPostPreview .insta-head #dots {
+    width: 20px;
+    transition: all .2s;
+    height: 20px;
+    border-radius: 50%;
+    padding: 5px;
+}
+
+.instagramPostPreview .insta-head #dots {
+    cursor: pointer;
+}
+
+.facebookPostPreview .fb-head #dots:hover {
+    background-color: #efefef;
+}
+
+.facebookPostPreview .fb-body,
+.instagramPostPreview .insta-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.instagramPostPreview .insta-body #text-wrapper {
+    margin-left: 5px;
+    font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-size: 0.9em;
+}
+
+.instagramPostPreview .insta-body #text-wrapper p:last-of-type {
+    margin-bottom: 10px;
+}
+
+.instagramPostPreview .insta-body #text-wrapper #instagram {
+    font-weight: 500;
+    margin-right: 7px;
+    cursor: pointer;
+}
+
+.instagramPostPreview .insta-body #text-wrapper #instagram:hover {
+    opacity: 0.5;
+}
+
+.instagramPostPreview .insta-body .icons-container {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.instagramPostPreview .insta-body .icons-container div {
+    width: 32%;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 5px;
+}
+
+.instagramPostPreview .insta-body .icons-container div img,
+.instagramPostPreview .insta-body .icons-container #heart {
+    height: 22px;
+    cursor: pointer;
+}
+
+.instagramPostPreview .insta-body .icons-container div img:hover,
+.instagramPostPreview .insta-body .icons-container #heart:hover {
+    opacity: 0.5;
+}
+
+.instagramPostPreview .insta-body .icons-container #heart {
+    margin-right: 5px;
+}
+
+.facebookPostPreview .fb-body p {
+    font-family: 'IBM Plex Sans';
+    font-size: medium;
+    padding: 0px 10px 0px 10px;
+    line-height: 1.5;
+}
+
+.facebookPostPreview .fb-body p:last-of-type {
+    margin-bottom: 10px;
+}
+
+.media-grid-columns {
+    height: 300px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+}
+
+.media-grid-rows {
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.first-row {
+    display: flex;
+    flex-direction: row;
+    height: 149px;
+}
+
+.second-row {
+    height: 149px;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 2px;
+}
+
+
+.media-grid-rows img,
+.media-grid-rows .react-player-container {
+    width: 100%;
+    height: 149px;
+    object-fit: cover;
+}
+
+.first-column {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.first-column img:not(:first-child),
+.second-column img:not(:first-child),
+.first-column video,
+.second-column video {
+    margin-top: 2px;
+}
+
+.second-column {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.second-column img, .second-column video {
+    height: 33%;
+}
+
+.second-column img:not(:first-child) {
+    margin-top: 2px;
+}
+
+.second-column img:last-of-type {
+    filter: brightness(50%);
+}
+
+.more-items {
+    position: absolute;
+    bottom: 14%;
+    left: 45%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.media-grid-columns .first-column img, .media-grid-columns .first-column .react-player {
+    object-fit: cover;
+    width: 100%;
+    height: 50%;
+}
+
+.react-player-container {
+    position: relative;
+    height: 50%;
+    overflow: hidden;
+}
+
+.react-player-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.react-player-wrapper video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+}
+
+.engagement-container {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 500;
+    color: #76787a;
+    width: 100%;
+}
+
+.engagement-container div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 22px 5px 22px;
+    transition: all .3s;
+    border-radius: 4px;
+    width: 50%;
+    margin: 5px;
+}
+
+.hashtag {
+    color: #3578E5;
+    cursor: pointer;
+}
+
+.hashtag:hover {
+    text-decoration: underline;
+}
+
+.engagement-container div:hover {
+    background-color: #f2f2f2;
+}
+
+.engagement-container div p {
+    margin: 0px 0px 0px 10px;
+}
+
+.engagement-container div img {
+    width: 18px;
+}
+
+.insta-body .next-img-insta-right,
+.insta-body .next-img-insta-left {
+    position: absolute;
+    bottom: 48%;
+    opacity: 0.8;
+    width: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.insta-body .next-img-insta-right {
+    right: 10px;
+}
+
+.insta-body .next-img-insta-left {
+    transform: rotate(180deg);
+    left: 10px;
+}
+
+.insta-body .next-img-insta-right:active,
+.insta-body .next-img-insta-left:active {
+    opacity: 0.95;
+}
+
+.insta-body .carousel-dot-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: 16px;
+}
+
+.insta-body .carousel-dot-wrapper .carousel-dot {
+    bottom: 0px;
+    right: 40%;
+    height: 6px;
+    width: 6px;
+    margin: 0 3px;
+    background-color: #ebebeb;
+    opacity: 0.5;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.insta-body .carousel-dot.active {
+    background-color: #ffffff;
+    opacity: 1;
+}
+
+.insta-body .insta-body-media-wrapper {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 220px;
+}
+
+.insta-body .insta-body-media-wrapper .main-imgs {
+    height: 220px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.insta-body-media-wrapper .media-slider .media-item div video {
+    object-fit: cover;
+    object-position: center;
+}
+
+.insta-body .insta-body-media-wrapper {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.insta-body .insta-body-media-wrapper .media-slider {
+    display: flex;
+    width: fit-content;
+}
+
+.insta-body .insta-body-media-wrapper .media-item {
+    flex-shrink: 0;
+    width: 100%;
+}
+
+/* When there are multiple media files */
+.insta-body .insta-body-media-wrapper .main-imgs.multiple {
+    margin: 0px; /* adjust the value as needed */
+    width: 100%; /* subtract double the margin from the width */
+}
+
+.requirementsDiv .reqs-container {
+    padding: 10px;
+}
+
+.requirementsDiv .reqs-container p {
+    line-height: 1.6;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+
+.requirementsDiv .reqs-container ol ul:nth-of-type(1) {
+    margin-bottom: 10px;
+}
+
+.rightSectionHome .publishBodyContainer .file-input-wrapper .btn-file-input {
+    border: none;
+    background-color: #1c1c57;
+    color: white;
+    font-family: 'Ubuntu';
+    font-weight: 400;
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    height: 40px;
+    transition: all 0.1s;
+    margin-bottom: 21px;
+}
+
+.rightSectionHome .publishBodyContainer .file-input-wrapper .btn-file-input:hover {
+    opacity: 0.9;
+}
+
+.rightSectionHome .publishBodyContainer .file-input-wrapper .btn-file-input img {
+    height: 55%;
+    width: fit-content;
+    margin-right: 10px;
+}
+
+.media-item .video-wrapper {
+    position: relative;
+    cursor: pointer;
+}
+
+.media-item .video-wrapper .play-icon-wrapper {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    opacity: 0.9;
+}
+
+.media-item .video-wrapper .play-icon-wrapper img {
+    width: 17%;
+}
+
+.media-item .video-wrapper .audio-controller img {
+    width: 45%;
+}
+
+.media-item .video-wrapper .audio-controller {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    bottom: 10px;
+    right: 15px;
+    width: 25px;
+    height: 25px;
+    background-color: #2e2e2e;
+    cursor: pointer;
+}
+
+.media-item .video-wrapper .audio-controller:active {
+    opacity: 0.7;
+}
+
+.file-input-wrapper .file-upload-errors {
+    color: #e00520;
+    margin-bottom: 4px;
+    font-family: 'IBM Plex Sans';
+}
+
+.file-input-wrapper .file-name-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 97%;
+    font-family: 'IBM Plex Sans';
+    font-size: 0.9em;
+    color: white;
+    padding: 1.5%;
+    border-radius: 4px;
+}
+
+.file-input-wrapper .file-name-wrapper:not(:last-of-type) {
+    margin-bottom: 20px;
+}
+
+.file-input-wrapper .file-name-wrapper p {
+    display: block;
+    margin: 0px;
+}
+
+.targetingBodyContainer {
+    padding: 10px;
+}
+
+.targetingBodyContainer .target-audience-wrapper {
+    padding: 10px;
+}
+
+.sub-fields-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-gap: 20px;
+    margin: 8px 10px 10px 10px;
+}
+
+.sub-fields-wrapper span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    background-color: white;
+    outline: 2px solid #a4a4bb;
+    color: #1c1c57;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sub-fields-wrapper span:hover {
+    background-color: #a4a4bb;
+    outline: none;
+    color: white;
+}
+
+.sub-fields-wrapper span:active {
+    background-color: #8383a4;
+}
+
+.rightSectionAnalytics {
+    display: flex;
+    flex-direction: column;
+    width: 78%;
+    height: fit-content;
+}
+
+.rightSectionAnalytics .analyticsContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.rightSectionAnalytics .analyticsContainer .analyticsContainer1 {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 20px;
+} 
+
+.groupedBarChart {
+    background-color: #f5f6f7;
+    border-radius: 7px;
+    width: 94%;
+    padding: 25px 3%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;    
+}
+
+.stackedBarChart {
+    background-color: #f5f6f7;
+    border-radius: 5px;
+    width: 43%;
+    height: fit-content;
+    padding: 20px 3%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.groupedBarChart .topArea {
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 12px;
+    margin-bottom: 25px;
+}
+
+.statsSummary {
+    width: 43%;
+    height: fit-content;
+    background-color: #f5f6f7;
+    border-radius: 5px;
+    padding: 25px 3%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.statsSummary .topArea {
+    width: 100%;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.statsSummary .topArea .title {
+    margin-bottom: 15px;
+}
+
+.rightSectionAnalytics .analyticsContainer2 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.StackedAreaChart-tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 3px;
+    pointer-events: none;
+}
+
+.legendStackedArea {
+    font-family: 'IBM Plex Sans';
+}
+
+.stackedAreaChart,
+.multiLineChart {
+    background-color: #f5f6f7;
+    border-radius: 5px;
+    width: 94%;
+    padding: 25px 3%;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.stackedAreaChart .topArea {
+    height: 50px;
+    width: 400px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stackedAreaChart .checkmarks-wrapper {
+    display: flex;
+    justify-content: center;
+    width: fit-content;
+}
+
+.stackedAreaChart .checkmark {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.stackedAreaChart .checkmark-icon {
+    cursor: pointer;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    user-select: none;
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    line-height: 15px;
+}
+
+.stackedAreaChart .checkmark-label {
+    margin-left: 5px;
+    color: #1c1c57;
+}
+
+.stackedAreaChart .checkmark-icon .checked {
+    background-color: #0d0d0d;
+}
+
+.stackedAreaChart .question-mark-container,
+.multiLineChart .question-mark-container,
+.groupedBarChart .question-mark-container,
+.statsSummary .grid-container .question-mark-container {
+    position: relative;
+}
+
+.stackedBarChart .question-mark-container {
+    position: relative;
+    margin-left: 15px;
+}
+
+.stackedAreaChart .question-mark,
+.stackedBarChart .question-mark {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    background-color: #1c1c57;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.stackedAreaChart .graphInfoTooltip,
+.stackedBarChart .graphInfoTooltip,
+.multiLineChart .graphInfoTooltip,
+.groupedBarChart .graphInfoTooltip,
+.statsSummary .grid-container .graphInfoTooltip {
+    position: absolute;
+    top: 0px;
+    z-index: 10000;
+    right: 25px;
+    width: 300px;
+    background-color: #f5f6f7;
+    box-shadow: 0px 0 2px 0.5px #c1c1c1;
+    color:#1c1c57;
+    font-family: 'IBM Plex Sans';
+    font-size: small;
+    line-height: 1.5;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.statsSummary .grid-container .box.one 
+.graphInfoTooltip .title {
+    font-weight: 600;
+}
+
+
+.GroupedBarChart-tooltip,
+.StackedBarChart-tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: rgb(50, 101, 167);
+    border: 0px;
+    border-radius: 3px;
+    pointer-events: none;
+}
+
+.multiLineChart .topArea {
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 12px;
+    margin-bottom: 25px;    
+}
+
+.stackedBarChart .topArea {
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin-top: 12px;
+    margin-bottom: 25px;      
+}
+
+.stackedBarChart .topArea .interactive,
+.multiLineChart .topArea .interactive {
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: row;    
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.groupedBarChart .topArea .interactive {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;    
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.stackedAreaChart .topArea .title,
+.groupedBarChart .topArea .title,
+.stackedBarChart .topArea .title,
+.multiLineChart .topArea .title,
+.statsSummary .topArea .title {
+    color: #1c1c57;
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
+.grid-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 15px;
+}
+  
+.grid-container > div {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 6px;
+    color: #1c1c57;
+    padding: 15px;
+}
+  
+.grid-container > div:first-child {
+    grid-column: span 2;
+}
+
+.statsSummary .box .interactive .question-mark {
+    width: 15px;
+    height: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: .7em;
+}
+
+.statsSummary .box .interactive {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.statsSummary .box .interactive .title {
+    font-weight: 500;
+}
+
+.statsSummary .box:not(.box.one) span {
+    font-weight: 500;
+    font-size: 1.1em;
+}
+
+.statsSummary .box.two span {
+    font-weight: 600;
+    font-size: 2em;
+}
+
+
+.statsSummary .box.one .sub-metrics {
+    display: flex;
+    justify-content: space-between;
+}
+
+.statsSummary .box.one .sub-metrics div {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.statsSummary .box.one .sub-metrics div .conversion-title {
+    font-size: small;
+    color: #565676;
+    margin-bottom: 5px;
+}
+
+.statsSummary .box.one .sub-metrics div span:nth-of-type(2) {
+    font-weight: 500;
+    font-size: 1.1em;
+}
+
+.rightSectionAnalytics .postSelectorContainer {
+    background-color: #f5f6f7;
+    border-radius: 5px;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.pinterestPostPreview {
+    font-family: -apple-system, BlinkMacSystemFont, 
+    "Segoe UI", Roboto, "Oxygen-Sans", Ubuntu, Cantarell, 
+    "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica, 
+    "Hiragino Kaku Gothic Pro W3", "Hiragino Kaku Gothic Pro", 
+    Meiryo, "MS Gothic", Arial, sans-serif, "Apple Color Emoji", 
+    "Segoe UI Emoji", "Segoe UI Symbol";
+    background-color: #ffffff;
+    border-radius: 10px;
+    filter: drop-shadow(0px 0px 6px #e4e4e4);
+    margin-top: 15px;
+}
+
+.pinterestPostPreview .mainImg {
+    width: 100%;
+    position: relative;
+    color: #000000;
+}
+
+.pinterestPostPreview .mainImg .main {
+    width: 100%;
+    margin-top: 0px;
+    height: auto;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.pinterestPostPreview .mainImg .videoContainer {
+    position: relative;
+}
+
+.pinterestPostPreview .mainImg .videoControllers {
+    width: 100%;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    height: 50px;
+    background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8));
+    position: absolute;
+    color: white;
+    font-size: .8em;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.pinterestPostPreview .mainImg .videoControllers .time {
+    margin-bottom: 4px;
+}
+
+.video-progress {
+    width: 40%;
+    display: flex;
+    align-items: center;
+    gap: 5px; /* space between the time, progress bar, and duration */
+}
+
+.progress-bar {
+    flex: 1; /* allows it to take available space between times */
+    height: 5px;
+    background: #ddd;
+    position: relative;
+    cursor: pointer;
+    border-radius: 20px;
+}
+
+.progress {
+    position: absolute;
+    height: 100%;
+    background: white;
+    border-radius: 20px;
+}
+
+.knob {
+    width: 15px;
+    height: 15px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0; /* You can adjust this according to your needs, maybe based on progress */
+}
+
+
+.pinterestPostPreview .mainImg .videoControllers img {
+    height: 18px;
+    cursor: pointer;
+}
+
+
+.pinterestPostPreview .mainImg video {
+    object-fit: contain !important;
+    cursor: pointer;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.pinterestPostPreview .linkOnMedia, 
+.pinterestPostPreview .zoomOnMedia {
+    position: absolute;
+}
+
+.pinterestPostPreview .linkOnMedia {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    bottom: 15px;
+    left: 15px;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.pinterestPostPreview .linkOnMedia:hover {
+    background-color: rgb(238, 238, 238);
+}
+
+.pinterestPostPreview .linkOnMedia div {
+    font-weight: 500;
+    font-size: .85em;
+}
+
+.pinterestPostPreview .linkOnMedia img {
+    width: 12px;
+    margin-right: 8px;
+}
+
+.pinterestPostPreview .zoomOnMedia {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(244, 244, 244);
+    bottom: 15px;
+    right: 15px;
+    padding: 7px;
+    border-radius: 50%;
+}
+
+.pinterestPostPreview .zoomOnMedia img {
+    width: 15px;
+}
+
+.pinterestPostPreview .pinDetails .saveDetails {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+.pinterestPostPreview .pinDetails a {
+    color: black;
+    border-bottom: 1.5px solid black;
+    cursor: pointer;
+    font-size: .85em;
+    margin-left: 15px;
+}
+
+.pinterestPostPreview .pinDetails .pinTitle {
+    cursor: pointer;
+    color: black;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 1.5em;
+    font-weight: 500;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.pinterestPostPreview .pinDetails .pinDesc {
+    color: #000000;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-top: 0px;
+    display: inline-block;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 90%;
+    margin-bottom: 25px;
+}
+
+.pinterestPostPreview .pinDetails .saveDetails div {
+    display: flex;
+}
+
+.pinterestPostPreview .pinDetails .saveDetails div:nth-of-type(2) {
+    cursor: pointer;
+    background-color: #E60023;
+    color: white;
+    font-size: .9em;
+    justify-content: center;
+    align-items: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 18px;
+    width: 40px;
+}
+
+.pinterestPostPreview .pinDetails .saveDetails div:nth-of-type(2):hover {
+    background-color: #a7021b;
+}
+
+.pinterestPostPreview .pinDetails .saveDetails img {
+    width: 18px;
+    height: 18px;
+
+}
+
+.pinterestPostPreview .pinDetails .pinnerInfo div {
+    display: flex;
+}
+
+.pinterestPostPreview .pinDetails .pinnerInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.pinterestPostPreview .pinDetails .pinnerInfo div:nth-of-type(2) {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    background-color: #f3f3f3;
+    width: 60px;
+    padding: 7px;
+    border-radius: 18px;
+}
+
+.pinterestPostPreview .pinDetails .pinnerInfo div:nth-of-type(2):hover {
+    background-color: #e4e4e4;
+}
+
+.pinterestPostPreview .pinDetails .pinnerInfo div:nth-of-type(1) div {
+    display: flex;
+    flex-direction: column;
+}
+
+.pinterestPostPreview .pinDetails .pinnerInfo div:nth-of-type(1) div p {
+    color: #000000;
+    margin: 0px;
+}
+
+.pinterestPostPreview .pinDetails .pinnerInfo div:nth-of-type(1) div p:nth-of-type(1) {
+    cursor: pointer;
+    font-size: .9em;
+    font-weight: 500;
+}
+
+.pinterestPostPreview .pinDetails .pinnerInfo div:nth-of-type(1) div p:nth-of-type(2) {
+    font-size: .8em;
+    font-weight: 400;
+}
+
+
+.pinterestPostPreview .pinDetails .pinnerInfo {
+    display: flex;
+}
+
+.pinterestPostPreview .pinDetails .pinnerInfo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-right: 7px;
+}
+
+.pinterestPostPreview .pinDetails .saveDetails span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.pinterestPostPreview .pinDetails .saveDetails span:hover {
+    background-color: #ececec;
+}
+
+.pinterestPostPreview .pinDetails .comments {
+    color: #000000;
+    font-size: 1.1em;
+    font-weight: 500;
+    margin-left: 15px;
+    margin-top: 25px;
+}
+
+.pinterestPostPreview .pinDetails .comments span {
+    color: #7d7d7d;
+    font-size: .85em;
+    font-weight: 400;
+}
+
+.pinterestPostPreview hr {
+    margin-top: 25px;
+    height: 1px;
+    background-color: #ececec;
+    border: none;
+}
+
+.pinterestPostPreview .bottomSection {
+    display: flex;
+    flex-direction: column;
+}
+
+.pinterestPostPreview .bottomSection div:nth-of-type(1) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+.pinterestPostPreview .bottomSection div:nth-of-type(1) img {
+    width: 22px;
+}
+
+.pinterestPostPreview .bottomSection div:nth-of-type(1) span {
+    background-color: #ececec;
+    width: 20px;
+    height: 20px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.pinterestPostPreview .bottomSection div:nth-of-type(1) p {
+    color: #000000;
+    font-size: 1.2em;
+    font-weight: 500;
+    margin: 0px;
+}
+
+.pinterestPostPreview .bottomSection div:nth-of-type(2) {
+    display: flex;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+
+.pinterestPostPreview .bottomSection div:nth-of-type(2) img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.pinterestPostPreview .bottomSection div:nth-of-type(2) div {
+    background-color: #ececec;
+    width: 100%;
+    border-radius: 50px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 15px;
+    color: #a2a2a2;
+    margin: 0px;
+    cursor: pointer;
+}
+
+.postStatusContainer {
+    width: 78%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 20px;
+}
+
+
+/* #f5f6f7 */
+.postStatusContainer div .titles {
+    width: 96%;
+    height: 50px;
+    background-color: #e7e7e7;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    padding-left: 4%;
+    font-size: 1.3em;
+    font-weight: 500;
+    color: #1c1c57;
+}
+
+.postStatusContainer div .body,
+.postStatusContainer div .revisionBody {
+    width: 90%;
+    padding: 5%;
+    background-color: #f5f6f7;
+    color: #1c1c57;
+    margin-top: 15px;
+    border-radius: 5px;
+}
+
+.postStatusContainer div .body p,
+.archiveSection .body p,
+.postStatusContainer div .revisionBody .postTitle {
+    color: #1c1c57;
+    margin: 0px;
+    line-height: 1.2;
+    font-size: 1.3em;
+    font-weight: 500;
+}
+
+.postStatusContainer div .body div,
+.archiveSection .body div {
+    width: 100%;
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.postStatusContainer div .body div .platform,
+.archiveSection .body div .platform {
+    cursor: pointer;
+    background-color: #a4a4bb;
+    color: white;
+    height: fit-content;
+    padding: 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: fit-content;
+    transition: all .15s;
+}
+
+.postStatusContainer div .body div .platform:hover,
+.archiveSection .body div .platform:hover {
+    background-color: #8888a1;
+}
+
+.postStatusContainer div .body div .platform span {
+    display: inline-flex;
+}
+
+.postStatusContainer div .body div .platform #link,
+.archiveSection .body div .platform #link {
+    color: white;
+    width: 15px;
+    padding-right: 5px;
+    margin-left: 8px;
+}
+
+.postStatusContainer div .body div .platform #smlg,
+.archiveSection .body div .platform #smlg {
+    width: 22px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.postStatusContainer div .body .date,
+.archiveSection .body .date {
+    background-color: #999999;
+    color: white;
+    padding: 4px;
+    border-radius: 4px;
+    font-size: .9em;
+}
+
+.postStatusContainer div #feedback-box {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 5px;
+    font-family: 'IBM Plex Sans';
+    padding: 5%;
+    margin-top: 20px;
+}
+
+.postStatusContainer div #feedback-box div {
+    width: 100%;
+    line-height: 1.4;
+    margin-bottom: 14px;
+    margin-top: 0px;
+}
+
+.postStatusContainer div #feedback-box button {
+    width: 100%;
+    font-family: 'Ubuntu';
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: white;
+    background-color: rgb(20,101,224);
+    transition: all .1s;
+}
+
+.postStatusContainer div #feedback-box button:hover {
+    background-color: #36366e;
+}
+
+.archiveSection {
+    width: 70%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 30px; 
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.archiveSection .body {
+    width: 90%;
+    background-color: #f5f6f7;
+    border-radius: 5px;
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.rightSectionZenContainer {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rightSectionZenContainer img {
+    width: 25%;
+}
+
+.smAccountsContainer {
+    width: 69%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+    gap: 30px; 
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.smAccountsContainer .linkedAccounts {
+    width: 90%;
+    height: fit-content;
+    background-color: #f5f6f7;
+    border-radius: 5px;
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.smAccountsContainer .linkedAccounts button,
+.paymentContainer button {
+    border: none;
+    cursor: pointer;
+    margin-top: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 1em;
+    font-family: 'Ubuntu';
+    color: white;
+    border-radius: 5px;
+    background-color:#125bd2;
+    transition: all .2s;
+}
+
+.smAccountsContainer .linkedAccounts button:hover,
+.paymentContainer button:hover {
+    background-color:#12123b;
+}
+
+.smAccountsContainer .linkedAccounts .account {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.smAccountsContainer .linkedAccounts .account #sm {
+    display: flex;
+    align-items: center;
+    font-size: 1.3em;
+    color: #1c1c57;
+}
+
+.smAccountsContainer .linkedAccounts .account #check {
+    width: 25px;
+}
+
+.smAccountsContainer .linkedAccounts .account #smlg {
+    width: 35px;
+    margin-right: 8px;
+    border-radius: 50%;
+}
+
+.smAccountsContainer .linkedAccountsWrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.smAccountsContainer .linkedAccountsWrapper .refreshWarning {
+    background-color: #f5f6f7;
+    color: #1c1c57;
+    display: flex;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: .9em;
+    font-family: 'IBM Plex Sans';
+}
+
+.smAccountsContainer .linkedAccountsWrapper .refreshWarning img {
+    width: 25px;
+    margin-right: 10px;
+}
+
+.accountSettingsContainer {
+    width: 76%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 20px;
+    color: #1c1c57;
+}
+
+.accountSettingsContainer .accountSetting {
+    background-color: #f5f6f7;
+    flex: 0 0 calc(33.333% - 15px); 
+    height: fit-content;
+    border-radius: 5px;
+}
+
+.accountSettingsContainer .accountSetting .head {
+    background-color: #e7e7e7;
+    padding: 12px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    font-size: 1.25em;
+}
+
+.accountSettingsContainer .accountSetting .body {
+    padding: 12px;
+}
+
+.accountSettingsContainer .accountSetting .body div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 11px;
+}
+
+.accountSettingsContainer .accountSetting .body .titles {
+    margin-bottom: 8px;
+}
+
+.accountSettingsContainer .accountSetting .body .old,
+.accountSettingsContainer .accountSetting .body input {
+    background-color: white;
+    padding: 6px 8px 6px 8px;
+    font-family: 'IBM Plex Sans';
+    font-size: medium;
+    border: none;
+    color: #1c1c57;
+    outline: 1px solid hsl(0, 0%, 80%);
+    border-radius: 4px;
+    transition: all .1s;
+}
+
+.accountSettingsContainer .accountSetting .body input:focus {
+    outline: 1.5px solid #1c1c57;
+    box-shadow: 0px 0px 1.5px 1px #1c1c57;
+}
+
+.accountSettingsContainer .accountSetting .body button {
+    cursor: pointer;
+    margin-top: 6px;
+    width: 100%;
+    padding: 6px 0px 6px 0px;
+    font-family: 'Ubuntu';
+    font-size: 1em;
+    border: none;
+    background-color: #125bd2;
+    color: white;
+    border-radius: 4px;
+    transition: all .2s;
+}
+
+.accountSettingsContainer .accountSetting .body button:hover {
+    background-color: #1c1c57;   
+}
+
+.responsive-video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    border-radius: 7px;
+    box-shadow: 0px 0px 3px 2px #e7e7e7;
+}
+
+.responsive-image {
+    border-radius: 7px;
+    box-shadow: 0px 0px 3px 2px #e7e7e7;
+    width: 100%;
+    height: auto;
+    margin-bottom: 8px;
+    display: block; /* removes any default margins or padding */
+}
+
+.image-credit {
+    font-style: italic;
+    font-size: .95em;
+}
+
+.image-credit a {
+    color: #1465e7;
+    cursor: pointer;
+}
+
+.responsive-video-wrapper iframe,
+.responsive-video-wrapper video  {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.blog-parent-section,
+.pricing-parent-section,
+.Er404-parent-section,
+.footerSectionsWrapper,
+.onboarding-parent-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.blog-parent-section:not(h1):not(h2):not(h3):not(h4):not(h5) {
+    font-family: 'IBM Plex Sans';
+}
+
+.blog-parent-section h1, 
+.blog-parent-section h2, 
+.blog-parent-section h3, 
+.blog-parent-section h4, 
+.blog-parent-section h5 {
+    font-family: 'Ubuntu';
+}
+
+.blog-parent-section .post-infos-container {
+    width: 93%;
+    padding: 20px;
+    color: #1c1c57;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 50px; 
+    margin-top: 20px;
+}
+
+.blog-parent-section .post-infos-container .post-info-container {
+    height: fit-content;
+}
+
+.post-infos-container .post-info-container .author img,
+.post-container .author img {
+    width: 36px;
+    border-radius: 50%;
+    margin-right: 7px;
+}
+
+.post-infos-container .post-info-container .category a,
+.post-container .category a {
+    font-weight: 600;
+    font-size: .9em;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.post-infos-container .post-info-container .category a:hover,
+.post-infos-container .post-info-container h2 a:hover,
+.post-container .category a:hover,
+.post-container #table-of-contents div span:hover {
+    color: #1465e7;
+}
+
+.post-container .blog-main-content a:not(.image-credit a):hover {
+    border-bottom: 1.5px solid #1465e7;
+}
+
+.post-infos-container .post-info-container h2 {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.post-infos-container .post-info-container h2 a {
+    height: fit-content;
+    font-size: 1.12em;
+    cursor: pointer;
+    color: #1c1c57;
+    transition: all .2s;
+    margin: 0px;
+}
+
+.post-infos-container .post-info-container .excerpt {
+    line-height: 1.5;
+    margin-bottom: 18px;
+    display: inline-block;
+}
+
+.post-info-container .post-meta-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: .9em;
+}
+
+.post-info-container .post-meta-info .author,
+.post-container .author {
+    display: flex;
+    width: fit-content;
+    align-items: center;
+}
+
+.post-info-container .featured-image img {
+    cursor: pointer;
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px 1px #e7e7e7;
+    margin-bottom: 5px;
+}
+
+.post-container {
+    color: #1c1c57;
+    width: 93%;
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.post-container .blog-main {
+    width: 50%;
+}
+
+.post-container .blog-main .blog-main-meta {
+    margin-bottom: 30px;
+    background-color:#f5f6f7;
+    border-radius: 6px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.post-container .blog-main .blog-main-meta h1 {
+    font-size: 3em;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.post-container .blog-main-meta .date-reading-time {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.post-container #table-of-contents {
+    position: -webkit-sticky; 
+    position: sticky;
+    top: 50px; 
+    width: 20%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+ 
+.post-container .social-sharing {
+    position: -webkit-sticky; 
+    position: sticky;
+    top: 50px; 
+    width: 20%;
+    height: fit-content;
+}
+
+.post-container .social-sharing h4,
+.post-container #table-of-contents h4 {
+    margin-top: 0px;
+    margin-bottom: 12px;
+}
+
+.post-container .social-sharing div {
+    width: fit-content;
+    display: flex;
+    justify-content: space-between;
+}
+
+.post-container .social-sharing div button:not(.post-container .social-sharing div button:last-of-type) {
+    margin-right: 15px;
+}
+
+.post-container #table-of-contents div {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-container #table-of-contents div span {
+    width: fit-content;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.post-container hr {
+    border: none;
+    background-color: #efefef;
+    width: 100%;
+    border-radius: 10px;
+    height: 2px;
+}
+
+
+/* styles.css or your CSS module */
+.slide-menu .mobile-menu {
+    position: fixed;
+    top: 0;
+    left: -300px;  /* start off the screen */
+    width: 300px;
+    background: #f5f6f7;
+    transition: left 0.8s;  /* animate the left property */
+}
+  
+.slide-menu .mobile-menu.open {
+    left: 0;  /* slide into the screen */
+}
+  
+.slide-menu button {
+    position: relative;
+    z-index: 1000;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    font-size: 2rem;
+    transition: transform 0.5s;
+}
+
+.slide-menu button.burger {
+    margin: 0px;
+    padding: 0px;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.slide-menu button.close {
+    background: transparent;
+    transform: rotate(90deg); /* This creates the rotation effect */
+}
+
+.slide-menu .overlay {
+    position:fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* semi-transparent black */
+    z-index: 100; /* ensure it's below the menu and button */
+}
+  
+@media screen and (max-width: 750px) {
+
+    #header {
+        width: 87%;
+    }
+
+    .planTypeContainer > div,
+    .planTypeContainer #social-reqs {
+        width: 300px;
+    }
+
+    .howToSection .steps {
+        width: 100%;
+        margin-left: 0px;
+    }
+
+    .pricingTablesContainer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .pricingTablesContainer .table2 {
+        margin-left: 0px;
+        margin-top: 100px;
+    }
+
+}
+
+@media screen and (max-width: 1215px) {
+
+    #header .mobile-menu.open {
+        display: flex;
+        width: fit-content;
+        height: 100%;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 50px;
+        z-index: 100;
+    }
+
+    #header div p {
+        width: fit-content;
+        margin: 0px;
+        margin-bottom: 30px;
+    }
+
+    .rightSectionZenContainer img {
+        width: 40%;
+    }
+
+    .postStatusContainer {
+        width: 100%;
+        margin-left: 0px;
+    }
+
+    .archiveSection {
+        width: 100%;
+        margin: 0px;
+    }
+
+    .smAccountsContainer {
+        width: 100%;
+        margin: 0px;
+    }
+
+    .accountSettingsContainer  {
+        width: 100%;
+    }
+
+
+}
+
+#pricingModal {
+    color: #1c1c57;
+    line-height: 1.5;
+}
+
+#pricingModal h3 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+#pricingModal ul {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#pricingModal ul li {
+    line-height: 1.5;
+}
+
+.pricing-slide-left {
+    transform: translateX(-100%); 
+    transition: transform 0.5s ease-out; 
+}
+
+.landin-last-section {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.landin-last-section h1 {
+    color: #1c1c57;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.landin-last-section button {
+    all: unset;
+    width: 300px;
+    text-align: center;
+    padding: 13px;
+    border-radius: 10px;
+    color: white;
+    background-color: #1465e7;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    cursor: pointer;
+    font-family: 'Ubuntu';
+    font-weight: 500;
+    font-size: 22pt;
+    margin-left: 15px;
+    margin-top: 15px;
+    margin-bottom: 70px;
+    transition: all .25s;
+}
+
+.landin-last-section button:hover {
+    margin-top: 11px;
+    margin-bottom: 74px;
+    background-color: #1c1c57;
+}
+
+.Er404-parent-section .Error-container {
+    width: 80%;
+    font-family: 'Ubuntu';
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #12123b;
+    margin-top: 50px;
+}
+
+.Er404-parent-section .Error-container img {
+    width: 320px;
+    margin-bottom: 30px;
+}
+
+.paymentContainer {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    justify-content: baseline;
+    align-items: baseline;
+}
+
+.paymentContainer div {
+    display: flex;
+}
+
+.paymentContainer p {
+    margin: 0px;
+    background-color: #f5f6f7;
+    color: #12123b;
+    padding: 15px;
+    border-radius: 5px;
+    font-family: 'IBM Plex Sans';
+}
+
+.paymentContainer div {
+    width: 300px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.paymentContainer button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
+}
+
+.paymentContainer img {
+    width: 18px;
+    margin-left: 20px;
+}
+
+@media screen and (max-width: 400px) {
+
+    .landin-last-section button {
+        width: 90%;
+    }
+
+    .pricingParent .pricingTitle h1 {
+        width: 90%;
+    }
+
+    .pricingParent .pricingTitle p {
+        width: 85%;
+    }
+
+}
+
+@media screen and (max-width: 395px) {
+
+    #featuresContainer {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    #featuresContainer p {
+        width: 100%;
+    }
+
+    .howToSection button {
+        width: 80%;
+    }
+
+    #header {
+        width: 85%;
+    }
+
+    .loginForm {
+        width: 80%;
+    }
+
+}
+
+@media screen and (max-width: 865px) {
+
+    .accordion {
+        margin-top: 0px;
+    }
+
+    #footer {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-left: 35px;
+        padding-right: 35px;
+    }
+
+    #footer div {
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+        height: 150px;
+    }
+
+    #footer div p {
+        margin: 0px;
+    }
+
+    .pricingParent .pricingTitle p {
+        width: 80%;
+    }
+
+}
+
+#mobile-sub-menu-wrapper {
+    margin-bottom: 40px;
+}
+
+#mobile-sub-menu-wrapper #mobile-sub-menu {
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 30px;
+    margin-left: 20px;
+    color: #73739a;
+    font-size: 1.2em;
+}
+
+#mobile-sub-menu-wrapper #mobile-sub-menu a:not(.sign-out) {
+    width: fit-content;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+#mobile-sub-menu-wrapper #mobile-sub-menu .sign-out {
+    color: red;
+    transition: all .2s;
+}
+
+#mobile-sub-menu-wrapper #mobile-sub-menu .sign-out:hover {
+    color: rgb(209, 0, 0);
+}
+
+#mobile-sub-menu-wrapper #mobile-sub-menu a:hover {
+    color: rgb(72, 72, 118);
+}
+
+#mobile-sub-menu-wrapper p {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0px;
+    font-size: 1.7em;
+}
+
+#mobile-sub-menu-wrapper p span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: auto;
+    margin-left: 20px;
+}
+
+@media screen and (max-width: 1215px) and (min-width: 620px) {
+    
+    .resultsSection {
+        width: 93%;
+    }
+
+    .resultsSection .homeContainer .rightSectionHome {
+        width: 52%;
+    }
+
+    .resultsSection .homeContainer .farRightSectionHome {
+        width: 45%;
+    }
+
+    .rightSectionAnalytics {
+        width: 100%;
+    }
+
+    .rightSectionAnalytics .postSelectorContainer {
+        width: 100%;
+    }
+
+}
+
+@media screen and (max-width: 620px) {
+
+    .resultsSection .homeContainer {
+        flex-direction: column;
+    }
+
+    .resultsSection {
+        width: 93%;
+    }
+
+    .resultsSection .homeContainer .rightSectionHome {
+        width: 100%;
+    }
+
+    .resultsSection .homeContainer .farRightSectionHome {
+        width: 100%;
+        margin-bottom: 40px;
+    }
+
+    .rightSectionAnalytics {
+        width: 100%;
+    }
+
+    .rightSectionAnalytics .analyticsContainer .analyticsContainer1 {
+        flex-direction: column;
+    }
+
+    .statsSummary {
+        width: 93%;
+        margin-bottom: 20px;
+    }
+
+    .stackedBarChart, 
+    .multiLineChart,
+    .groupedBarChart {
+        width: 93%;
+    }
+
+}
+
+@media (max-width: 726px) {
+    .grid-container {
+        grid-template-columns: 1fr;  /* Single column layout for constrained width */
+    }
+    .grid-container > div:first-child {
+        grid-column: span 1;  /* Override the span of the first box to 1 column when viewport width is limited */
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .postStatusContainer div:nth-last-of-type(1),
+    .postStatusContainer div:nth-last-of-type(2) {
+        margin-bottom: 20px;
+    }
+}
+
+.applicationSentMessageContainer {
+    width: 100%;
+    height: fit-content;
+    margin-top: 80px;
+    margin-bottom: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;   
+}
+
+
+.applicationSentMessageContainer div {
+    display: flex;
+    background-color: white;
+    color: #1c1c57;
+    width: 350px;
+    height: fit-content;
+    padding: 20px;
+    box-shadow: 0px 0px 3px 1px #e7e7e7;
+    border-radius: 10px;
+    align-items: center;
+    flex-direction: column;
+    font-size: 1.1em;
+    line-height: 1.5;
+    font-family: 'IBM Plex Sans';
+}
+
+.applicationSentMessageContainer div img {
+    width: 50px;
+    margin-bottom: 20px;
+}
+
+.applicationSentMessageContainer div p {
+    margin: 0px;
+}
+
+.onboarding-container {
+    width: 93%;
+    height: 100vh;
+    margin-top: 35px;
+}
+
+.onboarding-container .payment-container {
+    width: fit-content;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Ubuntu';
+}
+
+.onboarding-container .payment-container h1 {
+    color: #12123b;
+}
+
+.onboarding-container .payment-container button {
+    margin-top: 20px;
+    margin-left: 35px;
+    font-size: 1.8em;
+}
+
+.onboarding-container .payment-container button:hover {
+    background-color: #12123b;
+}
+
+.onboarding-container .payment-container button img {
+    height: 20px;
 }

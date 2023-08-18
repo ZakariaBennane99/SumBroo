@@ -149,28 +149,31 @@ const SignIn = () => {
           <div className='login-container'>
             {!clickedOnForgot ?
                 <form className='loginForm'>
-                    <h1 id='loginUpTxt'>Log In</h1>
-                    <h4 style={{ color: 'red' }}>{leftErrors}</h4>
+                    <h1 id='loginUpTxt'>Sign In</h1>
+                    {
+                      leftErrors ? 
+                      <h4 style={{ color: 'red' }}>{leftErrors}</h4> : ''
+                    }
                     <div className='email-cont'>
                       <label htmlFor="email">Email</label>
                       <div>
                         {validationErrors.email ? <p style={{ fontSize: '12px', marginBottom: '10px', color: 'red' }}>Please enter a valid email</p> : "" }
-                        <input type="email" id="email" onChange={handleChange} style={{ outline: validationErrors.email ? '2px solid red' : '' }}/>
+                        <input placeholder="Enter your email" type="email" id="email" onChange={handleChange} style={{ outline: validationErrors.email ? '2px solid red' : '' }}/>
                       </div>
                     </div>
                     <div className='pass-cont'>
                       <label htmlFor="password">Password</label>
                       {formValues.password.length > 0 ?
-                         <FontAwesomeIcon icon={showEye ? faEyeSlash : faEye} style={{ position: 'absolute', zIndex:'100', width: showEye ? '17px' : '16px', right: showEye ? '9' : '9', top: '4' , cursor: 'pointer', color: 'black' }} onClick={handleShowEye}/>
+                         <FontAwesomeIcon icon={showEye ? faEye : faEyeSlash } style={{ position: 'absolute', zIndex:'100', width: '15px', right: '0px', top: '4px' , cursor: 'pointer', color: '#1c1c57' }} onClick={handleShowEye}/>
                       : ""}
                       <div>
                         {validationErrors.password ? <p style={{ fontSize: '12px', marginBottom: '10px', color: 'red' }}>Password required</p> : "" }
-                        <input type={showEye ? "text" : "password"} id="password" value={formValues.password} onChange={handleChange} style={{ outline: validationErrors.password ? '2px solid red' : '', position:'relative' }}/>
+                        <input placeholder="Enter your password" type={showEye ? "text" : "password"} id="password" value={formValues.password} onChange={handleChange} style={{ outline: validationErrors.password ? '2px solid red' : '', position:'relative' }}/>
                       </div>
                     </div>
                     <div style={{ width: '100%', position: 'relative' }}>
-                      <button type='button' onMouseOver={handleHover} onMouseOut={handleHover} onClick={loginUser} style={{ paddingRight: hovered ? "70px" : "" }}>Log In</button>
-                      <FontAwesomeIcon icon={faArrowRight} style={{ position: 'absolute', fontSize:'20px', right: hovered ? '30' : '-20', transition: '0.5s', bottom:'8' , color: 'white' }}/>
+                      <button type='button' onMouseOver={handleHover} onMouseOut={handleHover} onClick={loginUser} style={{ paddingRight: hovered ? "70px" : "" }}>Sign In</button>
+                      <FontAwesomeIcon icon={faArrowRight} style={{ position: 'absolute', fontSize:'20px', right: hovered ? '30' : '-30', transition: '0.5s', bottom:'10' , color: 'white' }}/>
                     </div>
                     <p onClick={handleChangePass} className='forgot-pass'>Forgot Password?</p>
                 </form> :
