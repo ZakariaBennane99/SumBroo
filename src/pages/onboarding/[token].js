@@ -14,16 +14,13 @@ import { connectUserDB, userDbConnection } from '../../../utils/connectUserDB'
 // This can be in a separate file for reusability across pages
 
 
-const Onboarding = ({ userId, token, onboardingStep }) => {
+const Onboarding = ({ userId, status }) => {
 
   const router = useRouter();
 
-  const onboardingStepUpd = onboardingStep || null;
-  const tokenUpd = token || null;
-
   // if onboarding step is 2, take the user to the last step which is 
   // to link the accounts in the settings
-  if (onboardingStepUpd && onboardingStepUpd === 2) {
+  if (status !== 'password' || status !== 'payment') {
     router.push('/sign-in');
     return null; // Return null to prevent rendering the component
   }
@@ -90,11 +87,21 @@ const Onboarding = ({ userId, token, onboardingStep }) => {
       <div className='onboarding-container'>
 
         {
-          !onboardingStepUpd && tokenUpd ? 
+          status === 'password' ? 
             <div className='password-container'>
               <h1>Step 1: Set Up a Password</h1>
+              <div>
+                <div>
+                  <label>Password</label>
+                  <input />
+                </div>
+                <div>
+                  <label>Confirm Password</label>
+                  <input />
+                </div>
+              </div>
             </div>
-          : onboardingStep === 1 ?
+          : status === 'payment' ?
             <div className='payment-container'>
               <h1>Step 2: Let's Take Care of the Payment</h1>
               <div style={{ width: '100%', position: 'relative' }}>
@@ -139,88 +146,51 @@ export default Onboarding;
 
 
 export async function getServerSideProps(context) {
+  console.log('runnign')
 
-  if ("step" in context.query && "userId" in context.query) {
+  try {
 
-    // connect the DB
-    await connectUserDB();
-    const { userId } = context.query
-    const sanitizedUserId = mongoSanitize.sanitize(userId);
-    let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
-    if (!user) throw new Error('User not found');
+    const token = context.query.token;
 
-    const onboardingStep = user.onboardingStep;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    if (onboardingStep === 0) {
-      throw new Error('User not found');
-    } else {
+    console.log((decoded.action !== 'onboarding' && decoded.action === 'payment') || 
+    ((decoded.action === 'onboarding' && decoded.action !== 'payment')))
+    if (decoded.action !== 'onboarding') {
+      throw new Error('Invalid action');
+    }
+    console.log('first')
+    const userId = decoded.userId
+    await connectUserDB()
+    if (decoded.action === 'onboarding') { 
+      // assuming onboardingStep is 0
+      console.log('second')
+      const sanitizedUserId = mongoSanitize.sanitize(userId);
+      let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
+      if (!user || user.onboardingStep !== 0) throw new Error('User not found');
       return {
         props: {
-          userId, onboardingStep
+          userId, status: 'password'
+        }
+      }; 
+    }
+
+    if (decoded.action === 'payment') {
+      console.log('third')
+      const sanitizedUserId = mongoSanitize.sanitize(userId);
+      let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
+      if (!user || user.onboardingStep !== 1) throw new Error('User not found');
+      return {
+        props: {
+          userId, status: 'payment'
         }
       };
     }
 
-  } else {
-
-    try {
-
-      const token = context.query.token;
-
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  
-      if (decoded.action !== 'onboarding' || decoded.action !== 'payment') {
-        throw new Error('Invalid action');
-      }
-
-
-      await connectUserDB()
-      if (decoded.action === 'onboarding') { 
-        // assuming onboardingStep is 0
-        const sanitizedUserId = mongoSanitize.sanitize(decoded.userId);
-        let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
-        if (!user) throw new Error('User not found');
-
-        return {
-          props: {
-            userId
-          }
-        };
-
-      }
-  
-      if (decoded.action === 'payment') {
-
-      }
-
-      const userId = decoded.userId
-
-      
-
-      console.log(userId === sanitizedUserId)
-
-
-      const onboardingStep = user.onboardingStep;
-      if (onboardingStep !== 0) {
-        return {
-          props: {
-            userId, onboardingStep
-          }
-        };
-      } else {
-        return {
-          props: {
-            userId, token
-          }
-        };
-      }
-  
-    } catch (error) {
-      return {
-        notFound: true
-      };
-    }
-
+  } catch (error) {
+    return {
+      notFound: true
+    };
   }
 
 }
