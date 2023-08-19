@@ -14,39 +14,47 @@ const SignIn = () => {
 
     const router = useRouter();
 
+    // password change
+    const [isPasswordChanged, setIsPasswordChanged] = useState(false)
+    const [passwordChangeErrors, setPasswordChangeErrors] = useState(null)
+    const [changePassOTP, setChangePassOTP] = useState(false)
+    const [passwordChange, setPsswordChange] = useState({
+      pass: ''
+    })
+
+    // handling OTP
+    const [OTPErrors, setOTPErrors] = useState(false)
+    const [OTPCorrect, setOTPCorrect] = useState(false)
+    const [OTP, setOTP] = useState({
+      otp: 0
+    })
+
+    // Email for password change
     const [sendPassChangeClicked, setPassChangeClicked] = useState(false)
-
     const [isEmailSentForPassChange, setIsEmailSentForPassChange] = useState(false)
-
-    const [isClicked, setIsClicked] = useState(false)
-
-    const [isServerError, setIsServerError] = useState(false)
-
-    const [showEye, setShowEye] = useState(false)
-
-    const [hovered, setHovered] = useState(false)
-
+    const [changePassErrors, setChangePassErrors] = useState(null)
     const [passChangeEmail, setPassChangeEmail] = useState({
       email: ""
     })
 
-    const [changePassErrors, setChangePassErrors] = useState(null)
-
+    // The sign in page
+    const [isClicked, setIsClicked] = useState(false)
+    const [showEye, setShowEye] = useState(false)
+    const [hovered, setHovered] = useState(false)
     const [clickedOnForgot, setClickedOnForgot] = useState(false)
-
-    const [formValues, setFormValues] = useState({
-      email: '',
-      password: ''
-    })
-
     const [leftErrors, setleftErrors] = useState(null)
-
-    const [passChangeErr, setPassChangeErr] = useState(false)
-
     const [validationErrors, setValidationErrors] = useState({
       email: false,
       password: false
     })
+    const [formValues, setFormValues] = useState({
+      email: '',
+      password: ''
+    })
+    
+    // Used by all 3 in case of server error
+    const [isServerError, setIsServerError] = useState(false)
+
 
     function handleShowEye () {
       return setShowEye(!showEye)
@@ -64,29 +72,32 @@ const SignIn = () => {
 
       setPassChangeClicked(true)
 
-      const changePassUrl = 'http://localhost:4050/api/change-password'
+      const changePassUrl = 'http://localhost:4050/api/initiate-password-change'
 
       try {
         const resp = await axios.post(changePassUrl, passChangeEmail)
-        if (resp.status === 201) {
+        if (resp.status === 200) {
           console.log(resp)
+          setIsEmailSentForPassChange(true)
         }
       } catch (err) {
         // if not a server error
         if (err.response.status === 400) {
           setChangePassErrors('Please include a valid email.')
+          setIsServerError(false)
         } else if (err.response.status === 401) {
           setChangePassErrors('Invalid email.')
+          setIsServerError(false)
         } else {
           // server error
-          setPassChangeErr(true)
+          setIsServerError(true)
         }
       }
 
     }
 
     function handleEmailPassChange(e) {
-      setChangePassErrors("")
+      setChangePassErrors(false)
       return setPassChangeEmail({ email: e.target.value })
     }
 
@@ -144,8 +155,61 @@ const SignIn = () => {
 
     async function handleOTP() {
       
+      const otpCHECKURL = 'http://localhost:4050/api/check-password-otp'
+
+      try {
+        const res = await axios.post(otpCHECKURL, OTP)
+        console.log(res)
+        if (res.status === 201) {
+          setOTPCorrect(true)
+        }
+        // send the user to the dashboard
+      } catch (error) {
+        // client error 400 or 401
+        if (error.response.status === 400) {
+          setOTPErrors('Invalid OTP')
+        } else if (error.response.status === 401) {
+          console.log(error)
+          // here set up the leftErrors
+          setOTPErrors('Invalid credentials!')
+          setIsServerError(false)
+        } else {
+          setIsServerError(true)
+        }
+        
+      }
     }
 
+    async function changePassword() {
+      // when you change the passowrd
+      // setIsPasswordChanged(true)
+
+      const changePasswordEnpoint = 'http://localhost:4050/api/change-password'
+
+      try {
+        const res = await axios.post(changePasswordEnpoint, passwordChange)
+        console.log(res)
+        if (res.status === 201) {
+          setOTPCorrect(true)
+        }
+        // send the user to the dashboard
+      } catch (error) {
+        // client error 400 or 401
+        if (error.response.status === 400) {
+          console.log('400', error)
+          //setPasswordChangeErrors(error.map(er => er.msg))
+          setIsServerError(false)
+        } else if (error.response.status === 401) {
+          console.log('401', error)
+          // here set up the leftErrors
+          setChangePassOTP('Expired OTP')
+          setIsServerError(false)
+        } else {
+          setIsServerError(true)
+        }
+        
+      }
+    }
 
 
     const customStyles = {
@@ -174,44 +238,93 @@ const SignIn = () => {
                     <div className='email-cont'>
                       <label htmlFor="email">Email</label>
                       <div>
-                        {validationErrors.email ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>Please enter a valid email.</p> : "" }
-                        <input placeholder="Enter your email" type="email" id="email" onChange={handleChange} style={{ outline: validationErrors.email ? '2px solid red' : '' }}/>
+                        {validationErrors.email ? <p 
+                        style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>Please enter a valid email.</p> : "" }
+                        <input placeholder="Enter your email" type="email" id="email" 
+                          onChange={handleChange} 
+                          style={{ outline: validationErrors.email ? '2px solid red' : '' }}/>
                       </div>
                     </div>
                     <div className='pass-cont'>
                       <label htmlFor="password">Password</label>
                       {formValues.password.length > 0 ?
-                         <FontAwesomeIcon icon={showEye ? faEye : faEyeSlash } style={{ position: 'absolute', zIndex:'100', width: '15px', right: '6px', top: '6px' , cursor: 'pointer', color: '#1c1c57' }} onClick={handleShowEye}/>
+                        <FontAwesomeIcon icon={showEye ? faEye : faEyeSlash } 
+                          style={{ position: 'absolute', zIndex:'100', width: '15px', right: '6px', top: '6px' , cursor: 'pointer', color: '#1c1c57' }} 
+                          onClick={handleShowEye}/>
                       : ""}
                       <div>
-                        {validationErrors.password ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>Password required.</p> : "" }
-                        <input placeholder="Enter your password" type={showEye ? "text" : "password"} id="password" value={formValues.password} onChange={handleChange} style={{ outline: validationErrors.password ? '2px solid red' : '', position:'relative' }}/>
+                        {validationErrors.password ? <p 
+                        style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>Password required.</p> : "" }
+                        <input placeholder="Enter your password" 
+                          type={showEye ? "text" : "password"} id="password" value={formValues.password} 
+                          onChange={handleChange} 
+                          style={{ outline: validationErrors.password ? '2px solid red' : '', position:'relative' }}/>
                       </div>
                     </div>
                     <div style={{ width: '100%', position: 'relative' }}>
-                      <button type='button' onMouseOver={handleHover} onMouseOut={handleHover} onClick={loginUser} style={{ paddingRight: hovered ? "70px" : "" }} disabled={isClicked}>Sign In</button>
-                      <FontAwesomeIcon icon={faArrowRight} style={{ position: 'absolute', fontSize:'20px', right: hovered ? '30' : '-30', transition: '0.5s', bottom:'10' , color: 'white' }}/>
+                      <button type='button' 
+                        onMouseOver={handleHover}
+                        onMouseOut={handleHover}
+                        onClick={loginUser}
+                        style={{ paddingRight: hovered ? "70px" : "" }} disabled={isClicked}>Sign In</button>
+                      <FontAwesomeIcon icon={faArrowRight} 
+                      style={{ position: 'absolute', fontSize:'20px', right: hovered ? '30' : '-30', transition: '0.5s', bottom:'10' , color: 'white' }}/>
                     </div>
                     <p onClick={handleChangePass} className='forgot-pass'>Forgot Password?</p>
                 </form> :
                 <div className='forgot-pass-container'>
-                    {isEmailSentForPassChange ?
-                    <div>
-                      <label htmlFor="passOTP">Enter OTP sent to your inbox</label>
-                      <input type="text" id="passOTP" placeholder="Enter OTP" onClick={handleOTP} />
-                    </div> :
+                    { isEmailSentForPassChange ? (OTPCorrect ?
+                      <div className='pass-cont'>
+                        <label htmlFor="password">Password</label>
+                        {formValues.password.length > 0 ?
+                           <FontAwesomeIcon 
+                            icon={showEye ? faEye : faEyeSlash }
+                            style={{ position: 'absolute', zIndex:'100', width: '15px', right: '6px', top: '6px' , cursor: 'pointer', color: '#1c1c57' }}
+                            onClick={handleShowEye}/>
+                        : ""}
+                        <div>
+                          {validationErrors.password ? <p 
+                          style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>Password required.</p> : "" }
+                          <input placeholder="Enter a new password" 
+                            type={showEye ? "text" : "password"} 
+                            id="password" 
+                            value={passwordChange.pass} 
+                            onChange={(e) => setPsswordChange({ ['pass']: e.target.value })}
+                            style={{ outline: validationErrors.password ? '2px solid red' : '', position:'relative' }}/>
+                        </div>
+                      </div> :
+                      ( isPasswordChanged ? 
+                        <div>
+                          Your password has been changed. You can log in now.
+                        </div>
+                      :
+                        <>
+                          <div>
+                            { OTPErrors ? <p className='pass-error'>{OTPErrors}</p> : "" }
+                            <label htmlFor="passOTP">Enter OTP sent to your inbox</label>
+                            <input type="number" id="passOTP" 
+                              placeholder="Enter OTP"
+                              value={OTP.otp}
+                              onClick={handleOTP}
+                              onChange={(e) => setOTP({ ['otp']: e.target.value })} />
+                          </div>
+                          <button>Send</button>
+                        </>
+                      ) ) :
                     <>
                         <div>
-                            <label htmlFor="email">Email</label>
                             { changePassErrors ? <p className='pass-error'>{changePassErrors}</p> : "" }
-                            <input type="email" id="email" onInput={handleEmailPassChange} value={passChangeEmail.email} placeholder="Enter your email"/>
+                            <label htmlFor="email">Email</label>
+                            <input type="email" id="email"
+                              onInput={handleEmailPassChange}
+                              value={passChangeEmail.email} placeholder="Enter your email"/>
                         </div>
                         <button onClick={handleSendForgot} disabled={sendPassChangeClicked}>Send</button>
                     </>}
                 </div>}
           </div>
           <Modal
-            isOpen={isServerError || passChangeErr}
+            isOpen={isServerError}
             style={customStyles}
             contentLabel="Example Modal"
               >
