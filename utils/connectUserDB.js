@@ -1,10 +1,12 @@
 import mongoose from 'mongoose';
-import UserModel from './User'
+import UserModel from './User';
+import AvAcModel from './AvailableAccounts';
 
 let userDbConnection = null;
 let userConnectionEstablishedPromise = null;
 
-let User; // Declare User outside the function to use it elsewhere
+let User; 
+let AvAc; // Declare AvAc outside the function to use it elsewhere
 
 const connectUserDB = () => {
     if (!userConnectionEstablishedPromise) {
@@ -22,6 +24,13 @@ const connectUserDB = () => {
                         User = userDbConnection.model('User', UserModel.schema);
                     } else {
                         User = userDbConnection.models.User;
+                    }
+
+                    // Associate the existing AvAcSchema with this connection
+                    if (!userDbConnection.models.avac) {
+                        AvAc = userDbConnection.model('avac', AvAcModel.schema);
+                    } else {
+                        AvAc = userDbConnection.models.avac;
                     }
 
                     resolve(userDbConnection);

@@ -16,7 +16,8 @@ import { connectUserDB, userDbConnection } from '../../../utils/connectUserDB'
 
 const Onboarding = ({ userId, status }) => {
 
-  const router = useRouter();
+  const [action, setAction] = useState(status)
+  const [tk, setTk] = useState('')
 
   const [pass, setPass] = useState('')
   const [confirPass, setConfirmPass] = useState('')
@@ -24,10 +25,6 @@ const Onboarding = ({ userId, status }) => {
 
   // if onboarding step is 2, take the user to the last step which is 
   // to link the accounts in the settings
-  if (!['password', 'payment'].includes(status)) {
-    router.push('/sign-in');
-    return null; // Return null to prevent rendering the component
-  }
 
   const [isError, setIsError] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -41,7 +38,7 @@ const Onboarding = ({ userId, status }) => {
           headers: {
               'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ userId, token })
+          body: JSON.stringify({ userId, tk })
       });
 
       const data = await response.json();
@@ -52,6 +49,7 @@ const Onboarding = ({ userId, status }) => {
         window.location.href = data.url;
       } else {
         // handle error: maybe show a message to the user
+        console.log(data)
         setIsError(true)
       }
     } catch (error) {
@@ -79,8 +77,10 @@ const Onboarding = ({ userId, status }) => {
       if (data.errors) {
         setPassErrors(data.errors.map(er => er.msg))
         setIsLoading(false)
-      } else {
-        console.log(data)
+      } else if (data.success) {
+        setIsLoading(false)
+        setTk(data.token)
+        setAction('payment')
       }
 
     } catch (error) {
@@ -116,7 +116,7 @@ const Onboarding = ({ userId, status }) => {
       <div className='onboarding-container'>
 
         {
-          status === 'password' ? 
+          action === 'password' ? 
             <div className='password-container'>
               <h1>Step 1: Set Up a Password</h1>
               <div className='pass-holder'>
@@ -135,10 +135,10 @@ const Onboarding = ({ userId, status }) => {
                   onChange={(e) => { setPassErrors(null); setConfirmPass(e.target.value) }}/>
                 </div>
 
-                <button disabled={isLoading ? true : false} className={`button ${isLoading ? 'loading' : ''}`} onClick={(handlePassword)}>{isLoading ? <Tadpole width={20} color='white' /> : 'Confirm'}</button>
+                <button disabled={isLoading ? true : false} className={`button ${isLoading ? 'loading' : ''}`} onClick={(handlePassword)}>{isLoading ? <Tadpole height={15} color='white' /> : 'Confirm'}</button>
               </div>
             </div>
-          : status === 'payment' ?
+          : action === 'payment' ?
             <div className='payment-container'>
               <h1>Step 2: Let's Take Care of the Payment</h1>
               <div style={{ width: '100%', position: 'relative' }}>
@@ -195,34 +195,21 @@ export async function getServerSideProps(context) {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    if (!['onboarding', 'password'].includes(decoded.action)) {
+    if (decoded.action !== 'onboarding') {
       throw new Error('Invalid action');
     }
 
     const userId = decoded.userId
     await connectUserDB()
-    if (decoded.action === 'onboarding') { 
-      // assuming onboardingStep is 0
-      const sanitizedUserId = mongoSanitize.sanitize(userId);
-      let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
-      if (!user || user.onboardingStep !== 0) throw new Error('User not found');
-      return {
-        props: {
-          userId, status: 'password'
-        }
-      }; 
-    }
-
-    if (decoded.action === 'payment') {
-      const sanitizedUserId = mongoSanitize.sanitize(userId);
-      let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
-      if (!user || user.onboardingStep !== 1) throw new Error('User not found');
-      return {
-        props: {
-          userId, status: 'payment'
-        }
-      };
-    }
+    // assuming onboardingStep is 0
+    const sanitizedUserId = mongoSanitize.sanitize(userId);
+    let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
+    if (!user || user.onboardingStep !== 0) throw new Error('User not found');
+    return {
+      props: {
+        userId, status: 'password'
+      }
+    }; 
 
   } catch (error) {
     return {
