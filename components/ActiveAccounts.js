@@ -41,50 +41,50 @@ const ActiveAccounts = ({ setPlatform }) => {
         {isOpen && <div className='platformsContainer'>
             <div>
                 <div className="cell-content notAvailable">
-                    <img src='/sm/fb.svg' alt='facebook-logo' className='notAvailableImg' /><span>Facebook</span>
+                    <img src='/sm/facebook.svg' alt='facebook-logo' className='notAvailableImg' /><span>Facebook</span>
                     <span className='tooltip'>Coming soon!</span>
                 </div>
             </div>
             <div>
                 <div className="cell-content notAvailable" >
-                    <img src='/sm/insta.svg' alt='instagram-logo' className='notAvailableImg' /><span>Instagram</span>
+                    <img src='/sm/instagram.svg' alt='instagram-logo' className='notAvailableImg' /><span>Instagram</span>
                     <span className='tooltip'>Coming soon!</span>
                 </div>
             </div>
             <div>
                 <div className="cell-content notAvailable">
-                    <img src='/sm/twit.svg' alt='twitter-logo' className='notAvailableImg' /><span>Twitter</span>
+                    <img src='/sm/twitter.svg' alt='twitter-logo' className='notAvailableImg' /><span>Twitter</span>
                     <span className='tooltip'>Coming soon!</span>
                 </div>
             </div>
             <div>
                 <div className="cell-content notAvailable">
-                    <img src='/sm/linked.svg' alt='linkedIn-logo' className='notAvailableImg' /><span>LinkedIn</span>
+                    <img src='/sm/linkedin.svg' alt='linkedIn-logo' className='notAvailableImg' /><span>LinkedIn</span>
                     <span className='tooltip'>Coming soon!</span>
                 </div>
             </div>
             <div>
                 <div className="cell-content notAvailable">
-                    <img src='/sm/tik.svg' alt='tiktok-logo' className='notAvailableImg' /><span>TikTok</span>
+                    <img src='/sm/tiktok.svg' alt='tiktok-logo' className='notAvailableImg' /><span>TikTok</span>
                     <span className='tooltip'>Coming soon!</span>
                 </div>
             </div>
             <div>
                 <div className="cell-content notAvailable">
-                    <img src='/sm/ytb.svg' alt='youtube-logo' className='notAvailableImg' /><span>YouTube</span>
+                    <img src='/sm/youtube.svg' alt='youtube-logo' className='notAvailableImg' /><span>YouTube</span>
                     <span className='tooltip'>Coming soon!</span>
                 </div>
             </div>
             <div>
                 <div className="cell-content notAvailable">
-                    <img src='/sm/vim.svg' alt='vimeo-logo' className='notAvailableImg' /><span>Vimeo</span>
+                    <img src='/sm/vimeo.svg' alt='vimeo-logo' className='notAvailableImg' /><span>Vimeo</span>
                     <span className='tooltip'>Coming soon!</span>
                 </div>
             </div>
             <div>
                 <div className="cell-content" onClick={() => handleClick('pinterest')} style={{ 
                     backgroundColor: selectedPlatform === 'pinterest' ? '#b9b9c6' : '' }}>
-                    <img src='/sm/pin.svg' alt='pinterest-logo' style={{ borderRadius: '50%' }} /><span>Pinterest</span>
+                    <img src='/sm/pinterest.svg' alt='pinterest-logo' style={{ borderRadius: '50%' }} /><span>Pinterest</span>
                     {selectedPlatform === 'pinterest' ? <img src='/check.svg' alt='checkmark' id='checkmark' /> : '' }
                 </div>
             </div>

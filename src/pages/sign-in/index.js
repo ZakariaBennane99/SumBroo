@@ -3,15 +3,20 @@
 import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import { useRouter } from 'next/router';
-import React, { useState } from 'react'
-import { faEye, faEyeSlash, faArrowRight } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import axios from 'axios'
+import Modal from 'react-modal';
+import React, { useState } from 'react';
+import { faEye, faEyeSlash, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
 
 
 const SignIn = () => {
 
     const router = useRouter();
+
+    const [isClicked, setIsClicked] = useState(false)
+
+    const [isServerError, setIsServerError] = useState(false)
 
     const [showEye, setShowEye] = useState(false)
 
@@ -32,7 +37,9 @@ const SignIn = () => {
       password: ''
     })
 
-    const [leftErrors, setleftErrors] = useState('')
+    const [leftErrors, setleftErrors] = useState(null)
+
+    const [passChangeErr, setPassChangeErr] = useState(false)
 
     const [validationErrors, setValidationErrors] = useState({
       email: false,
@@ -53,40 +60,22 @@ const SignIn = () => {
 
     async function handleSendForgot () {
 
-        const userChPassUrl = 'http://localhost:4050/api/user'
-        // send email to change password
+
         const changePassUrl = 'http://localhost:4050/api/change-password'
 
         try {
-          const resp = await axios.post(userChPassUrl, passChangeEmail)
+          const resp = await axios.post(changePassUrl, passChangeEmail)
           const userId = resp.data._id
           if (resp.status === 201) {
-            try {
-              const emailRes = await axios.post(changePassUrl, {
-                email: passChangeEmail.email,
-                userId: userId
-               })
-              if (emailRes.status === 200) {
-                setIsEmailSentForPassChange("Yes")
-                // this is to tokenise the password change request
-                document.cookie = `passToken=${emailRes.data.token}; path=/; max-age=${30 * 24 * 60 * 60}`;
-                window.localStorage.setItem('userId', JSON.stringify(userId))
-              }
-            } catch (err) {
-              setIsEmailSentForPassChange("No")
-              setChangePassErrors('Please try again later.')
-              console.error(err)
-            }
+            console.log(resp)
           }
         } catch (err) {
           console.log(err)
           // if not a server error
           if (err.response.status === 401) {
             // just take the message from your server
-            setIsEmailSentForPassChange("No")
             setChangePassErrors(err.response.data.msg)
           } else {
-            setIsEmailSentForPassChange("No")
             setChangePassErrors('Please try again later.')
           }
 
@@ -114,35 +103,56 @@ const SignIn = () => {
     // login the user
     const loginUser = async function authUser () {
 
+      setIsClicked(true)
+
       const apiUrl = 'http://localhost:4050/api/auth'
 
       try {
-        const r = await axios.post(apiUrl, formValues)
-        console.log('this is the res', r.data)
-        document.cookie = `passToken=${r.data.token}; path=/; max-age=${30 * 24 * 60 * 60}`;
-        window.localStorage.setItem('userId', JSON.stringify(r.data.userData.id))
-        window.localStorage.setItem('userName', JSON.stringify(r.data.userData.name))
-        window.localStorage.setItem('userEmail', JSON.stringify(r.data.userData.email))
-        router.push('/home');
+        const res = await axios.post(apiUrl, formValues)
+        console.log(res)
+        if (res.status === 201) {
+          router.push('/dashboard');
+        }
+        // send the user to the dashboard
       } catch (error) {
         // client error 400 or 401
-        if (error.response.status === 401 || error.response.status === 403) {
-          setleftErrors(error.response.data.errors[0].msg)
-        } else if (error.response.status === 400) {
-          error.response.data.errors.map(el => {
+        if (error.response.status === 400) {
+          error.response.data.errors.forEach(error => {
             setValidationErrors((prev) => {
-              return {...prev, [el.param]: true}
+              return {
+                ...prev, 
+                [error.param]: error.msg
+              }
             })
           })
-          // server error 500
+          setIsServerError(false)
+        } else if (error.response.status === 401) {
+          console.log(error)
+          // here set up the leftErrors
+          setleftErrors('Invalid credentials!')
+          setIsServerError(false)
         } else {
-          setleftErrors('Please try again!')
+          setIsServerError(true)
         }
-
+        
       }
 
     }
 
+
+
+    const customStyles = {
+      content: {
+        width: '20%',
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        fontFamily: 'Ubuntu',
+      },
+    };
 
     return (<div className="footerSectionsWrapper">
         <Header />
@@ -152,27 +162,27 @@ const SignIn = () => {
                     <h1 id='loginUpTxt'>Sign In</h1>
                     {
                       leftErrors ? 
-                      <h4 style={{ color: 'red' }}>{leftErrors}</h4> : ''
+                      <p style={{ color: 'red' }}>{leftErrors}</p> : ''
                     }
                     <div className='email-cont'>
                       <label htmlFor="email">Email</label>
                       <div>
-                        {validationErrors.email ? <p style={{ fontSize: '12px', marginBottom: '10px', color: 'red' }}>Please enter a valid email</p> : "" }
+                        {validationErrors.email ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>Please enter a valid email.</p> : "" }
                         <input placeholder="Enter your email" type="email" id="email" onChange={handleChange} style={{ outline: validationErrors.email ? '2px solid red' : '' }}/>
                       </div>
                     </div>
                     <div className='pass-cont'>
                       <label htmlFor="password">Password</label>
                       {formValues.password.length > 0 ?
-                         <FontAwesomeIcon icon={showEye ? faEye : faEyeSlash } style={{ position: 'absolute', zIndex:'100', width: '15px', right: '0px', top: '4px' , cursor: 'pointer', color: '#1c1c57' }} onClick={handleShowEye}/>
+                         <FontAwesomeIcon icon={showEye ? faEye : faEyeSlash } style={{ position: 'absolute', zIndex:'100', width: '15px', right: '6px', top: '6px' , cursor: 'pointer', color: '#1c1c57' }} onClick={handleShowEye}/>
                       : ""}
                       <div>
-                        {validationErrors.password ? <p style={{ fontSize: '12px', marginBottom: '10px', color: 'red' }}>Password required</p> : "" }
+                        {validationErrors.password ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>Password required.</p> : "" }
                         <input placeholder="Enter your password" type={showEye ? "text" : "password"} id="password" value={formValues.password} onChange={handleChange} style={{ outline: validationErrors.password ? '2px solid red' : '', position:'relative' }}/>
                       </div>
                     </div>
                     <div style={{ width: '100%', position: 'relative' }}>
-                      <button type='button' onMouseOver={handleHover} onMouseOut={handleHover} onClick={loginUser} style={{ paddingRight: hovered ? "70px" : "" }}>Sign In</button>
+                      <button type='button' onMouseOver={handleHover} onMouseOut={handleHover} onClick={loginUser} style={{ paddingRight: hovered ? "70px" : "" }} disabled={isClicked}>Sign In</button>
                       <FontAwesomeIcon icon={faArrowRight} style={{ position: 'absolute', fontSize:'20px', right: hovered ? '30' : '-30', transition: '0.5s', bottom:'10' , color: 'white' }}/>
                     </div>
                     <p onClick={handleChangePass} className='forgot-pass'>Forgot Password?</p>
@@ -180,21 +190,44 @@ const SignIn = () => {
                 <div className='forgot-pass-container'>
                     {isEmailSentForPassChange === "Yes" ?
                     <>
-                      <p className='pass-sent'>We have sent you an email with instructions to change your password. Make sure you check your spam folder.</p>
+                      <p className='pass-sent'>We have sent you an email with a link to change your password. The link will be active for 20 Minutes.</p>
                     </> :
                     <>
                         <div>
                             <label htmlFor="email">Email</label>
                             {isEmailSentForPassChange === "No" ? <p className='pass-error'>{changePassErrors}</p> : "" }
-                            <input type="email" id="email" onInput={handleEmailPassChange} value={passChangeEmail.email}/>
+                            <input type="email" id="email" onInput={handleEmailPassChange} value={passChangeEmail.email} placeholder="Enter your email"/>
                         </div>
                         <button onClick={handleSendForgot}>Send</button>
                     </>}
                 </div>}
           </div>
+          <Modal
+            isOpen={isServerError || passChangeErr}
+            style={customStyles}
+            contentLabel="Example Modal"
+              >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+              <span onClick={() => location.reload()}
+                style={{ backgroundColor: '#1465e7', 
+                color: "white",
+                padding: '10px', 
+                cursor: 'pointer',
+                fontFamily: 'Ubuntu',
+                borderRadius: '3px',
+                fontSize: '1.1em',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                 }}>Try again</span>
+            </div>
+          </Modal>
         <Footer />
     </div>
     )
 };
 
 export default SignIn;
+
+

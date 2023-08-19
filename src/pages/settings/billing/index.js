@@ -28,6 +28,8 @@ const Billing = () => {
     const [isError, setIsError] = useState(false)
 
     async function handleBilling() {
+      // this is manual you should store the userId 
+      // in the HttpOnly cookie
       const customerId = 'cus_OTkFQCz14xEjQx'
       setIsLoading(true)
       try {
