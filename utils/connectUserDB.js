@@ -28,7 +28,7 @@ const connectUserDB = () => {
 
                     // Associate the existing AvAcSchema with this connection
                     if (!userDbConnection.models.avac) {
-                        AvAc = userDbConnection.model('avac', AvAcModel.schema);
+                        AvAc = userDbConnection.model('AvAc', AvAcModel.schema);
                     } else {
                         AvAc = userDbConnection.models.avac;
                     }

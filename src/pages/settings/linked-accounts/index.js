@@ -8,13 +8,13 @@ import mongoSanitize from 'express-mongo-sanitize';
 
 
 function capitalize(wd) {
-    const capitalizeWord = wd => wd.charAt(0).toUpperCase() + wd.slice(1).toLowerCase();
+    const capitalizeWord = wd.charAt(0).toUpperCase() + wd.slice(1).toLowerCase();
     return capitalizeWord
 }
 
-const LinkedAccounts = ({ userId, AllAccounts }) => {
+const LinkedAccounts = ({ userId, AllAccounts, newUser }) => {
 
-    console.log(userId, AllAccounts)
+    const isNewUser = newUser || false
 
     const [windowWidth, setWindowWidth] = useState(null);
 
@@ -107,14 +107,20 @@ export async function getServerSideProps(context) {
             let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
             console.log('the step', user.onboardingStep)
             if (!user || user.onboardingStep !== 2) throw new Error('User not found');
+            console.log('after the checking if the there is a user, and an oboarding step')
 
             const activeProfiles = user.socialMediaLinks
                 .filter(link => link.profileStatus === "active")
                 .map(link => link.platformName);
 
+            console.log('the active accounts', activeProfiles)  
+
+
             let AvAccounts = await userDbConnection.model('AvAc').findOne({ _id: '64dff175f982d9f8a4304100' });
 
-            let AvAcc = AvAccounts.map(ac => {
+            console.log('availale accounts', AvAccounts)
+
+            let AvAcc = AvAccounts.accounts.map(ac => {
                 return {
                     name: ac,
                     active: activeProfiles.includes(ac)
@@ -123,7 +129,7 @@ export async function getServerSideProps(context) {
 
             return {
               props: {
-                userId, AllAccounts: AvAcc
+                userId, AllAccounts: AvAcc, newUser: true
               }
             }; 
         

@@ -45,7 +45,6 @@ const Onboarding = ({ userId, status }) => {
 
       if (data.url) {
         // take the user to the Stripe page
-        setIsLoading(false)
         window.location.href = data.url;
       } else {
         // handle error: maybe show a message to the user
