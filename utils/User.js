@@ -80,6 +80,22 @@ const SocialMediaLinkSchema = new Schema({
         // If rejected, we remove the profile and send him a message on why 
         // we rejected him and that when he fulfills the reqs, he can a send a profile linking req
     }, 
+    lastPublished: {
+        type: Date,
+        default: null
+        /*
+            // This is for checking each Platform's publishing limit time window:
+            // You can also have different requirements for each platform
+            const now = new Date();
+            if (!user.lastPublished || (now - user.lastPublished) > (24 * 60 * 60 * 1000)) {
+              // Allow publishing
+              user.lastPublished = now;
+              await user.save();
+            } else {
+              // Deny publishing and inform the user
+            }
+        */
+    },
     niche: {
         type: String
     },
