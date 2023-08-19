@@ -14,6 +14,10 @@ const SignIn = () => {
 
     const router = useRouter();
 
+    const [sendPassChangeClicked, setPassChangeClicked] = useState(false)
+
+    const [isEmailSentForPassChange, setIsEmailSentForPassChange] = useState(false)
+
     const [isClicked, setIsClicked] = useState(false)
 
     const [isServerError, setIsServerError] = useState(false)
@@ -26,9 +30,7 @@ const SignIn = () => {
       email: ""
     })
 
-    const [changePassErrors, setChangePassErrors] = useState("")
-
-    const [isEmailSentForPassChange, setIsEmailSentForPassChange] = useState("")
+    const [changePassErrors, setChangePassErrors] = useState(null)
 
     const [clickedOnForgot, setClickedOnForgot] = useState(false)
 
@@ -60,26 +62,27 @@ const SignIn = () => {
 
     async function handleSendForgot () {
 
+      setPassChangeClicked(true)
 
-        const changePassUrl = 'http://localhost:4050/api/change-password'
+      const changePassUrl = 'http://localhost:4050/api/change-password'
 
-        try {
-          const resp = await axios.post(changePassUrl, passChangeEmail)
-          const userId = resp.data._id
-          if (resp.status === 201) {
-            console.log(resp)
-          }
-        } catch (err) {
-          console.log(err)
-          // if not a server error
-          if (err.response.status === 401) {
-            // just take the message from your server
-            setChangePassErrors(err.response.data.msg)
-          } else {
-            setChangePassErrors('Please try again later.')
-          }
-
+      try {
+        const resp = await axios.post(changePassUrl, passChangeEmail)
+        if (resp.status === 201) {
+          console.log(resp)
         }
+      } catch (err) {
+        // if not a server error
+        if (err.response.status === 400) {
+          setChangePassErrors('Please include a valid email.')
+        } else if (err.response.status === 401) {
+          setChangePassErrors('Invalid email.')
+        } else {
+          // server error
+          setPassChangeErr(true)
+        }
+      }
+
     }
 
     function handleEmailPassChange(e) {
@@ -139,6 +142,10 @@ const SignIn = () => {
 
     }
 
+    async function handleOTP() {
+      
+    }
+
 
 
     const customStyles = {
@@ -188,17 +195,18 @@ const SignIn = () => {
                     <p onClick={handleChangePass} className='forgot-pass'>Forgot Password?</p>
                 </form> :
                 <div className='forgot-pass-container'>
-                    {isEmailSentForPassChange === "Yes" ?
-                    <>
-                      <p className='pass-sent'>We have sent you an email with a link to change your password. The link will be active for 20 Minutes.</p>
-                    </> :
+                    {isEmailSentForPassChange ?
+                    <div>
+                      <label htmlFor="passOTP">Enter OTP sent to your inbox</label>
+                      <input type="text" id="passOTP" placeholder="Enter OTP" onClick={handleOTP} />
+                    </div> :
                     <>
                         <div>
                             <label htmlFor="email">Email</label>
-                            {isEmailSentForPassChange === "No" ? <p className='pass-error'>{changePassErrors}</p> : "" }
+                            { changePassErrors ? <p className='pass-error'>{changePassErrors}</p> : "" }
                             <input type="email" id="email" onInput={handleEmailPassChange} value={passChangeEmail.email} placeholder="Enter your email"/>
                         </div>
-                        <button onClick={handleSendForgot}>Send</button>
+                        <button onClick={handleSendForgot} disabled={sendPassChangeClicked}>Send</button>
                     </>}
                 </div>}
           </div>
