@@ -104,7 +104,7 @@ const Onboarding = ({ userId, status }) => {
 
 
   return (<div className='onboarding-parent-container'>
-      <Header />
+      <Header signedIn={false} />
       <div className='onboarding-container'>
 
         {

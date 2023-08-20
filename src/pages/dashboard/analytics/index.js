@@ -11,12 +11,13 @@ import GroupedBarChart from '../../../../components/viz/GroupedBarChart';
 import StackedBarChart from '../../../../components/viz/StackedBarChart';
 import MultiLineChart from '../../../../components/viz/MultiLineChart';
 import StatsSummary from '../../../../components/viz/StatsSummary';
+import jwt from 'jsonwebtoken';
 
 
 // Post Data Info
 // Likes & Comments (Scrapped)
 
-const Analytics = () => {
+const Analytics = ({ signedIn }) => {
 
   const [windowWidth, setWindowWidth] = useState(null);
 
@@ -120,7 +121,6 @@ const Analytics = () => {
         updatedDayData['other'] = updatedDayData['impressions'] - totalSelectedMetrics;
         return updatedDayData;
       });
-      console.log(updatedData)
       setData3(updatedData);
     } else {
       setData3(DATA3);
@@ -411,7 +411,7 @@ const Analytics = () => {
   };
 
   return (<div id="parentWrapper">
-    <Header signedIn={true}/>
+    <Header signedIn={signedIn}/>
     <div className="resultsSection">
       <div className="homeContainer">
         {
@@ -469,3 +469,46 @@ const Analytics = () => {
 };
 
 export default Analytics;
+
+
+export async function getServerSideProps(context) {
+
+  try {
+
+    // Get cookies from the request headers
+    const cookies = context.req.headers.cookie;
+
+    // Parse the cookies to retrieve the otpTOKEN
+    const tokenCookie = cookies.split(';').find(c => c.trim().startsWith('token='));
+
+    let tokenValue;
+    if (tokenCookie) {
+      tokenValue = tokenCookie.split('=')[1];
+    }
+
+    const decoded = jwt.verify(tokenValue, process.env.USER_JWT_SECRET);
+
+    if (decoded.type !== 'sessionToken') {
+      return {
+        props: {
+          signedIn: false
+        }
+      };
+    }
+
+    return {
+      props: {
+        signedIn: true
+      }
+    };
+
+
+  } catch (error) {
+    return {
+      props: {
+        signedIn: false
+      }
+    };
+  }
+
+}

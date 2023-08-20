@@ -1,10 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import { useEffect, useRef, useState } from 'react';
-import { Tadpole } from "react-svg-spinners";
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { slide as BurgerMenu } from 'react-burger-menu';
 import SlideMenu from './SlideMenu';
 
 const Header = ({ signedIn }) => {
@@ -30,56 +28,6 @@ const Header = ({ signedIn }) => {
   const [isSubMenuOpen2, setIsSubMenuOpen2] = useState(false)
 
   const router = useRouter();
-  const [isMenuOpen, setMenuOpen] = useState(false);
-
-  const styles = {
-    bmBurgerButton: {
-      position: 'relative',
-      width: '36px',
-      height: '30px',
-      right: '15px',
-      top: '15px'
-    },
-    bmCross: {
-      background: '#bdc3c7'
-    },
-    bmBurgerBars: {
-      background: '#373a47'
-    },
-    bmBurgerBarsHover: {
-      background: '#a90000'
-    },
-    bmCrossButton: {
-      height: '24px',
-      width: '24px'
-    },
-    bmCross: {
-      background: '#bdc3c7'
-    },
-    bmMenuWrap: {
-      position: 'fixed',
-      height: '100%'
-    },
-    bmMenu: {
-      background: '#373a47',
-      padding: '2.5em 1.5em 0',
-      fontSize: '1.15em',
-      left: '0',
-      top: '0',
-      transform: 'translateX(12vw)'
-    },
-    bmMorphShape: {
-      fill: '#373a47'
-    },
-    bmItemList: {
-      color: '#b8b7ad',
-      padding: '0.8em'
-    },
-    bmItem: {
-      display: 'inline-block'
-    }
-    // ... other styles you want to customize
-  };
 
   const renderLinks = (isMobile) => (
     <>

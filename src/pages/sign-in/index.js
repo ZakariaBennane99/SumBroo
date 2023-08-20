@@ -95,7 +95,9 @@ const SignIn = () => {
       const apiUrl = 'http://localhost:4050/api/auth'
 
       try {
-        const res = await axios.post(apiUrl, formValues)
+        const res = await axios.post(apiUrl, formValues,  {
+          withCredentials: true
+        })
         console.log(res)
         if (res.status === 201) {
           router.push('/dashboard');
