@@ -102,13 +102,6 @@ const Onboarding = ({ userId, status }) => {
     },
   };
 
-  // closing the Modal
-  function closeModal() {
-      setModalIsOpen({
-          isOpen: false,
-          text: ''
-      })
-  }
 
   return (<div className='onboarding-parent-container'>
       <Header />
@@ -157,7 +150,6 @@ const Onboarding = ({ userId, status }) => {
         <Modal
           isOpen={isError}
           style={customStyles}
-          onRequestClose={closeModal}
           contentLabel="Example Modal"
             >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

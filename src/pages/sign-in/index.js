@@ -17,13 +17,14 @@ const SignIn = () => {
     // password change
     const [isPasswordChanged, setIsPasswordChanged] = useState(false)
     const [passwordChangeErrors, setPasswordChangeErrors] = useState(null)
-    const [changePassOTP, setChangePassOTP] = useState(false)
+    const [updatePasswordClicked, setUpdatePasswordClicked] = useState(false)
     const [passwordChange, setPsswordChange] = useState({
       pass: ''
     })
 
     // handling OTP
-    const [OTPErrors, setOTPErrors] = useState(false)
+    const [OTPErrors, setOTPErrors] = useState(null)
+    const [verifyOTPClicked, setIsVerifyOTPClicked] = useState(false)
     const [OTPCorrect, setOTPCorrect] = useState(false)
     const [OTP, setOTP] = useState({
       otp: 0
@@ -66,34 +67,6 @@ const SignIn = () => {
 
     function handleChangePass () {
       return setClickedOnForgot(!clickedOnForgot)
-    }
-
-    async function handleSendForgot () {
-
-      setPassChangeClicked(true)
-
-      const changePassUrl = 'http://localhost:4050/api/initiate-password-change'
-
-      try {
-        const resp = await axios.post(changePassUrl, passChangeEmail)
-        if (resp.status === 200) {
-          console.log(resp)
-          setIsEmailSentForPassChange(true)
-        }
-      } catch (err) {
-        // if not a server error
-        if (err.response.status === 400) {
-          setChangePassErrors('Please include a valid email.')
-          setIsServerError(false)
-        } else if (err.response.status === 401) {
-          setChangePassErrors('Invalid email.')
-          setIsServerError(false)
-        } else {
-          // server error
-          setIsServerError(true)
-        }
-      }
-
     }
 
     function handleEmailPassChange(e) {
@@ -143,8 +116,7 @@ const SignIn = () => {
         } else if (error.response.status === 401) {
           console.log(error)
           // here set up the leftErrors
-          setleftErrors('Invalid credentials!')
-          setIsServerError(false)
+          setleftErrors('Invalid credentials')
         } else {
           setIsServerError(true)
         }
@@ -154,25 +126,30 @@ const SignIn = () => {
     }
 
     async function handleOTP() {
-      
+
+      setIsVerifyOTPClicked(true)
+
       const otpCHECKURL = 'http://localhost:4050/api/check-password-otp'
 
       try {
-        const res = await axios.post(otpCHECKURL, OTP)
-        console.log(res)
+        const res = await axios.post(otpCHECKURL, OTP, {
+          withCredentials: true
+        })
         if (res.status === 201) {
           setOTPCorrect(true)
+          setOTPErrors(null)
+          setIsVerifyOTPClicked(false)
         }
         // send the user to the dashboard
       } catch (error) {
+        setIsVerifyOTPClicked(false)
         // client error 400 or 401
         if (error.response.status === 400) {
           setOTPErrors('Invalid OTP')
         } else if (error.response.status === 401) {
           console.log(error)
           // here set up the leftErrors
-          setOTPErrors('Invalid credentials!')
-          setIsServerError(false)
+          setOTPErrors('Expired OTP')
         } else {
           setIsServerError(true)
         }
@@ -181,29 +158,29 @@ const SignIn = () => {
     }
 
     async function changePassword() {
-      // when you change the passowrd
-      // setIsPasswordChanged(true)
 
+      setUpdatePasswordClicked(true)
       const changePasswordEnpoint = 'http://localhost:4050/api/change-password'
 
       try {
-        const res = await axios.post(changePasswordEnpoint, passwordChange)
-        console.log(res)
+        const res = await axios.post(changePasswordEnpoint, passwordChange, {
+          withCredentials: true
+        })
         if (res.status === 201) {
-          setOTPCorrect(true)
+          setIsPasswordChanged(true)
+          setUpdatePasswordClicked(false)
         }
         // send the user to the dashboard
       } catch (error) {
         // client error 400 or 401
+        setUpdatePasswordClicked(false)
         if (error.response.status === 400) {
           console.log('400', error)
-          //setPasswordChangeErrors(error.map(er => er.msg))
-          setIsServerError(false)
+          setPasswordChangeErrors(error.response.data.errors.map(er => er.msg))
         } else if (error.response.status === 401) {
           console.log('401', error)
           // here set up the leftErrors
-          setChangePassOTP('Expired OTP')
-          setIsServerError(false)
+          setPasswordChangeErrors(['Expired OTP'])
         } else {
           setIsServerError(true)
         }
@@ -211,6 +188,38 @@ const SignIn = () => {
       }
     }
 
+    async function handleSendForgot () {
+
+      setPassChangeClicked(true)
+
+      const changePassUrl = 'http://localhost:4050/api/initiate-password-change'
+
+      try {
+        const resp = await axios.post(changePassUrl, passChangeEmail, {
+          withCredentials: true
+        })
+        if (resp.status === 200) {
+          console.log(resp)
+          setIsEmailSentForPassChange(true)
+          setPassChangeClicked(false)
+        }
+      } catch (err) {
+        setPassChangeClicked(false)
+        console.log(err)
+        // if not a server error
+        if (err.response.status === 400) {
+          setChangePassErrors('Please include a valid email')
+          setIsServerError(false)
+        } else if (err.response.status === 401) {
+          setChangePassErrors('Invalid email')
+          setIsServerError(false)
+        } else {
+          // server error
+          setIsServerError(true)
+        }
+      }
+
+    }
 
     const customStyles = {
       content: {
@@ -238,7 +247,7 @@ const SignIn = () => {
                     <div className='email-cont'>
                       <label htmlFor="email">Email</label>
                       <div>
-                        {validationErrors.email ? <p 
+                        {validationErrors.email ? <p  
                         style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>Please enter a valid email.</p> : "" }
                         <input placeholder="Enter your email" type="email" id="email" 
                           onChange={handleChange} 
@@ -273,55 +282,56 @@ const SignIn = () => {
                     <p onClick={handleChangePass} className='forgot-pass'>Forgot Password?</p>
                 </form> :
                 <div className='forgot-pass-container'>
-                    { isEmailSentForPassChange ? (OTPCorrect ?
-                      <div className='pass-cont'>
-                        <label htmlFor="password">Password</label>
-                        {formValues.password.length > 0 ?
-                           <FontAwesomeIcon 
-                            icon={showEye ? faEye : faEyeSlash }
-                            style={{ position: 'absolute', zIndex:'100', width: '15px', right: '6px', top: '6px' , cursor: 'pointer', color: '#1c1c57' }}
-                            onClick={handleShowEye}/>
-                        : ""}
-                        <div>
-                          {validationErrors.password ? <p 
-                          style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>Password required.</p> : "" }
-                          <input placeholder="Enter a new password" 
-                            type={showEye ? "text" : "password"} 
-                            id="password" 
-                            value={passwordChange.pass} 
-                            onChange={(e) => setPsswordChange({ ['pass']: e.target.value })}
-                            style={{ outline: validationErrors.password ? '2px solid red' : '', position:'relative' }}/>
-                        </div>
-                      </div> :
-                      ( isPasswordChanged ? 
-                        <div>
-                          Your password has been changed. You can log in now.
-                        </div>
-                      :
+                  {(() => {
+                    if (!isEmailSentForPassChange) {
+                      return (
                         <>
                           <div>
-                            { OTPErrors ? <p className='pass-error'>{OTPErrors}</p> : "" }
-                            <label htmlFor="passOTP">Enter OTP sent to your inbox</label>
-                            <input type="number" id="passOTP" 
-                              placeholder="Enter OTP"
-                              value={OTP.otp}
-                              onClick={handleOTP}
-                              onChange={(e) => setOTP({ ['otp']: e.target.value })} />
-                          </div>
-                          <button>Send</button>
-                        </>
-                      ) ) :
-                    <>
-                        <div>
-                            { changePassErrors ? <p className='pass-error'>{changePassErrors}</p> : "" }
+                            {changePassErrors && <p style={{ marginTop: '0px' }} className='pass-error'>{changePassErrors}</p>}
                             <label htmlFor="email">Email</label>
-                            <input type="email" id="email"
-                              onInput={handleEmailPassChange}
-                              value={passChangeEmail.email} placeholder="Enter your email"/>
+                            <input type="email" id="email" onInput={handleEmailPassChange} value={passChangeEmail.email} placeholder="Enter your email" />
+                          </div>
+                          <button onClick={handleSendForgot} disabled={sendPassChangeClicked}>Send OTP</button>
+                        </>
+                      );
+                    }
+                  
+                    if (isEmailSentForPassChange && !OTPCorrect) {
+                      return (
+                        <>
+                          {OTPErrors && <p style={{ marginTop: '0px' }} className='pass-error'>{OTPErrors}</p>}
+                          <label htmlFor="passOTP">Enter OTP sent to your inbox</label>
+                          <input type="number" id="passOTP" placeholder="Enter OTP" value={OTP.otp} onChange={(e) => { setOTPErrors(null); setOTP({ ['otp']: e.target.value }) }} />
+                          <button onClick={handleOTP} disabled={verifyOTPClicked}>Verify OTP</button>
+                        </>
+                      );
+                    }
+                  
+                    if (OTPCorrect && !isPasswordChanged) {
+                      return (
+                        <div className='pass-cont' style={{ alignItems: 'flex-start', marginTop: '0px' }}>
+                          {passwordChangeErrors && passwordChangeErrors.map(err => {
+                            return <p style={{ marginTop: '0px', fontSize: '.7em' }} className='pass-error'>{err}</p>
+                          })}
+                          <label htmlFor="password">New Password</label>
+                          <div>
+                            <input placeholder="Enter your new password" type="password" id="password" value={passwordChange.pass} onChange={(e) => { setPasswordChangeErrors(null); setPsswordChange({ ['pass']: e.target.value }) }} />
+                          </div>
+                          <button onClick={changePassword} disabled={updatePasswordClicked}>Update Password</button>
                         </div>
-                        <button onClick={handleSendForgot} disabled={sendPassChangeClicked}>Send</button>
-                    </>}
-                </div>}
+                      );
+                    }
+                  
+                    if (isPasswordChanged) {
+                      return (
+                        <div style={{ fontSize: '1em' }}>
+                          Your password has been changed. You can log in now.
+                        </div>
+                      );
+                    }
+                  })()}
+              </div>
+              }
           </div>
           <Modal
             isOpen={isServerError}

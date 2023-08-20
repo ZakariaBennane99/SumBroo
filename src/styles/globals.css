@@ -878,6 +878,10 @@ a {
     border-radius: 4px;
 }
 
+.forgot-pass-container input {
+    width: 286px;
+}
+
 .loginForm .email-cont input:focus,
 .loginForm .pass-cont input:focus,
 .forgot-pass-container input:focus {
@@ -917,7 +921,7 @@ a {
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     padding: 25px;
     height: -moz-fit-content;
     height: fit-content;
@@ -932,6 +936,7 @@ a {
     display: flex;
     flex-direction: column;
     width: 100%;
+    justify-content: flex-start;
 }
 
 
