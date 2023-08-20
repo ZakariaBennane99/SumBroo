@@ -12,9 +12,10 @@ function capitalize(wd) {
     return capitalizeWord
 }
 
-const LinkedAccounts = ({ userId, AllAccounts, newUser }) => {
+const LinkedAccounts = ({ userId, AllAccounts, newUser, signedIn }) => {
 
     const isNewUser = newUser || false
+    const signedIn = signedIn || false
 
     const [windowWidth, setWindowWidth] = useState(null);
 
@@ -50,7 +51,7 @@ const LinkedAccounts = ({ userId, AllAccounts, newUser }) => {
 
 
     return (<div id="parentWrapper">
-        <Header signedIn={true}/>
+        <Header signedIn={signedIn}/>
         <div className="resultsSection">
             <div className="homeContainer">
                 {
@@ -83,17 +84,12 @@ export default LinkedAccounts;
 
 export async function getServerSideProps(context) {
 
-    console.log(context.query.grub)
-
+    // this is only for onboarding
     if (context.query.grub) {
         try {
             const { grub } = context.query;
-
-            console.log('the Grub is there')
         
             const decoded = jwt.verify(grub, process.env.JWT_SECRET);
-            console.log('after the decoded')
-            console.log(decoded.action)
         
             if (decoded.action !== 'payment') {
               throw new Error('Invalid action');
@@ -101,24 +97,18 @@ export async function getServerSideProps(context) {
             const userId = decoded.userId
             await connectUserDB()
             // assuming onboardingStep is 2
-            console.log('after connecting DB')
             const sanitizedUserId = mongoSanitize.sanitize(userId);
-            console.log(sanitizedUserId)
+
             let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
-            console.log('the step', user.onboardingStep)
+
             if (!user || user.onboardingStep !== 2) throw new Error('User not found');
-            console.log('after the checking if the there is a user, and an oboarding step')
 
             const activeProfiles = user.socialMediaLinks
                 .filter(link => link.profileStatus === "active")
                 .map(link => link.platformName);
 
-            console.log('the active accounts', activeProfiles)  
-
 
             let AvAccounts = await userDbConnection.model('AvAc').findOne({ _id: '64dff175f982d9f8a4304100' });
-
-            console.log('availale accounts', AvAccounts)
 
             let AvAcc = AvAccounts.accounts.map(ac => {
                 return {
@@ -140,6 +130,44 @@ export async function getServerSideProps(context) {
           }
     } else {
         // general token check for the user
+        try {
+
+            // Get cookies from the request headers
+            const cookies = context.req.headers.cookie;
+        
+            // Parse the cookies to retrieve the otpTOKEN
+            const tokenCookie = cookies.split(';').find(c => c.trim().startsWith('token='));
+        
+            let tokenValue;
+            if (tokenCookie) {
+              tokenValue = tokenCookie.split('=')[1];
+            }
+        
+            const decoded = jwt.verify(tokenValue, process.env.USER_JWT_SECRET);
+        
+            if (decoded.type !== 'sessionToken') {
+              return {
+                props: {
+                  signed: false
+                }
+              };
+            }
+        
+            return {
+              props: {
+                signed: true
+              }
+            };
+        
+        
+        } catch (error) {
+            return {
+              props: {
+                signed: false
+              }
+            };
+        }
+
     }
   
   }
