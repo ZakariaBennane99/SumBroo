@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import { Tadpole } from "react-svg-spinners";
 
-const Billing = () => {
+const Billing = ({ signedIn }) => {
 
     const [windowWidth, setWindowWidth] = useState(null);
 
@@ -116,3 +116,46 @@ const Billing = () => {
 };
 
 export default Billing;
+
+
+export async function getServerSideProps(context) {
+
+  try {
+
+    // Get cookies from the request headers
+    const cookies = context.req.headers.cookie;
+
+    // Parse the cookies to retrieve the otpTOKEN
+    const tokenCookie = cookies.split(';').find(c => c.trim().startsWith('token='));
+
+    let tokenValue;
+    if (tokenCookie) {
+      tokenValue = tokenCookie.split('=')[1];
+    }
+
+    const decoded = jwt.verify(tokenValue, process.env.USER_JWT_SECRET);
+
+    if (decoded.type !== 'sessionToken') {
+      return {
+        props: {
+          signedIn: false
+        }
+      };
+    }
+
+    return {
+      props: {
+        signedIn: true
+      }
+    };
+
+
+  } catch (error) {
+    return {
+      props: {
+        signedIn: false
+      }
+    };
+  }
+
+}
