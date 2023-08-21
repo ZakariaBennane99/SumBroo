@@ -178,6 +178,12 @@ export async function getServerSideProps(context) {
       };
     }
 
+    // here check for the active social Media accounts
+    // the DB will automatically update the status depending on
+    // the user's billing cuz of webHooks
+
+    const best = 'b'
+
     return {
       props: {
         signedIn: true
