@@ -7,7 +7,12 @@ import SlideMenu from './SlideMenu';
 
 const Header = ({ signedIn }) => {
 
+
+  // sign out user when clicked on sign out
+
   const [windowWidth, setWindowWidth] = useState(null);
+  
+  const [isSignOuClicked, setIsSignOutClicked] = useState(false)
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
@@ -28,6 +33,14 @@ const Header = ({ signedIn }) => {
   const [isSubMenuOpen2, setIsSubMenuOpen2] = useState(false)
 
   const router = useRouter();
+
+
+  function signOut() {
+    // here to make a request to the backend to destroy the 
+    // the cookie, then delete take the user to the landing page or sign in
+    // don't forget to 'setIsSignOutClicked(true)'
+  }
+
 
   const renderLinks = (isMobile) => (
     <>
@@ -89,9 +102,9 @@ const Header = ({ signedIn }) => {
                     <Link href='/settings/billing' style={{ color: router.pathname === '/settings/billing' ? 'rgb(72, 72, 118)' : 'none'}}>
                       Billing
                     </Link>
-                    <span className="sign-out">
+                    <button onClick={signOut} className="sign-out" disabled={isSignOuClicked}>
                       Sign Out
-                    </span>
+                    </button>
                   </div> 
                   : ''
                 }
