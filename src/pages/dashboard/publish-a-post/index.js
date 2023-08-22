@@ -9,7 +9,7 @@ import Requirements from '../../../../components/Requirements';
 import Targeting from '../../../../components/Targeting';
 import PinterestPostPreview from "../../../../components/PinterestPostPreview";
 import dynamic from 'next/dynamic';
-import jwt from 'jsonwebtoken';
+
 
 
 const PostInput = dynamic(
@@ -24,7 +24,10 @@ const options = [
 ];
 
 
-const PublishAPost = ({ signedIn }) => {
+const PublishAPost = ({ signedIn, isServerError }) => {
+
+  // show the modal when there is a servre error
+  const serverErr = isServerError || false
 
   const [windowWidth, setWindowWidth] = useState(null);
 
@@ -155,6 +158,29 @@ export default PublishAPost;
 
 export async function getServerSideProps(context) {
 
+  const Stripe = require('stripe');
+  const { connectUserDB } = require('../../../../utils/connectUserDB');
+  const User = require('../../../../utils/User');
+  const jwt = require('jsonwebtoken');
+
+  async function getCusPriceId(id) {
+
+    // now hit the Stripe API to get the user status
+    const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+
+    try {
+      const customer = await stripe.customers.retrieve(id);
+      const subscription = customer.subscriptions.data[0];
+      const activePriceId = subscription.items.data[0].price.id;
+      return activePriceId;
+
+    } catch(err) {
+      console.log(err)
+      return 'Server error'
+    }
+
+  }
+
   try {
 
     // Get cookies from the request headers
@@ -178,9 +204,38 @@ export async function getServerSideProps(context) {
       };
     }
 
-    // here check for the active social Media accounts
-    // the DB will automatically update the status depending on
-    // the user's billing cuz of webHooks
+    /*
+      You don't need webhooks, you can hit the Stripe customer
+      endpoint with each user session (sign in), then update 
+      the DB accordingly. And access it freely within that session
+      so each session we update the DB and we can request as hit
+      our DB's enpoint easily. Make sure you have an array for 
+      each social media that contains the pricing Ids which 
+      they are part of: one monthly and the other is annually.
+      So, when you renew the data in your DB, you match the
+      price id of the customer's subscription price ID whose
+      status is updated into the DB with the array (the 
+      profile). 
+    */
+     
+    // your token has already the userId
+    const { userId } = decoded.userId;
+
+    // new get the user Stripe customer id
+    let user = await User.find({ userId });
+
+    // the Stripe customer Id
+    let stripeId = user.stripeId;
+
+
+    // get the user plan PRICE ID not the the plan id
+
+    const activePriceId = await getCusPriceId(stripeId)
+    return {
+      props: {
+        isServerError: true
+      }
+    };
 
     const best = 'b'
 

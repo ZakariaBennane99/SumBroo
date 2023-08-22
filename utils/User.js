@@ -96,6 +96,15 @@ const SocialMediaLinkSchema = new Schema({
             }
         */
     },
+    pricePlans: {
+        type: [String]
+        // for now you only include the 
+        // the monthly and annual plan price 
+        // for Pinterest, then you can add more pricePlan 
+        // (priceIds) of all the plans where this platform exits
+        // this way we will be able to see which plan the user is part 
+        // of
+    },
     niche: {
         type: String
     },
