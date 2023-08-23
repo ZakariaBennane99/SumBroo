@@ -261,7 +261,16 @@ export async function getServerSideProps(context) {
     }
 
     // get the subscription status
-    const subStatus = await getSubscriptionStatus(stripeId, activePriceId)
+    const subStatus = await getSubscriptionStatus(stripeId, activePriceId);
+    if (subStatus === 'Server error') {
+      return {
+        props: {
+          signedIn: false,
+          isServerError: true,
+          platforms: []
+        }
+      };
+    };
 
     // now query your DB
     const users = await User.find({ "socialMediaLinks.pricePlans": activePriceId }, 'socialMediaLinks.platformName');
@@ -271,15 +280,6 @@ export async function getServerSideProps(context) {
         user.socialMediaLinks.forEach(link => {
             if (link.pricePlans.includes(activePriceId)) {
                 // get the subscription status
-                if (subStatus === 'Server error') {
-                  return {
-                    props: {
-                      signedIn: false,
-                      isServerError: true,
-                      platforms: []
-                    }
-                  };
-                }
                 if (subStatus === 'active') {
                   link.profileStatus = 'active';
                   platformNames.push({ 
