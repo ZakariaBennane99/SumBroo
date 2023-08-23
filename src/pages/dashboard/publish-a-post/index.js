@@ -273,7 +273,6 @@ export async function getServerSideProps(context) {
     users.forEach(user => {
         user.socialMediaLinks.forEach(link => {
             if (link.pricePlans.includes(activePriceId)) {
-                platformNames.push(link.platformName);
                 // get the subscription status
                 if (subStatus === 'Server error') {
                   return {
@@ -284,10 +283,22 @@ export async function getServerSideProps(context) {
                 }
                 if (subStatus === 'active') {
                   link.profileStatus = 'active';
+                  platformNames.push({ 
+                    name: link.platformName,
+                    status: 'active'
+                  });
                 } else if (['canceled', 'past_due'].includes(subStatus)) {
                   link.profileStatus = 'canceledSubscriptionPayment';
+                  platformNames.push({ 
+                    name: link.platformName,
+                    status: 'canceledSubscriptionPayment'
+                  });
                 } else {
                   link.profileStatus = 'pendingSubscriptionPayment';
+                  platformNames.push({ 
+                    name: link.platformName,
+                    status: 'pendingSubscriptionPayment'
+                  });
                 }
             }
         });
