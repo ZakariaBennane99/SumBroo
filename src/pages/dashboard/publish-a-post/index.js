@@ -216,6 +216,8 @@ export async function getServerSideProps(context) {
 
     const decoded = jwt.verify(tokenValue, process.env.USER_JWT_SECRET);
 
+    // if not sessiong token (user not signed in) return
+    // so we can avoid unecessary payment checks
     if (decoded.type !== 'sessionToken') {
       return {
         props: {
