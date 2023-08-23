@@ -180,6 +180,26 @@ export async function getServerSideProps(context) {
     }
 
   }
+  
+  async function getSubscriptionStatus(customerId, priceId) {
+    try {
+        // List all subscriptions for the customer
+        const subscriptions = await Stripe.subscriptions.list({
+            customer: customerId,
+        });
+
+        // Find the subscription with the specific price ID
+        const targetSubscription = subscriptions.data.find(sub => 
+            sub.items.data.some(item => item.price.id === priceId)
+        );
+
+        // Return the status of the subscription
+        return targetSubscription.status;
+    } catch (error) {
+        console.error('Error fetching subscription status:', error);
+        return 'Server error'
+    }
+  }
 
   try {
 
@@ -221,6 +241,9 @@ export async function getServerSideProps(context) {
     // your token has already the userId
     const { userId } = decoded.userId;
 
+    // connect DB
+    await connectUserDB()
+
     // new get the user Stripe customer id
     let user = await User.find({ userId });
 
@@ -228,14 +251,54 @@ export async function getServerSideProps(context) {
     let stripeId = user.stripeId;
 
 
-    // get the user plan PRICE ID not the the plan id
+    // get the user plan PRICE ID not the plan id
 
     const activePriceId = await getCusPriceId(stripeId)
-    return {
-      props: {
-        isServerError: true
-      }
-    };
+
+    if (activePriceId === 'Server error') {
+      return {
+        props: {
+          isServerError: true
+        }
+      };
+    }
+
+    // get the subscription status
+    const subStatus = await getSubscriptionStatus(stripeId, activePriceId)
+
+    // now query your DB
+    const users = await User.find({ "socialMediaLinks.pricePlans": activePriceId }, 'socialMediaLinks.platformName');
+        
+    const platformNames = [];
+    users.forEach(user => {
+        user.socialMediaLinks.forEach(link => {
+            if (link.pricePlans.includes(activePriceId)) {
+                platformNames.push(link.platformName);
+                // get the subscription status
+                if (subStatus === 'Server error') {
+                  return {
+                    props: {
+                      isServerError: true
+                    }
+                  };
+                }
+                if (subStatus === 'active') {
+                  link.profileStatus = 'active';
+                } else if (['canceled', 'past_due'].includes(subStatus)) {
+                  link.profileStatus = 'canceledSubscriptionPayment';
+                } else {
+                  link.profileStatus = 'pendingSubscriptionPayment';
+                }
+            }
+        });
+    });
+
+    console.log(platformNames);
+
+    // update the active platforms based in the user DB based on the platforms above
+    if (platformNames.length > 0) {
+
+    }
 
     const best = 'b'
 
