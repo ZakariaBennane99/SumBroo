@@ -237,7 +237,7 @@ const SignIn = () => {
     };
 
     return (<div className="footerSectionsWrapper">
-        <Header />
+        <Header signedIn={false} />
           <div className='login-container'>
             {!clickedOnForgot ?
                 <form className='loginForm'>

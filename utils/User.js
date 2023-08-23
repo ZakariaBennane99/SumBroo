@@ -112,7 +112,7 @@ const SocialMediaLinkSchema = new Schema({
         type: [String],
         validate: {
             validator: function(array) {
-                return array.length <= 6;
+                return array.length <= 8;
             },
             message: 'Audience array size should not exceed 6 tags.'
         }

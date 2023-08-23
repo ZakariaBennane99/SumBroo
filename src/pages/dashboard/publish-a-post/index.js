@@ -24,10 +24,11 @@ const options = [
 ];
 
 
-const PublishAPost = ({ signedIn, isServerError }) => {
+const PublishAPost = ({ signedIn, isServerError, platforms }) => {
 
-  // show the modal when there is a servre error
-  const serverErr = isServerError || false
+  if (!signedIn || isServerError) {
+    router.push('/sign-in');
+  }
 
   const [windowWidth, setWindowWidth] = useState(null);
 
@@ -59,7 +60,8 @@ const PublishAPost = ({ signedIn, isServerError }) => {
   // for the target platforms
   const [targetPlatform, setTargetPlatform] = useState()
 
-  // submitting the post for validation
+  // submitting the post for backend validation
+  // then a message to the user to either 
   function handlePost() {
 
   }
@@ -71,6 +73,8 @@ const PublishAPost = ({ signedIn, isServerError }) => {
     }
   }, [targetPlatform]);
 
+
+  // if platforms are empty 
 
   return (<div id="parentWrapper">
   <Header signedIn={signedIn}/>
@@ -94,6 +98,7 @@ const PublishAPost = ({ signedIn, isServerError }) => {
             <div className="rightSectionHome" >
             <ActiveAccounts
                 setPlatform={setTargetPlatform}
+                activeProfiles={platforms}
               />
             <Requirements
                 platform={targetPlatform}
@@ -221,24 +226,12 @@ export async function getServerSideProps(context) {
     if (decoded.type !== 'sessionToken') {
       return {
         props: {
-          signedIn: false
+          signedIn: false,
+          isServerError: false,
+          platforms: []
         }
       };
     }
-
-    /*
-      You don't need webhooks, you can hit the Stripe customer
-      endpoint with each user session (sign in), then update 
-      the DB accordingly. And access it freely within that session
-      so each session we update the DB and we can request as hit
-      our DB's enpoint easily. Make sure you have an array for 
-      each social media that contains the pricing Ids which 
-      they are part of: one monthly and the other is annually.
-      So, when you renew the data in your DB, you match the
-      price id of the customer's subscription price ID whose
-      status is updated into the DB with the array (the 
-      profile). 
-    */
      
     // your token has already the userId
     const { userId } = decoded.userId;
@@ -260,7 +253,9 @@ export async function getServerSideProps(context) {
     if (activePriceId === 'Server error') {
       return {
         props: {
-          isServerError: true
+          signedIn: false,
+          isServerError: true,
+          platforms: []
         }
       };
     }
@@ -279,7 +274,9 @@ export async function getServerSideProps(context) {
                 if (subStatus === 'Server error') {
                   return {
                     props: {
-                      isServerError: true
+                      signedIn: false,
+                      isServerError: true,
+                      platforms: []
                     }
                   };
                 }
@@ -308,24 +305,34 @@ export async function getServerSideProps(context) {
 
     console.log(platformNames);
 
-    // update the active platforms based in the user DB based on the platforms above
-    if (platformNames.length > 0) {
 
+    if (platformNames.length > 0) {
+      return {
+        props: {
+          signedIn: true,
+          isServerError: false,
+          platforms: platformNames
+        }
+      };
     }
 
-    const best = 'b'
 
+    // no active subscriptions
     return {
       props: {
-        signedIn: true
+        signedIn: true,
+        isServerError: false,
+        // empty array
+        platforms: platformNames
       }
     };
-
 
   } catch (error) {
     return {
       props: {
-        signedIn: false
+        signedIn: false,
+        isServerError: true,
+        platforms: []
       }
     };
   }
