@@ -1,11 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import HomeMenu from "../../../components/HomeMenu";
 import Header from "../../../components/Header";
 import Footer from '../../../components/Footer';
-import jwt from 'jsonwebtoken';
 
 
 const Home = () => {
@@ -48,6 +46,8 @@ export default Home;
 
 
 export async function getServerSideProps(context) {
+
+  const jwt = require('jsonwebtoken');
 
   try {
 

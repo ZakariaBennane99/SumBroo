@@ -1,14 +1,10 @@
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import SettingsMenu from "../../../components/SettingsMenu";
 import Header from "../../../components/Header";
 import Footer from '../../../components/Footer';
-import { useRouter } from "next/router";
 
 
 const Settings = () => {
-
-  const router = useRouter();
 
   const [windowWidth, setWindowWidth] = useState(null);
 
@@ -48,6 +44,8 @@ const Settings = () => {
 export default Settings;
 
 export async function getServerSideProps(context) {
+
+  const jwt = require('jsonwebtoken');
 
   try {
 

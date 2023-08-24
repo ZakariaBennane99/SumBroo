@@ -1,17 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import { useRouter } from 'next/router';
 import { useState, useEffect } from "react";
 import Header from '../../../../components/Header';
 import Footer from '../../../../components/Footer';
 import HomeMenu from '../../../../components/HomeMenu';
 import _ from 'lodash';
-import jwt from 'jsonwebtoken';
 
 
-const PostsStatus = ({ signedIn }) => {
-
-  const router = useRouter();
+const PostsStatus = () => {
 
   const [windowWidth, setWindowWidth] = useState(null);
 
@@ -87,11 +83,7 @@ const PostsStatus = ({ signedIn }) => {
   const inReview = data.filter(elem => elem.status === 'in-review')
   const rejected = data.filter(elem => elem.status === 'rejected')
 
-  if (!signedIn) {
-    router.push('/sign-in');
-    return null
-  } else {
-    return (<div id="parentWrapper">
+  return (<div id="parentWrapper">
     <Header signedIn={signedIn}/>
     <div className="resultsSection">
       <div className="homeContainer">
@@ -152,14 +144,14 @@ const PostsStatus = ({ signedIn }) => {
     </div>
     <Footer />
     </div>)
-  }  
-
 };
 
 export default PostsStatus;
 
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context) {\
+
+  const jwt = require('jsonwebtoken');
 
   try {
 
@@ -178,24 +170,24 @@ export async function getServerSideProps(context) {
 
     if (decoded.type !== 'sessionToken') {
       return {
-        props: {
-          signedIn: false
-        }
+        redirect: {
+          destination: '/sign-in',
+          permanent: false,
+        },
       };
     }
 
     return {
-      props: {
-        signedIn: true
-      }
+      props: {}
     };
 
 
   } catch (error) {
     return {
-      props: {
-        signedIn: false
-      }
+      redirect: {
+        destination: '/sign-in',
+        permanent: false,
+      },
     };
   }
 

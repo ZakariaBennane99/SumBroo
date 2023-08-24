@@ -122,6 +122,8 @@ export default AccountSettings;
 
 export async function getServerSideProps(context) {
 
+  const jwt = require('jsonwebtoken');
+
     try {
   
       // Get cookies from the request headers

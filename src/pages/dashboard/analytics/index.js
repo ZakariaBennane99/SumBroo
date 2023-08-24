@@ -1,7 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import { useRouter } from 'next/router';
-import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import Header from '../../../../components/Header';
 import Footer from '../../../../components/Footer';
@@ -11,15 +9,12 @@ import GroupedBarChart from '../../../../components/viz/GroupedBarChart';
 import StackedBarChart from '../../../../components/viz/StackedBarChart';
 import MultiLineChart from '../../../../components/viz/MultiLineChart';
 import StatsSummary from '../../../../components/viz/StatsSummary';
-import jwt from 'jsonwebtoken';
 
 
 // Post Data Info
 // Likes & Comments (Scrapped)
 
-const Analytics = ({ signedIn }) => {
-
-  const router = useRouter();
+const Analytics = () => {
 
   const [windowWidth, setWindowWidth] = useState(null);
 
@@ -412,12 +407,8 @@ const Analytics = ({ signedIn }) => {
     })
   };
 
-  if (!signedIn) {
-    router.push('/sign-in');
-    return null
-  } else {
-    return (<div id="parentWrapper">
-    <Header signedIn={signedIn}/>
+  return (<div id="parentWrapper">
+    <Header signedIn={true}/>
     <div className="resultsSection">
       <div className="homeContainer">
         {
@@ -471,7 +462,6 @@ const Analytics = ({ signedIn }) => {
     </div>
     <Footer />
   </div>)
-  }
 
 };
 
@@ -479,6 +469,8 @@ export default Analytics;
 
 
 export async function getServerSideProps(context) {
+
+  const jwt = require('jsonwebtoken');
 
   try {
 
@@ -497,24 +489,24 @@ export async function getServerSideProps(context) {
 
     if (decoded.type !== 'sessionToken') {
       return {
-        props: {
-          signedIn: false
-        }
+        redirect: {
+          destination: '/sign-in',
+          permanent: false,
+        },
       };
     }
 
     return {
-      props: {
-        signedIn: true
-      }
+      props: {}
     };
 
 
   } catch (error) {
     return {
-      props: {
-        signedIn: false
-      }
+      redirect: {
+        destination: '/sign-in',
+        permanent: false,
+      },
     };
   }
 

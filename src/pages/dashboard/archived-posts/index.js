@@ -1,13 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import { useRouter } from 'next/router';
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import Header from '../../../../components/Header';
 import Footer from '../../../../components/Footer';
 import HomeMenu from '../../../../components/HomeMenu';
 import _ from 'lodash';
-import jwt from 'jsonwebtoken';
 
 
 
@@ -104,6 +101,8 @@ export default Archive;
 
 
 export async function getServerSideProps(context) {
+
+  const jwt = require('jsonwebtoken');
 
   try {
 

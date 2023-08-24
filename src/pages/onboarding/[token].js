@@ -1,13 +1,8 @@
 import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
-import jwt from 'jsonwebtoken';
-import User from '../../../utils/User'
 import Modal from 'react-modal';
 import { Tadpole } from "react-svg-spinners";
-import { useState, useEffect } from 'react';
-import mongoSanitize from 'express-mongo-sanitize';
-import { useRouter } from 'next/router';
-import { connectUserDB, userDbConnection } from '../../../utils/connectUserDB'
+import { useState } from 'react';
 
 
 
@@ -179,6 +174,11 @@ export default Onboarding;
 
 
 export async function getServerSideProps(context) {
+
+  const jwt = require('jsonwebtoken');
+  const User = require('../../../utils/User');
+  const { connectUserDB, userDbConnection } = require('../../../utils/connectUserDB');
+  const mongoSanitize = require('express-mongo-sanitize');
 
   try {
 

@@ -2,9 +2,6 @@ import Header from "../../../../components/Header";
 import Footer from "../../../../components/Footer";
 import SettingsMenu from "../../../../components/SettingsMenu";
 import { useState, useEffect } from "react";
-import { connectUserDB, userDbConnection } from '../../../../utils/connectUserDB';
-import jwt from 'jsonwebtoken';
-import mongoSanitize from 'express-mongo-sanitize';
 import Modal from 'react-modal';
 
 
@@ -118,90 +115,72 @@ export default LinkedAccounts;
 
 export async function getServerSideProps(context) {
 
-    // this is only for onboarding
-    if (context.query.grub) {
-        try {
-            const { grub } = context.query;
-        
-            const decoded = jwt.verify(grub, process.env.JWT_SECRET);
-        
-            if (decoded.action !== 'payment') {
-              throw new Error('Invalid action');
-            }
-            const userId = decoded.userId
-            await connectUserDB()
-            // assuming onboardingStep is 2
-            const sanitizedUserId = mongoSanitize.sanitize(userId);
+  const { connectUserDB, userDbConnection } = require('../../../../utils/connectUserDB');
+  const jwt = require('jsonwebtoken');
+  const mongoSanitize = require('express-mongo-sanitize')
 
-            let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
-
-            if (!user || user.onboardingStep !== 2) throw new Error('User not found');
-
-            const activeProfiles = user.socialMediaLinks
-                .filter(link => link.profileStatus === "active")
-                .map(link => link.platformName);
-
-            let AvAccounts = await userDbConnection.model('AvAc').findOne({ _id: '64dff175f982d9f8a4304100' });
-
-            let AvAcc = AvAccounts.accounts.map(ac => {
-              return {
-                name: ac,
-                active: activeProfiles.includes(ac)
-              }
-            })
-
-            return {
-              props: {
-                userId, 
-                AllAccounts: AvAcc, 
-                newUser: true,
-                isServerErr: false
-              }
-            }; 
-        
-          } catch (error) {
-            return {
-              props: {
-                userId: false, 
-                AllAccounts: false, 
-                newUser: false,
-                isServerErr: false
-              }
-            };
+  // this is only for onboarding
+  if (context.query.grub) {
+      try {
+          const { grub } = context.query;
+      
+          const decoded = jwt.verify(grub, process.env.JWT_SECRET);
+      
+          if (decoded.action !== 'payment') {
+            throw new Error('Invalid action');
           }
-    } else {
-        // general token check for the user
-        try {
-
-            // Get cookies from the request headers
-            const cookies = context.req.headers.cookie;
-        
-            // Parse the cookies to retrieve the otpTOKEN
-            const tokenCookie = cookies.split(';').find(c => c.trim().startsWith('token='));
-        
-            let tokenValue;
-            if (tokenCookie) {
-              tokenValue = tokenCookie.split('=')[1];
-            }
-        
-            const decoded = jwt.verify(tokenValue, process.env.USER_JWT_SECRET);
-        
-            if (decoded.type !== 'sessionToken') {
-              return {
-                redirect: {
-                  destination: '/sign-in',
-                  permanent: false,
-                },
-              };
-            }
-        
-            // continue rendering
+          const userId = decoded.userId
+          await connectUserDB()
+          // assuming onboardingStep is 2
+          const sanitizedUserId = mongoSanitize.sanitize(userId);
+          let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
+          if (!user || user.onboardingStep !== 2) throw new Error('User not found');
+          const activeProfiles = user.socialMediaLinks
+              .filter(link => link.profileStatus === "active")
+              .map(link => link.platformName);
+          let AvAccounts = await userDbConnection.model('AvAc').findOne({ _id: '64dff175f982d9f8a4304100' });
+          let AvAcc = AvAccounts.accounts.map(ac => {
             return {
-              props: {}
-            };
-        
-        
-          } catch (error) {
+              name: ac,
+              active: activeProfiles.includes(ac)
+            }
+          })
+          return {
+            props: {
+              userId, 
+              AllAccounts: AvAcc, 
+              newUser: true,
+              isServerErr: false
+            }
+          }; 
+      
+        } catch (error) {
+          return {
+            props: {
+              userId: false, 
+              AllAccounts: false, 
+              newUser: false,
+              isServerErr: false
+            }
+          };
+        }
+  } else {
+      // general token check for the user
+      try {
+          // Get cookies from the request headers
+          const cookies = context.req.headers.cookie;
+      
+          // Parse the cookies to retrieve the otpTOKEN
+          const tokenCookie = cookies.split(';').find(c => c.trim().startsWith('token='));
+      
+          let tokenValue;
+          if (tokenCookie) {
+            tokenValue = tokenCookie.split('=')[1];
+          }
+      
+          const decoded = jwt.verify(tokenValue, process.env.USER_JWT_SECRET);
+      
+          if (decoded.type !== 'sessionToken') {
             return {
               redirect: {
                 destination: '/sign-in',
@@ -209,7 +188,21 @@ export async function getServerSideProps(context) {
               },
             };
           }
-
-    }
+      
+          // continue rendering
+          return {
+            props: {}
+          };
+      
+      
+        } catch (error) {
+          return {
+            redirect: {
+              destination: '/sign-in',
+              permanent: false,
+            },
+          };
+        }
+  }
   
   }

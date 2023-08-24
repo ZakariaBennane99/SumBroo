@@ -1,10 +1,7 @@
-const contentful = require('contentful');
-
-import { useEffect, useState, useMemo } from 'react';
-import Link from 'next/link';
 import Header from '../../../components/Header'
 import Footer from '../../../components/Footer';
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
+import Image from 'next/image';
 
 
 
@@ -63,7 +60,7 @@ function Blog({ posts }) {
                     </h2>
 
                     <a href={`/blog/${post.fields.slug}`} title={post.fields.title} className='featured-image'>
-                        <img src={`/api/contentfulAsset?path=${encodeURIComponent(post.fields.featuredImage.fields.file.url)}`} alt={post.fields.featuredImage.fields.title} />
+                        <Image width={100} height={100} src={`/api/contentfulAsset?path=${encodeURIComponent(post.fields.featuredImage.fields.file.url)}`} alt={post.fields.featuredImage.fields.title} />
                     </a>
 
                     <div className='excerpt'>
@@ -91,6 +88,8 @@ function Blog({ posts }) {
 export default Blog;
 
 export async function getStaticProps() {
+
+    const contentful = require('contentful');
 
     const client = contentful.createClient({
         space: process.env.CONTENTFUL_SPACE_ID,
