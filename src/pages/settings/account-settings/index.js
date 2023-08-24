@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 
-const AccountSettings = ({ signedIn }) => {
+const AccountSettings = ({ signedIn }) => { 
 
   const router = useRouter();
 
@@ -34,9 +34,9 @@ const AccountSettings = ({ signedIn }) => {
     })
 
     const data = {
-        username: 'Maker89',
-        email: 'manOnFire@mail.com',
-        password: 'backendSex'
+      username: 'Maker89',
+      email: 'manOnFire@mail.com',
+      password: 'backendSex'
     }
 
     function handleUserInfo(e) {
@@ -144,24 +144,25 @@ export async function getServerSideProps(context) {
   
       if (decoded.type !== 'sessionToken') {
         return {
-          props: {
-            signedIn: false
-          }
+          redirect: {
+            destination: '/sign-in',
+            permanent: false,
+          },
         };
       }
   
+      // continue rendering
       return {
-        props: {
-          signedIn: true
-        }
+        props: {}
       };
   
   
     } catch (error) {
       return {
-        props: {
-          signedIn: false
-        }
+        redirect: {
+          destination: '/sign-in',
+          permanent: false,
+        },
       };
     }
   

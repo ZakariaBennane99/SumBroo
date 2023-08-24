@@ -40,7 +40,7 @@ const Billing = ({ signedIn }) => {
         const response = await fetch('http://localhost:4050/api/create-customer-portal-session', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({ customerId })
         });

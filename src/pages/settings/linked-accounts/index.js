@@ -6,6 +6,7 @@ import { connectUserDB, userDbConnection } from '../../../../utils/connectUserDB
 import jwt from 'jsonwebtoken';
 import mongoSanitize from 'express-mongo-sanitize';
 import { useRouter } from "next/router";
+import Modal from 'react-modal';
 
 
 function capitalize(wd) {
@@ -13,12 +14,11 @@ function capitalize(wd) {
     return capitalizeWord
 }
 
-const LinkedAccounts = ({ userId, AllAccounts, newUser, signedIn }) => {
+const LinkedAccounts = ({ AllAccounts, newUser, isServerErr, userId }) => {
 
     const router = useRouter();
 
     const isNewUser = newUser || false
-    const signedIn = signedIn || false
 
     const [windowWidth, setWindowWidth] = useState(null);
 
@@ -52,12 +52,22 @@ const LinkedAccounts = ({ userId, AllAccounts, newUser, signedIn }) => {
         } 
     */
 
-  if (!signedIn) {
-    router.push('/sign-in');
-    return null
-  } else {
-    return (<div id="parentWrapper">
-    <Header signedIn={signedIn}/>
+  
+  const customStyles = {
+    content: {
+      width: '20%',
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      fontFamily: 'Ubuntu',
+    },
+  };
+              
+  return (<div id="parentWrapper">
+    <Header signedIn={true}/>
     <div className="resultsSection">
         <div className="homeContainer">
             {
@@ -82,9 +92,29 @@ const LinkedAccounts = ({ userId, AllAccounts, newUser, signedIn }) => {
             }
         </div>
     </div>
+    <Modal
+      isOpen={isServerErr}
+      style={customStyles}
+      contentLabel="Example Modal"
+        >
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+        <span onClick={() => location.reload()}
+          style={{ backgroundColor: '#1465e7', 
+          color: "white",
+          padding: '10px', 
+          cursor: 'pointer',
+          fontFamily: 'Ubuntu',
+          borderRadius: '3px',
+          fontSize: '1.1em',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+           }}>Try again</span>
+      </div>
+    </Modal>
     <Footer />
-    </div>)
-  }     
+    </div>)   
 };
 
 export default LinkedAccounts;
@@ -114,25 +144,32 @@ export async function getServerSideProps(context) {
                 .filter(link => link.profileStatus === "active")
                 .map(link => link.platformName);
 
-
             let AvAccounts = await userDbConnection.model('AvAc').findOne({ _id: '64dff175f982d9f8a4304100' });
 
             let AvAcc = AvAccounts.accounts.map(ac => {
-                return {
-                    name: ac,
-                    active: activeProfiles.includes(ac)
-                }
+              return {
+                name: ac,
+                active: activeProfiles.includes(ac)
+              }
             })
 
             return {
               props: {
-                userId, AllAccounts: AvAcc, newUser: true
+                userId, 
+                AllAccounts: AvAcc, 
+                newUser: true,
+                isServerErr: false
               }
             }; 
         
           } catch (error) {
             return {
-              notFound: true
+              props: {
+                userId: false, 
+                AllAccounts: false, 
+                newUser: false,
+                isServerErr: false
+              }
             };
           }
     } else {
@@ -154,26 +191,27 @@ export async function getServerSideProps(context) {
         
             if (decoded.type !== 'sessionToken') {
               return {
-                props: {
-                  signed: false
-                }
+                redirect: {
+                  destination: '/sign-in',
+                  permanent: false,
+                },
               };
             }
         
+            // continue rendering
             return {
-              props: {
-                signed: true
-              }
+              props: {}
             };
         
         
-        } catch (error) {
+          } catch (error) {
             return {
-              props: {
-                signed: false
-              }
+              redirect: {
+                destination: '/sign-in',
+                permanent: false,
+              },
             };
-        }
+          }
 
     }
   
