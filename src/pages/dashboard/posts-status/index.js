@@ -87,7 +87,7 @@ const PostsStatus = ({ signedIn }) => {
   const inReview = data.filter(elem => elem.status === 'in-review')
   const rejected = data.filter(elem => elem.status === 'rejected')
 
-  if (signedIn) {
+  if (!signedIn) {
     router.push('/sign-in');
     return null
   } else {

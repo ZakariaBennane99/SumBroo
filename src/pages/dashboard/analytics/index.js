@@ -412,7 +412,7 @@ const Analytics = ({ signedIn }) => {
     })
   };
 
-  if (signedIn) {
+  if (!signedIn) {
     router.push('/sign-in');
     return null
   } else {

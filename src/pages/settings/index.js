@@ -2,10 +2,13 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import SettingsMenu from "../../../components/SettingsMenu";
 import Header from "../../../components/Header";
-import Footer from '../../../components/Footer'
+import Footer from '../../../components/Footer';
+import { useRouter } from "next/router";
 
 
 const Settings = ({ signedIn }) => {
+
+  const router = useRouter();
 
   const [windowWidth, setWindowWidth] = useState(null);
 
@@ -25,20 +28,25 @@ const Settings = ({ signedIn }) => {
   }, []);
 
 
-  return (<div id="parentWrapper">
-  <Header signedIn={signedIn}/>
-  <div className="resultsSection">
-    <div className="homeContainer">
-      {
-        windowWidth > 1215 ? <SettingsMenu /> : ''
-      }
-      <div style={{ width: windowWidth > 1215 ? '80%' : '100%' }} className="rightSectionZenContainer">
-        <img src="./zenMode.svg" alt="editing"/>
+  if (!signedIn) {
+    router.push('/sign-in');
+    return null
+  } else {
+      return (<div id="parentWrapper">
+      <Header signedIn={signedIn}/>
+      <div className="resultsSection">
+        <div className="homeContainer">
+          {
+            windowWidth > 1215 ? <SettingsMenu /> : ''
+          }
+          <div style={{ width: windowWidth > 1215 ? '80%' : '100%' }} className="rightSectionZenContainer">
+            <img src="./zenMode.svg" alt="editing"/>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <Footer />
-</div>)
+      <Footer />
+    </div>)
+  }
 
 };
 

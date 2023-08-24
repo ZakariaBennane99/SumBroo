@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { connectUserDB, userDbConnection } from '../../../../utils/connectUserDB';
 import jwt from 'jsonwebtoken';
 import mongoSanitize from 'express-mongo-sanitize';
+import { useRouter } from "next/router";
 
 
 function capitalize(wd) {
@@ -13,6 +14,8 @@ function capitalize(wd) {
 }
 
 const LinkedAccounts = ({ userId, AllAccounts, newUser, signedIn }) => {
+
+    const router = useRouter();
 
     const isNewUser = newUser || false
     const signedIn = signedIn || false
@@ -50,34 +53,39 @@ const LinkedAccounts = ({ userId, AllAccounts, newUser, signedIn }) => {
     */
 
 
+  if (!signedIn) {
+    router.push('/sign-in');
+    return null
+  } else {
     return (<div id="parentWrapper">
-        <Header signedIn={signedIn}/>
-        <div className="resultsSection">
-            <div className="homeContainer">
-                {
-                    windowWidth > 1215 ? <SettingsMenu /> : ''
-                }
-                {
-                    AllAccounts.map(acc => {
-                        return (
-                        <div className="smAccountsContainer">
-                            <div className="linkedAccountsWrapper"> 
-        
-                                <div className="linkedAccounts">
-                                    <div className="account">
-                                        <span id="sm"><img id="smlg" src={`/sm/${acc.name}.svg`} /> {capitalize(acc.name)}</span>
-                                    </div>
-                                    <button>{acc.active ? 'Link Account' : 'Apply To Link'}</button>
+    <Header signedIn={signedIn}/>
+    <div className="resultsSection">
+        <div className="homeContainer">
+            {
+                windowWidth > 1215 ? <SettingsMenu /> : ''
+            }
+            {
+                AllAccounts.map(acc => {
+                    return (
+                    <div className="smAccountsContainer">
+                        <div className="linkedAccountsWrapper"> 
+    
+                            <div className="linkedAccounts">
+                                <div className="account">
+                                    <span id="sm"><img id="smlg" src={`/sm/${acc.name}.svg`} /> {capitalize(acc.name)}</span>
                                 </div>
+                                <button>{acc.active ? 'Link Account' : 'Apply To Link'}</button>
                             </div>
                         </div>
-                        )
-                    })
-                }
-            </div>
+                    </div>
+                    )
+                })
+            }
         </div>
-        <Footer />
-  </div>)
+    </div>
+    <Footer />
+    </div>)
+  }     
 };
 
 export default LinkedAccounts;
