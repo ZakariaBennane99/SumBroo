@@ -13,8 +13,6 @@ const SettingsMenu = () => {
 
   async function signOutUser() {
 
-    console.log('Inside the signOut')
-
     const url = 'http://localhost:4050/api/sign-out-user';
   
     try {
@@ -22,7 +20,6 @@ const SettingsMenu = () => {
         withCredentials: true
       });
   
-      console.log(res)
       if (res.status === 200) {
         router.push('/sign-in');
       } else {

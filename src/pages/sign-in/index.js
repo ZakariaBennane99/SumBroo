@@ -392,10 +392,7 @@ export async function getServerSideProps(context) {
 
     if (decoded.type !== 'sessionToken') {
       return {
-        redirect: {
-          destination: '/sign-in',
-          permanent: false,
-        },
+        props: {}
       };
     }
 
@@ -411,10 +408,7 @@ export async function getServerSideProps(context) {
 
   } catch (error) {
     return {
-      redirect: {
-        destination: '/sign-in',
-        permanent: false,
-      },
+      props: {}
     };
   }
 
