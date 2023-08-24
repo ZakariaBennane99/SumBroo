@@ -1,24 +1,89 @@
 import Link from "next/link";
 import { useRouter } from 'next/router';
+import { useState } from "react";
+import Modal from 'react-modal';
+import axios from 'axios';
+
 
 const SettingsMenu = () => {
+  
+  const router = useRouter();
 
-    const router = useRouter();
+  const [isServerErr, setIsServerErr] = useState(false)
 
-    return (<div className="leftSectionHome" style={{ width: '15%' }}>
-        <Link href='/settings/linked-accounts' style={{backgroundColor: router.pathname === '/settings/linked-accounts' ? '#e4e4eb' : 'none'}}>
-          Linked Accounts
-        </Link>
-        <Link href='/settings/account-settings' style={{backgroundColor: router.pathname === '/settings/account-settings' ? '#e4e4eb' : 'none'}}>
-          Account Settings
-        </Link>
-        <Link href='/settings/billing' style={{backgroundColor: router.pathname === '/settings/billing' ? '#e4e4eb' : 'none'}}>
-          Billing
-        </Link>
-        <span className="sign-out">
-          Sign Out
-        </span>
-    </div>)
+  async function signOutUser() {
+
+    console.log('Inside the signOut')
+
+    const url = 'http://localhost:4050/api/sign-out-user';
+  
+    try {
+      const res = await axios.post(url, {}, {  
+        withCredentials: true
+      });
+  
+      console.log(res)
+      if (res.status === 200) {
+        router.push('/sign-in');
+      } else {
+        console.error(`Unexpected status code: ${res.status}`);
+      }
+    } catch (err) {
+      console.error(err);
+      setIsServerErr(true);
+    }
+  }
+
+
+  const customStyles = {
+    content: {
+      width: '20%',
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      fontFamily: 'Ubuntu',
+    },
+  };
+
+  return (<div className="leftSectionHome" style={{ width: '15%' }}>
+      <Link href='/settings/linked-accounts' style={{backgroundColor: router.pathname === '/settings/linked-accounts' ? '#e4e4eb' : 'none'}}>
+        Linked Accounts
+      </Link>
+      <Link href='/settings/account-settings' style={{backgroundColor: router.pathname === '/settings/account-settings' ? '#e4e4eb' : 'none'}}>
+        Account Settings
+      </Link>
+      <Link href='/settings/billing' style={{backgroundColor: router.pathname === '/settings/billing' ? '#e4e4eb' : 'none'}}>
+        Billing
+      </Link>
+      <span onClick={signOutUser} className="sign-out">
+        Sign Out
+      </span>
+      <Modal
+          ariaHideApp={false} 
+          isOpen={isServerErr}
+          style={customStyles}
+          contentLabel="Example Modal"
+            >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+            <span onClick={() => location.reload()}
+              style={{ backgroundColor: '#1465e7', 
+              color: "white",
+              padding: '10px', 
+              cursor: 'pointer',
+              fontFamily: 'Ubuntu',
+              borderRadius: '3px',
+              fontSize: '1.1em',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+               }}>Try again</span>
+          </div>
+        </Modal>
+  </div>)
 };
 
 export default SettingsMenu;

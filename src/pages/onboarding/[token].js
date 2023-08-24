@@ -138,8 +138,6 @@ const Onboarding = ({ userId, status }) => {
             Generic page 
           </div>
         }
-
-
       </div>
 
         <Modal
