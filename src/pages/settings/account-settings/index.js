@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 
-const AccountSettings = ({ signedIn }) => { 
+const AccountSettings = () => { 
 
   const router = useRouter();
 
@@ -50,15 +50,11 @@ const AccountSettings = ({ signedIn }) => {
 
 
     useEffect(() => {
-        console.log(userInfo)
+      console.log(userInfo)
     }, [userInfo])
 
-    if (!signedIn) {
-      router.push('/sign-in');
-      return null
-    } else {
-      return (<div id="parentWrapper">
-      <Header signedIn={signedIn}/>
+    return (<div id="parentWrapper">
+      <Header signedIn={true}/>
       <div className="resultsSection">
           <div className="homeContainer">
               {
@@ -120,7 +116,6 @@ const AccountSettings = ({ signedIn }) => {
       </div>
       <Footer />
     </div>)
-    }
 };
 
 export default AccountSettings;

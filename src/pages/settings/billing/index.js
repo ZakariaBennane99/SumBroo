@@ -4,12 +4,10 @@ import SettingsMenu from "../../../../components/SettingsMenu";
 import { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import { Tadpole } from "react-svg-spinners";
-import { useRouter } from "next/router";
 
 
-const Billing = ({ signedIn }) => {
+const Billing = () => {
 
-  const router = useRouter();
 
     const [windowWidth, setWindowWidth] = useState(null);
 
@@ -78,11 +76,7 @@ const Billing = ({ signedIn }) => {
     };
 
 
-    if (!signedIn) {
-      router.push('/sign-in');
-      return null
-    } else {
-      return (<div id="parentWrapper">
+    return (<div id="parentWrapper">
       <Header signedIn={true}/>
       <div className="resultsSection">
           <div className="homeContainer">
@@ -121,7 +115,6 @@ const Billing = ({ signedIn }) => {
       </Modal>
       <Footer />
     </div>)
-    }
 };
 
 export default Billing;
@@ -146,24 +139,25 @@ export async function getServerSideProps(context) {
 
     if (decoded.type !== 'sessionToken') {
       return {
-        props: {
-          signedIn: false
-        }
+        redirect: {
+          destination: '/sign-in',
+          permanent: false,
+        },
       };
     }
 
+    // continue rendering
     return {
-      props: {
-        signedIn: true
-      }
+      props: {}
     };
 
 
   } catch (error) {
     return {
-      props: {
-        signedIn: false
-      }
+      redirect: {
+        destination: '/sign-in',
+        permanent: false,
+      },
     };
   }
 

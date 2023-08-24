@@ -10,7 +10,6 @@ import Targeting from '../../../../components/Targeting';
 import PinterestPostPreview from "../../../../components/PinterestPostPreview";
 import dynamic from 'next/dynamic';
 import Modal from 'react-modal';
-import { useRouter } from "next/router";
 
 
 
@@ -33,13 +32,7 @@ function allObjectsHaveSameValueForKey(arr, key) {
 }
 
 
-const PublishAPost = ({ signedIn, isServerError, platforms }) => {
-
-  const router = useRouter();
-
-  if (!signedIn || isServerError) {
-    router.push('/sign-in');
-  }
+const PublishAPost = ({ isServerError, platforms }) => {
 
   const [windowWidth, setWindowWidth] = useState(null);
 
@@ -102,7 +95,7 @@ const PublishAPost = ({ signedIn, isServerError, platforms }) => {
   // Show this section if all the social Media 
   if (allObjectsHaveSameValueForKey(platforms, 'status') && platforms[0].status !== 'active') {
     return (<div id="parentWrapper">
-    <Header signedIn={signedIn}/>
+    <Header signedIn={true}/>
     <div className="resultsSection">
         {
           windowWidth < 620 ?
@@ -180,7 +173,7 @@ const PublishAPost = ({ signedIn, isServerError, platforms }) => {
     </div>)
   } else {
     return (<div id="parentWrapper">
-    <Header signedIn={signedIn}/>
+    <Header signedIn={true}/>
     <div className="resultsSection">
         {
           windowWidth < 620 ?
@@ -369,11 +362,10 @@ export async function getServerSideProps(context) {
     // so we can avoid unecessary payment checks
     if (decoded.type !== 'sessionToken') {
       return {
-        props: {
-          signedIn: false,
-          isServerError: false,
-          platforms: []
-        }
+        redirect: {
+          destination: '/sign-in',
+          permanent: false,
+        },
       };
     }
      
@@ -389,7 +381,6 @@ export async function getServerSideProps(context) {
     // the Stripe customer Id
     let stripeId = user.stripeId;
 
-
     // get the user plan PRICE ID not the plan id
 
     const activePriceId = await getCusPriceId(stripeId)
@@ -397,7 +388,6 @@ export async function getServerSideProps(context) {
     if (activePriceId === 'Server error') {
       return {
         props: {
-          signedIn: false,
           isServerError: true,
           platforms: []
         }
@@ -409,7 +399,6 @@ export async function getServerSideProps(context) {
     if (subStatus === 'Server error') {
       return {
         props: {
-          signedIn: false,
           isServerError: true,
           platforms: []
         }
@@ -446,7 +435,6 @@ export async function getServerSideProps(context) {
 
     return {
       props: {
-        signedIn: true,
         isServerError: false,
         platforms: platformNames
       }
@@ -455,7 +443,6 @@ export async function getServerSideProps(context) {
   } catch (error) {
     return {
       props: {
-        signedIn: false,
         isServerError: true,
         platforms: []
       }

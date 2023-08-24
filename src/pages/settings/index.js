@@ -6,7 +6,7 @@ import Footer from '../../../components/Footer';
 import { useRouter } from "next/router";
 
 
-const Settings = ({ signedIn }) => {
+const Settings = () => {
 
   const router = useRouter();
 
@@ -28,12 +28,8 @@ const Settings = ({ signedIn }) => {
   }, []);
 
 
-  if (!signedIn) {
-    router.push('/sign-in');
-    return null
-  } else {
-      return (<div id="parentWrapper">
-      <Header signedIn={signedIn}/>
+  return (<div id="parentWrapper">
+      <Header signedIn={true}/>
       <div className="resultsSection">
         <div className="homeContainer">
           {
@@ -46,7 +42,6 @@ const Settings = ({ signedIn }) => {
       </div>
       <Footer />
     </div>)
-  }
 
 };
 

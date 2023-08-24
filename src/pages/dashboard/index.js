@@ -6,12 +6,9 @@ import HomeMenu from "../../../components/HomeMenu";
 import Header from "../../../components/Header";
 import Footer from '../../../components/Footer';
 import jwt from 'jsonwebtoken';
-import { useRouter } from "next/router";
 
 
-const Home = ({ signedIn }) => {
-
-  const router = useRouter();
+const Home = () => {
 
   const [windowWidth, setWindowWidth] = useState(null);
 
@@ -31,12 +28,8 @@ const Home = ({ signedIn }) => {
   }, []);
 
 
-  if (!signedIn) {
-    router.push('/sign-in');
-    return null
-  } else {
-    return (<div id="parentWrapper">
-    <Header signedIn={signedIn}/>
+  return (<div id="parentWrapper">
+    <Header signedIn={true}/>
     <div className="resultsSection">
       <div className="homeContainer">
         {
@@ -49,7 +42,6 @@ const Home = ({ signedIn }) => {
     </div>
     <Footer />
   </div>)
-  }
 };
 
 export default Home;
@@ -74,24 +66,25 @@ export async function getServerSideProps(context) {
 
     if (decoded.type !== 'sessionToken') {
       return {
-        props: {
-          signedIn: false
-        }
+        redirect: {
+          destination: '/sign-in',
+          permanent: false,
+        },
       };
     }
 
+    // continue rendering
     return {
-      props: {
-        signedIn: true
-      }
+      props: {}
     };
 
 
   } catch (error) {
     return {
-      props: {
-        signedIn: false
-      }
+      redirect: {
+        destination: '/sign-in',
+        permanent: false,
+      },
     };
   }
 

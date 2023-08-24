@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { connectUserDB, userDbConnection } from '../../../../utils/connectUserDB';
 import jwt from 'jsonwebtoken';
 import mongoSanitize from 'express-mongo-sanitize';
-import { useRouter } from "next/router";
 import Modal from 'react-modal';
 
 
@@ -15,8 +14,6 @@ function capitalize(wd) {
 }
 
 const LinkedAccounts = ({ AllAccounts, newUser, isServerErr, userId }) => {
-
-    const router = useRouter();
 
     const isNewUser = newUser || false
 
