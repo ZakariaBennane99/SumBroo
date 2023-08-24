@@ -14,6 +14,8 @@ const LinkedAccounts = ({ AllAccounts, newUser, isServerErr, userId }) => {
 
     const isNewUser = newUser || false
 
+    console.log(AllAccounts)
+
     const [windowWidth, setWindowWidth] = useState(null);
 
     useEffect(() => {

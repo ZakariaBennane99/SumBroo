@@ -142,13 +142,10 @@ const UserSchema = new Schema({
     },
     accountStatus: {
         type: String,
-        enum: ["new","disabled", "active", "pending"],
+        enum: ["new", "disabled", "active", "pending"],
         // "New": account has just been created.
-        // "Disabled": account has been disabled by admin for quality and other issues.(rare case)
         // "Active": account is fully active.
-        // "Pending": awaiting user payment/onboarding before activation. You'll have to send an email
-        // in which you direct them to pay first, then start onboarding. The email link expires after
-        // 48H after which the user is deleted from the DB.
+        // "Pending": awaiting user payment/onboarding 
         required: true
         // If rejected, we remove the user entirely and send him a message on why 
         // we rejected him and that when he fulfills the reqs, he can create an account again

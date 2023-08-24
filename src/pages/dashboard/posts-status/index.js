@@ -84,7 +84,7 @@ const PostsStatus = () => {
   const rejected = data.filter(elem => elem.status === 'rejected')
 
   return (<div id="parentWrapper">
-    <Header signedIn={signedIn}/>
+    <Header signedIn={true}/>
     <div className="resultsSection">
       <div className="homeContainer">
         {
@@ -149,7 +149,7 @@ const PostsStatus = () => {
 export default PostsStatus;
 
 
-export async function getServerSideProps(context) {\
+export async function getServerSideProps(context) {
 
   const jwt = require('jsonwebtoken');
 

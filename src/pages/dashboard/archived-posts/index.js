@@ -10,11 +10,6 @@ import _ from 'lodash';
 
 const Archive = () => {
 
-  if (!signedIn) {
-    router.push('/sign-in');
-  }  
-
-
   const [windowWidth, setWindowWidth] = useState(null);
 
   useEffect(() => {
