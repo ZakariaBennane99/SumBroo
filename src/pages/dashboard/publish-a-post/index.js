@@ -9,6 +9,7 @@ import Requirements from '../../../../components/Requirements';
 import Targeting from '../../../../components/Targeting';
 import PinterestPostPreview from "../../../../components/PinterestPostPreview";
 import dynamic from 'next/dynamic';
+import Modal from 'react-modal';
 
 
 
@@ -74,88 +75,173 @@ const PublishAPost = ({ signedIn, isServerError, platforms }) => {
   }, [targetPlatform]);
 
 
-  // if platforms are empty 
+  const customStyles = {
+    content: {
+      width: '20%',
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      fontFamily: 'Ubuntu',
+    },
+  };
 
-  return (<div id="parentWrapper">
-  <Header signedIn={signedIn}/>
-  <div className="resultsSection">
-      {
-        windowWidth < 620 ?
-        <div className="homeContainer">
+
+  // if platforms are empty 
+  if (platforms.length === 0) {
+    return (<div id="parentWrapper">
+    <Header signedIn={signedIn}/>
+    <div className="resultsSection">
         {
-          windowWidth > 1215 ? <HomeMenu /> : ''
-        }
-        <div className='farRightSectionHome'>
-        <div className='postPreview' >
-          <h2>Preview</h2>
-            {selectedPlatform && selectedPlatform === 'pinterest' && (imgUrl || videoUrl || pinLink.length > 0 ||
-            text.length > 0 || pinTitle.length > 0) &&
-            <PinterestPostPreview pinLink={pinLink}
-            pinTitle={pinTitle} text={text} 
-            imgUrl={imgUrl} videoUrl={videoUrl} />}
-        </div>
-      </div>
-            <div className="rightSectionHome" >
-            <ActiveAccounts
-                setPlatform={setTargetPlatform}
-                activeProfiles={platforms}
-              />
-            <Requirements
-                platform={targetPlatform}
-              />
-            <PostInput
-              setText={setText}
-              setPostTitle={setPostTitle}
-              setPinTitle={setPinTitle}
-              setPinLink={setPinLink}
-              setImgUrl={setImgUrl}
-              setVideoUrl={setVideoUrl}
-              submitPost={handlePost}
-              platform={targetPlatform}
-            />
-            <Targeting />
-            <button id='publish-btn'>PUBLISH</button>
-          </div></div>
-        :
-        <div className="homeContainer">
+          windowWidth < 620 ?
+          <div className="homeContainer">
             {
               windowWidth > 1215 ? <HomeMenu /> : ''
             }
-            <div className="rightSectionHome" >
-            <ActiveAccounts
-                setPlatform={setTargetPlatform}
-              />
-            <Requirements
+            <div>
+              <p>
+                You have 
+              </p>
+            </div>
+          </div>
+          :
+          <div className="homeContainer">
+            {
+              windowWidth > 1215 ? <HomeMenu /> : ''
+            }
+            <div>
+
+            </div>
+          </div>
+        }
+        <Modal
+            isOpen={isServerError}
+            style={customStyles}
+            contentLabel="Example Modal"
+              >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+              <span onClick={() => location.reload()}
+                style={{ backgroundColor: '#1465e7', 
+                color: "white",
+                padding: '10px', 
+                cursor: 'pointer',
+                fontFamily: 'Ubuntu',
+                borderRadius: '3px',
+                fontSize: '1.1em',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                 }}>Try again</span>
+            </div>
+        </Modal>
+    </div>
+    <Footer />
+    </div>)
+  } else {
+    return (<div id="parentWrapper">
+    <Header signedIn={signedIn}/>
+    <div className="resultsSection">
+        {
+          windowWidth < 620 ?
+          <div className="homeContainer">
+          {
+            windowWidth > 1215 ? <HomeMenu /> : ''
+          }
+          <div className='farRightSectionHome'>
+          <div className='postPreview' >
+            <h2>Preview</h2>
+              {selectedPlatform && selectedPlatform === 'pinterest' && (imgUrl || videoUrl || pinLink.length > 0 ||
+              text.length > 0 || pinTitle.length > 0) &&
+              <PinterestPostPreview pinLink={pinLink}
+              pinTitle={pinTitle} text={text} 
+              imgUrl={imgUrl} videoUrl={videoUrl} />}
+          </div>
+        </div>
+              <div className="rightSectionHome" >
+              <ActiveAccounts
+                  setPlatform={setTargetPlatform}
+                  activeProfiles={platforms}
+                />
+              <Requirements
+                  platform={targetPlatform}
+                />
+              <PostInput
+                setText={setText}
+                setPostTitle={setPostTitle}
+                setPinTitle={setPinTitle}
+                setPinLink={setPinLink}
+                setImgUrl={setImgUrl}
+                setVideoUrl={setVideoUrl}
+                submitPost={handlePost}
                 platform={targetPlatform}
               />
-            <PostInput
-              setText={setText}
-              setPostTitle={setPostTitle}
-              setPinTitle={setPinTitle}
-              setPinLink={setPinLink}
-              setImgUrl={setImgUrl}
-              setVideoUrl={setVideoUrl}
-              submitPost={handlePost}
-              platform={targetPlatform}
-            />
-            <Targeting />
-            <button id='publish-btn'>PUBLISH</button>
+              <Targeting />
+              <button id='publish-btn'>PUBLISH</button>
+            </div></div>
+          :
+          <div className="homeContainer">
+              {
+                windowWidth > 1215 ? <HomeMenu /> : ''
+              }
+              <div className="rightSectionHome" >
+              <ActiveAccounts
+                  setPlatform={setTargetPlatform}
+                />
+              <Requirements
+                  platform={targetPlatform}
+                />
+              <PostInput
+                setText={setText}
+                setPostTitle={setPostTitle}
+                setPinTitle={setPinTitle}
+                setPinLink={setPinLink}
+                setImgUrl={setImgUrl}
+                setVideoUrl={setVideoUrl}
+                submitPost={handlePost}
+                platform={targetPlatform}
+              />
+              <Targeting />
+              <button id='publish-btn'>PUBLISH</button>
+            </div>
+          <div className='farRightSectionHome'>
+          <div className='postPreview' >
+            <h2>Preview</h2>
+              {selectedPlatform && selectedPlatform === 'pinterest' && (imgUrl || videoUrl || pinLink.length > 0 ||
+              text.length > 0 || pinTitle.length > 0) &&
+              <PinterestPostPreview pinLink={pinLink}
+              pinTitle={pinTitle} text={text} 
+              imgUrl={imgUrl} videoUrl={videoUrl} />}
           </div>
-        <div className='farRightSectionHome'>
-        <div className='postPreview' >
-          <h2>Preview</h2>
-            {selectedPlatform && selectedPlatform === 'pinterest' && (imgUrl || videoUrl || pinLink.length > 0 ||
-            text.length > 0 || pinTitle.length > 0) &&
-            <PinterestPostPreview pinLink={pinLink}
-            pinTitle={pinTitle} text={text} 
-            imgUrl={imgUrl} videoUrl={videoUrl} />}
-        </div>
-      </div></div>
-      }
-
-  </div>
-  <Footer />
-  </div>)
+        </div></div>
+        }
+        <Modal
+            isOpen={isServerError}
+            style={customStyles}
+            contentLabel="Example Modal"
+              >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+              <span onClick={() => location.reload()}
+                style={{ backgroundColor: '#1465e7', 
+                color: "white",
+                padding: '10px', 
+                cursor: 'pointer',
+                fontFamily: 'Ubuntu',
+                borderRadius: '3px',
+                fontSize: '1.1em',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                 }}>Try again</span>
+            </div>
+        </Modal>
+    </div>
+    <Footer />
+    </div>)
+  }
 };
 
 export default PublishAPost;
@@ -204,6 +290,16 @@ export async function getServerSideProps(context) {
         console.error('Error fetching subscription status:', error);
         return 'Server error'
     }
+  }
+
+  function getStatus(st) {
+    if (st === 'active') {
+      return 'active'
+    } else if (['cnaceled', 'unpaid', 'ended'].includes(st)) {
+      return 'canceledSubscriptionPayment'
+    } else if (['past_due', 'incomplete', 'incomplete_expired'].includes(st)) {
+      return 'pendingSubscriptionPayment'
+    } 
   }
 
   try {
@@ -276,29 +372,22 @@ export async function getServerSideProps(context) {
     const users = await User.find({ "socialMediaLinks.pricePlans": activePriceId }, 'socialMediaLinks.platformName');
         
     const platformNames = [];
+
     users.forEach(user => {
         user.socialMediaLinks.forEach(link => {
             if (link.pricePlans.includes(activePriceId)) {
-                // get the subscription status
-                if (subStatus === 'active') {
-                  link.profileStatus = 'active';
-                  platformNames.push({ 
-                    name: link.platformName,
-                    status: 'active'
-                  });
-                } else if (['canceled', 'past_due'].includes(subStatus)) {
-                  link.profileStatus = 'canceledSubscriptionPayment';
-                  platformNames.push({ 
-                    name: link.platformName,
-                    status: 'canceledSubscriptionPayment'
-                  });
-                } else {
-                  link.profileStatus = 'pendingSubscriptionPayment';
-                  platformNames.push({ 
-                    name: link.platformName,
-                    status: 'pendingSubscriptionPayment'
-                  });
-                }
+                link.profileStatus = 'active'
+                platformNames.push({ 
+                  name: link.platformName,
+                  status: 'active'
+                });
+            } else {
+              const st = getStatus(subStatus)
+              link.profileStatus = st
+              platformNames.push({ 
+                name: link.platformName,
+                status: st
+              });
             }
         });
     });
