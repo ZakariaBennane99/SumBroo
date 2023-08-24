@@ -7,10 +7,14 @@ import Header from '../../../../components/Header';
 import Footer from '../../../../components/Footer';
 import HomeMenu from '../../../../components/HomeMenu';
 import _ from 'lodash';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
+import { useRouter } from "next/router";
+
 
 
 const Archive = ({ signedIn }) => {
+
+  const router = useRouter();
 
   const [windowWidth, setWindowWidth] = useState(null);
 
@@ -67,30 +71,36 @@ const Archive = ({ signedIn }) => {
     }
   ]
 
-  return (<div id="parentWrapper">
-  <Header signedIn={signedIn}/>
-  <div className="resultsSection">
-    <div className="homeContainer">
-      {
-        windowWidth > 1215 ? <HomeMenu /> : ''
-      }
-      <div className="archiveSection">
+
+  if (signedIn) {
+    router.push('/sign-in');
+    return null
+  } else {
+    return (<div id="parentWrapper">
+    <Header signedIn={signedIn}/>
+    <div className="resultsSection">
+      <div className="homeContainer">
         {
-          data.map(el =>
-            <div className='body'>
-              <p>{_.startCase(el.title)}</p>
-              <div>
-                <span className='platform'><img id='smlg' src='/sm/pin.svg' /> <span>{_.startCase(el.platform)}</span> <img id='link' src='/linkToPost.svg' /></span>
-                <span className='date'>{el.date}</span>
-              </div>
-            </div>
-          )
+          windowWidth > 1215 ? <HomeMenu /> : ''
         }
+        <div className="archiveSection">
+          {
+            data.map(el =>
+              <div className='body'>
+                <p>{_.startCase(el.title)}</p>
+                <div>
+                  <span className='platform'><img id='smlg' src='/sm/pin.svg' /> <span>{_.startCase(el.platform)}</span> <img id='link' src='/linkToPost.svg' /></span>
+                  <span className='date'>{el.date}</span>
+                </div>
+              </div>
+            )
+          }
+        </div>
       </div>
     </div>
-  </div>
-  <Footer />
-  </div>)
+    <Footer />
+    </div>)
+  }
 
 };
 
