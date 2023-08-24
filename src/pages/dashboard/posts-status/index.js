@@ -6,10 +6,12 @@ import Header from '../../../../components/Header';
 import Footer from '../../../../components/Footer';
 import HomeMenu from '../../../../components/HomeMenu';
 import _ from 'lodash';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
 
 const PostsStatus = ({ signedIn }) => {
+
+  const router = useRouter();
 
   const [windowWidth, setWindowWidth] = useState(null);
 
@@ -27,8 +29,6 @@ const PostsStatus = ({ signedIn }) => {
       window.removeEventListener('resize', handleResize);
     }
   }, []);
-
-  const router = useRouter();
 
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -87,67 +87,72 @@ const PostsStatus = ({ signedIn }) => {
   const inReview = data.filter(elem => elem.status === 'in-review')
   const rejected = data.filter(elem => elem.status === 'rejected')
 
-  return (<div id="parentWrapper">
-  <Header signedIn={signedIn}/>
-  <div className="resultsSection">
-    <div className="homeContainer">
-      {
-        windowWidth > 1215 ? <HomeMenu /> : ''
-      }
-      <div className="postStatusContainer">
-        <div>
-          <div className='titles'>Published</div>
-          {
-            published.map(el =>
-              <div className='body'>
-                <p>{_.startCase(el.title)}</p>
-                <div>
-                  <span className='platform'><img id='smlg' src='/sm/pin.svg' /> <span>{_.startCase(el.platform)}</span> <img id='link' src='/linkToPost.svg' /></span>
-                  <span className='date'>{el.date}</span>
-                </div>
-              </div>
-            )
-          }
-        </div>
-        <div>
-          <div className='titles'>In Review</div>
+  if (signedIn) {
+    router.push('/sign-in');
+    return null
+  } else {
+    return (<div id="parentWrapper">
+    <Header signedIn={signedIn}/>
+    <div className="resultsSection">
+      <div className="homeContainer">
+        {
+          windowWidth > 1215 ? <HomeMenu /> : ''
+        }
+        <div className="postStatusContainer">
+          <div>
+            <div className='titles'>Published</div>
             {
-              inReview.map(el =>
+              published.map(el =>
                 <div className='body'>
                   <p>{_.startCase(el.title)}</p>
                   <div>
-                    <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src='/sm/pin.svg' /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
+                    <span className='platform'><img id='smlg' src='/sm/pin.svg' /> <span>{_.startCase(el.platform)}</span> <img id='link' src='/linkToPost.svg' /></span>
+                    <span className='date'>{el.date}</span>
                   </div>
                 </div>
               )
             }
-        </div>
-        <div>
-          <div className='titles'>Need Revision</div>
-          {
-            rejected.map(el => 
-              <div className='body'>
-                <p className='postTitle'>{_.startCase(el.title)}</p>
-                <div>
-                    <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src='/sm/pin.svg' /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
+          </div>
+          <div>
+            <div className='titles'>In Review</div>
+              {
+                inReview.map(el =>
+                  <div className='body'>
+                    <p>{_.startCase(el.title)}</p>
+                    <div>
+                      <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src='/sm/pin.svg' /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
+                    </div>
+                  </div>
+                )
+              }
+          </div>
+          <div>
+            <div className='titles'>Need Revision</div>
+            {
+              rejected.map(el => 
+                <div className='body'>
+                  <p className='postTitle'>{_.startCase(el.title)}</p>
+                  <div>
+                      <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src='/sm/pin.svg' /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
+                  </div>
+                  <div id="feedback-box">
+                    {
+                      el.explanation.split('\n').map(elem => 
+                        <div className='feedback-points part'>{elem}</div>
+                      )
+                    }
+                    <button onClick={ () => { router.push('/dashboard/publish-a-post'); } } className="create-post-button">Create a New Post</button>
+                  </div>
                 </div>
-                <div id="feedback-box">
-                  {
-                    el.explanation.split('\n').map(elem => 
-                      <div className='feedback-points part'>{elem}</div>
-                    )
-                  }
-                  <button onClick={ () => { router.push('/dashboard/publish-a-post'); } } className="create-post-button">Create a New Post</button>
-                </div>
-              </div>
-            )
-          }
+              )
+            }
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <Footer />
-  </div>)
+    <Footer />
+    </div>)
+  }  
 
 };
 

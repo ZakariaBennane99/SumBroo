@@ -50,11 +50,15 @@ const PostSchema = new Schema({
         required: true
     },
     platform: String,
-    publishingDate: Date,
-    content: PostContentSchema,
-    comment: String, // for rejected posts
     postLink: String, // for published posts
-    postId: String // post ID from the platform API
+    postTitle: String, // this is only within SumBroo
+    publishingDate: Date,
+    // before the review, this represents the date at which 
+    // user hit publish after the review this should be 
+    // updated to the actual publishing date (in case of accepting the post)
+    postId: String, // post ID from the platform API
+    content: PostContentSchema, // after publishing remove the content
+    comment: String, // for rejected posts
 });
 
 const SocialMediaLinkSchema = new Schema({
