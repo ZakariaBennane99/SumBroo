@@ -19,6 +19,8 @@ import jwt from 'jsonwebtoken';
 
 const Analytics = ({ signedIn }) => {
 
+  const router = useRouter();
+
   const [windowWidth, setWindowWidth] = useState(null);
 
   useEffect(() => {
@@ -410,7 +412,11 @@ const Analytics = ({ signedIn }) => {
     })
   };
 
-  return (<div id="parentWrapper">
+  if (signedIn) {
+    router.push('/sign-in');
+    return null
+  } else {
+    return (<div id="parentWrapper">
     <Header signedIn={signedIn}/>
     <div className="resultsSection">
       <div className="homeContainer">
@@ -465,6 +471,7 @@ const Analytics = ({ signedIn }) => {
     </div>
     <Footer />
   </div>)
+  }
 
 };
 
