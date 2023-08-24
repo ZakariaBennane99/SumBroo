@@ -52,7 +52,6 @@ const LinkedAccounts = ({ userId, AllAccounts, newUser, signedIn }) => {
         } 
     */
 
-
   if (!signedIn) {
     router.push('/sign-in');
     return null

@@ -4,8 +4,12 @@ import SettingsMenu from "../../../../components/SettingsMenu";
 import { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import { Tadpole } from "react-svg-spinners";
+import { useRouter } from "next/router";
+
 
 const Billing = ({ signedIn }) => {
+
+  const router = useRouter();
 
     const [windowWidth, setWindowWidth] = useState(null);
 
@@ -74,45 +78,50 @@ const Billing = ({ signedIn }) => {
     };
 
 
-    return (<div id="parentWrapper">
-        <Header signedIn={true}/>
-        <div className="resultsSection">
-            <div className="homeContainer">
-                {
-                    windowWidth > 1215 ? <SettingsMenu /> : ''
-                }
-                <div className="paymentContainer">
-                    <div>
-                        <p>When clicking on the button below, you'll be redirected to a secure Stripe page to manage your billing details.</p>
-                        <button className={`button ${isLoading ? 'loading' : ''}`} onClick={handleBilling} style={{ paddingLeft: '15px', paddingRight: '15px' }} disabled={isLoading ? true : false}>
-                        {isLoading ? <Tadpole width={20} color='white' /> : <>Manage Billing <img src="/pinterest/external-white.svg" /></>}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <Modal
-          isOpen={isError}
-          style={customStyles}
-          contentLabel="Example Modal"
-            >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
-            <span onClick={() => location.reload()}
-              style={{ backgroundColor: '#1465e7', 
-              color: "white",
-              padding: '10px', 
-              cursor: 'pointer',
-              fontFamily: 'Ubuntu',
-              borderRadius: '3px',
-              fontSize: '1.1em',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-               }}>Try again</span>
+    if (!signedIn) {
+      router.push('/sign-in');
+      return null
+    } else {
+      return (<div id="parentWrapper">
+      <Header signedIn={true}/>
+      <div className="resultsSection">
+          <div className="homeContainer">
+              {
+                  windowWidth > 1215 ? <SettingsMenu /> : ''
+              }
+              <div className="paymentContainer">
+                  <div>
+                      <p>When clicking on the button below, you'll be redirected to a secure Stripe page to manage your billing details.</p>
+                      <button className={`button ${isLoading ? 'loading' : ''}`} onClick={handleBilling} style={{ paddingLeft: '15px', paddingRight: '15px' }} disabled={isLoading ? true : false}>
+                      {isLoading ? <Tadpole width={20} color='white' /> : <>Manage Billing <img src="/pinterest/external-white.svg" /></>}</button>
+                  </div>
+              </div>
           </div>
-        </Modal>
-        <Footer />
-  </div>)
+      </div>
+      <Modal
+        isOpen={isError}
+        style={customStyles}
+        contentLabel="Example Modal"
+          >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+          <span onClick={() => location.reload()}
+            style={{ backgroundColor: '#1465e7', 
+            color: "white",
+            padding: '10px', 
+            cursor: 'pointer',
+            fontFamily: 'Ubuntu',
+            borderRadius: '3px',
+            fontSize: '1.1em',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+             }}>Try again</span>
+        </div>
+      </Modal>
+      <Footer />
+    </div>)
+    }
 };
 
 export default Billing;
