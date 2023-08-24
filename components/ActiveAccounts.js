@@ -70,10 +70,10 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
                                 <img src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAvailableImg' /><span>{capitalize(platform.name)}</span>
                                 <span className='tooltip'>
                                 {
-                                    platform.status === '' ? 
-                                    '' 
+                                    platform.status === 'canceledSubscriptionPayment' ? 
+                                    'Re-activate your subscription to continue posting.' 
                                     :
-                                    
+                                    'Please fix your payment issues.'
                                 }
                                 </span>
                             </div>

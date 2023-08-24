@@ -10,6 +10,7 @@ import Targeting from '../../../../components/Targeting';
 import PinterestPostPreview from "../../../../components/PinterestPostPreview";
 import dynamic from 'next/dynamic';
 import Modal from 'react-modal';
+import { useRouter } from "next/router";
 
 
 
@@ -33,6 +34,8 @@ function allObjectsHaveSameValueForKey(arr, key) {
 
 
 const PublishAPost = ({ signedIn, isServerError, platforms }) => {
+
+  const router = useRouter();
 
   if (!signedIn || isServerError) {
     router.push('/sign-in');

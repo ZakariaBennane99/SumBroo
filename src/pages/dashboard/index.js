@@ -5,10 +5,13 @@ import { useState, useEffect } from "react";
 import HomeMenu from "../../../components/HomeMenu";
 import Header from "../../../components/Header";
 import Footer from '../../../components/Footer';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
+import { useRouter } from "next/router";
 
 
 const Home = ({ signedIn }) => {
+
+  const router = useRouter();
 
   const [windowWidth, setWindowWidth] = useState(null);
 
@@ -27,21 +30,26 @@ const Home = ({ signedIn }) => {
     }
   }, []);
 
-  return (<div id="parentWrapper">
-  <Header signedIn={signedIn}/>
-  <div className="resultsSection">
-    <div className="homeContainer">
-      {
-        windowWidth > 1215 ? <HomeMenu /> : ''
-      }
-      <div style={{ width: windowWidth > 1215 ? '80%' : '100%', height: windowWidth > 1215 ? 'fit-content' : '100vh' }} className="rightSectionZenContainer">
-        <img src="./zenMode.svg" alt="editing"/>
+
+  if (signedIn) {
+    router.push('/sign-in');
+    return null
+  } else {
+    return (<div id="parentWrapper">
+    <Header signedIn={signedIn}/>
+    <div className="resultsSection">
+      <div className="homeContainer">
+        {
+          windowWidth > 1215 ? <HomeMenu /> : ''
+        }
+        <div style={{ width: windowWidth > 1215 ? '80%' : '100%', height: windowWidth > 1215 ? 'fit-content' : '100vh' }} className="rightSectionZenContainer">
+          <img src="./zenMode.svg" alt="editing"/>
+        </div>
       </div>
     </div>
-  </div>
-  <Footer />
-</div>)
-
+    <Footer />
+  </div>)
+  }
 };
 
 export default Home;
