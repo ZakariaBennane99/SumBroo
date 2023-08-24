@@ -24,6 +24,13 @@ const options = [
   { value: 'instagram', label: 'Instagram' },
 ];
 
+function allObjectsHaveSameValueForKey(arr, key) {
+  if (arr.length === 0) return true; // or handle empty array as you see fit
+
+  const firstValue = arr[0][key];
+  return arr.every(obj => obj[key] === firstValue);
+}
+
 
 const PublishAPost = ({ signedIn, isServerError, platforms }) => {
 
@@ -89,8 +96,8 @@ const PublishAPost = ({ signedIn, isServerError, platforms }) => {
   };
 
 
-  // if platforms are empty 
-  if (platforms.length === 0) {
+  // Show this section if all the social Media 
+  if (allObjectsHaveSameValueForKey(platforms, 'status') && platforms[0].status !== 'active') {
     return (<div id="parentWrapper">
     <Header signedIn={signedIn}/>
     <div className="resultsSection">
@@ -100,20 +107,48 @@ const PublishAPost = ({ signedIn, isServerError, platforms }) => {
             {
               windowWidth > 1215 ? <HomeMenu /> : ''
             }
-            <div>
-              <p>
-                You have 
-              </p>
-            </div>
+            {
+              platforms[0].status === 'canceledSubscriptionPayment' ? 
+              <div className="notification">
+                <img src='/infotip.svg' alt="Info Tip" />
+                <p>Your subscription has been canceled.</p>
+                <Link href="/settings/billing">
+                  <button className="link-button">Restart Subscription</button>
+                </Link>
+              </div>
+              :
+              <div className="notification">
+                <img src='/infotip.svg' alt="Info Tip" />
+                <p>There seems to be an issue with your billing.</p>
+                <Link href="/settings/billing">
+                  <button className="link-button">Go To Billing</button>
+                </Link>
+              </div>
+            }
           </div>
           :
           <div className="homeContainer">
             {
               windowWidth > 1215 ? <HomeMenu /> : ''
             }
-            <div>
-
-            </div>
+            {
+              platforms[0].status === 'canceledSubscriptionPayment' ? 
+              <div className="notification">
+                <img src='/infotip.svg' alt="Info Tip" />
+                <p>Your subscription has been canceled.</p>
+                <Link href="/settings/billing">
+                  <button className="link-button">Restart Subscription</button>
+                </Link>
+              </div>
+              :
+              <div className="notification">
+                <img src='/infotip.svg' alt="Info Tip" />
+                <p>There seems to be an issue with your billing.</p>
+                <Link href="/settings/billing">
+                  <button className="link-button">Go To Billing</button>
+                </Link>
+              </div>
+            }
           </div>
         }
         <Modal
@@ -252,6 +287,7 @@ export async function getServerSideProps(context) {
   const Stripe = require('stripe');
   const { connectUserDB } = require('../../../../utils/connectUserDB');
   const User = require('../../../../utils/User');
+  const AvAc = require('../../../../utils/AvailableAccounts')
   const jwt = require('jsonwebtoken');
 
   async function getCusPriceId(id) {
@@ -301,6 +337,15 @@ export async function getServerSideProps(context) {
       return 'pendingSubscriptionPayment'
     } 
   }
+
+  const updateStatusByName = (name, newStatus, arr) => {
+    for (let obj of arr) {
+      if (obj.name === name) {
+        obj.status = newStatus;
+        break;  // Exit the loop once the item is found
+      }
+    }
+  };
 
   try {
 
@@ -370,48 +415,36 @@ export async function getServerSideProps(context) {
 
     // now query your DB
     const users = await User.find({ "socialMediaLinks.pricePlans": activePriceId }, 'socialMediaLinks.platformName');
-        
-    const platformNames = [];
+    const avac = await AvAc.find();
+    
+    const platformNames = avac.accounts.map(acc => {
+      return (
+        {
+          name: acc.ac,
+          status: acc.status
+        }
+      )
+    });
 
     users.forEach(user => {
         user.socialMediaLinks.forEach(link => {
             if (link.pricePlans.includes(activePriceId)) {
-                link.profileStatus = 'active'
-                platformNames.push({ 
-                  name: link.platformName,
-                  status: 'active'
-                });
+                link.profileStatus = 'active';
+                updateStatusByName(link.platformName, 'active', platformNames);
             } else {
               const st = getStatus(subStatus)
               link.profileStatus = st
-              platformNames.push({ 
-                name: link.platformName,
-                status: st
-              });
+              updateStatusByName(link.platformName, 'active', platformNames);
             }
         });
     });
 
     console.log(platformNames);
 
-
-    if (platformNames.length > 0) {
-      return {
-        props: {
-          signedIn: true,
-          isServerError: false,
-          platforms: platformNames
-        }
-      };
-    }
-
-
-    // no active subscriptions
     return {
       props: {
         signedIn: true,
         isServerError: false,
-        // empty array
         platforms: platformNames
       }
     };

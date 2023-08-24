@@ -5,7 +5,11 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 
-const ActiveAccounts = ({ setPlatform }) => {
+function capitalize(word) {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+}
+
+const ActiveAccounts = ({ setPlatform, platforms }) => {
 
     const [isOpen, setIsOpen] = useState(true);
     const [selectedPlatform, setSelectedPlatform] = useState();
@@ -39,61 +43,44 @@ const ActiveAccounts = ({ setPlatform }) => {
             </div>
         </div>
         {isOpen && <div className='platformsContainer'>
-            <div>
-                <div className="cell-content notAvailable">
-                    <img src='/sm/facebook.svg' alt='facebook-logo' className='notAvailableImg' /><span>Facebook</span>
-                    <span className='tooltip'>Coming soon!</span>
-                </div>
-            </div>
-            <div>
-                <div className="cell-content notAvailable" >
-                    <img src='/sm/instagram.svg' alt='instagram-logo' className='notAvailableImg' /><span>Instagram</span>
-                    <span className='tooltip'>Coming soon!</span>
-                </div>
-            </div>
-            <div>
-                <div className="cell-content notAvailable">
-                    <img src='/sm/twitter.svg' alt='twitter-logo' className='notAvailableImg' /><span>Twitter</span>
-                    <span className='tooltip'>Coming soon!</span>
-                </div>
-            </div>
-            <div>
-                <div className="cell-content notAvailable">
-                    <img src='/sm/linkedin.svg' alt='linkedIn-logo' className='notAvailableImg' /><span>LinkedIn</span>
-                    <span className='tooltip'>Coming soon!</span>
-                </div>
-            </div>
-            <div>
-                <div className="cell-content notAvailable">
-                    <img src='/sm/tiktok.svg' alt='tiktok-logo' className='notAvailableImg' /><span>TikTok</span>
-                    <span className='tooltip'>Coming soon!</span>
-                </div>
-            </div>
-            <div>
-                <div className="cell-content notAvailable">
-                    <img src='/sm/youtube.svg' alt='youtube-logo' className='notAvailableImg' /><span>YouTube</span>
-                    <span className='tooltip'>Coming soon!</span>
-                </div>
-            </div>
-            <div>
-                <div className="cell-content notAvailable">
-                    <img src='/sm/vimeo.svg' alt='vimeo-logo' className='notAvailableImg' /><span>Vimeo</span>
-                    <span className='tooltip'>Coming soon!</span>
-                </div>
-            </div>
-            <div>
-                <div className="cell-content" onClick={() => handleClick('pinterest')} style={{ 
-                    backgroundColor: selectedPlatform === 'pinterest' ? '#b9b9c6' : '' }}>
-                    <img src='/sm/pinterest.svg' alt='pinterest-logo' style={{ borderRadius: '50%' }} /><span>Pinterest</span>
-                    {selectedPlatform === 'pinterest' ? <img src='/check.svg' alt='checkmark' id='checkmark' /> : '' }
-                </div>
-            </div>
-            <div>
-                <div className="cell-content notAvailable">
-                    <img src='/sm/flic.svg' alt='flickr-logo' className='notAvailableImg' /><span>Flickr</span>
-                    <span className='tooltip'>Coming soon!</span>
-                </div>
-            </div>
+            {
+                platforms.map(platform => {
+                    if (platform.status === 'active') {
+                        return (
+                            <div>
+                                <div className="cell-content" onClick={() => handleClick('pinterest')} style={{ 
+                                    backgroundColor: selectedPlatform === 'pinterest' ? '#b9b9c6' : '' }}>
+                                    <img src='/sm/pinterest.svg' alt='pinterest-logo' style={{ borderRadius: '50%' }} /><span>Pinterest</span>
+                                    {selectedPlatform === platform.name ? <img src='/check.svg' alt='checkmark' id='checkmark' /> : '' }
+                                </div>
+                            </div>
+                        )
+                    } else if (platform.status === 'notAvailale') {
+                        return (
+                        <div>
+                            <div className="cell-content notAvailable">
+                                <img src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAvailableImg' /><span>{capitalize(platform.name)}</span>
+                                <span className='tooltip'>Coming soon!</span>
+                            </div>
+                        </div>
+                        )
+                    } else {
+                        <div>
+                            <div className="cell-content notAvailable">
+                                <img src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAvailableImg' /><span>{capitalize(platform.name)}</span>
+                                <span className='tooltip'>
+                                {
+                                    platform.status === '' ? 
+                                    '' 
+                                    :
+                                    
+                                }
+                                </span>
+                            </div>
+                        </div>
+                    }
+                })
+            }
         </div>}
     </div>)
 
