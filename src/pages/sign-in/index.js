@@ -8,6 +8,8 @@ import React, { useState } from 'react';
 import { faEye, faEyeSlash, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
+import { Tadpole } from "react-svg-spinners";
+
 
 
 const SignIn = () => {
@@ -280,9 +282,14 @@ const SignIn = () => {
                         onMouseOver={handleHover}
                         onMouseOut={handleHover}
                         onClick={loginUser}
-                        style={{ paddingRight: hovered ? "70px" : "" }} disabled={isClicked}>Sign In</button>
-                      <FontAwesomeIcon icon={faArrowRight} 
-                      style={{ position: 'absolute', fontSize:'20px', right: hovered ? '30' : '-30', transition: '0.5s', bottom:'10' , color: 'white' }}/>
+                        className={`button ${isClicked ? 'loading' : ''}`}
+                        style={{ paddingRight: hovered ? "70px" : "" }} disabled={isClicked}>{isClicked ? <Tadpole height={15} color='white' /> : 'Sign In'}</button>
+                        {
+                          isClicked ? 
+                          '' :
+                          <FontAwesomeIcon icon={faArrowRight} 
+                            style={{ position: 'absolute', fontSize:'20px', right: hovered ? '30' : '-30', transition: '0.5s', bottom:'10' , color: 'white' }}/>
+                        }
                     </div>
                     <p onClick={handleChangePass} className='forgot-pass'>Forgot Password?</p>
                 </form> :

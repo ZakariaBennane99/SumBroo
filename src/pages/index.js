@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Bowser from "bowser";
-import { Tadpole } from "react-svg-spinners";
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { useRouter } from 'next/router';
@@ -62,7 +61,7 @@ const Landing = () => {
   // send the token to the backend
   return (
     <div id='parentWrapper'>
-      <Header singedIn={false} />
+      <Header singedIn={true} isLanding={true} />
       <div id='heroSection'>
         <h1>Efficiently Maximize Your Impact with SumBroo and Grow Faster & Cheaper Than Ever</h1>
         <p>Enjoy a surge in your <span>growth rate</span> and <span>audience reach</span>, experience a daily dose of <span>high-quality content</span>, and keep your wallet happy with our <span>very affordable plans</span>.</p>

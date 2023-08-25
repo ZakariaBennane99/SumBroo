@@ -1,132 +1,111 @@
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable jsx-a11y/alt-text */
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import SlideMenu from './SlideMenu';
 
-const Header = ({ signedIn }) => {
+const Header = ({ signedIn, isLanding }) => {
 
-
-  // sign out user when clicked on sign out
+  const landing = isLanding || false;
 
   const [windowWidth, setWindowWidth] = useState(null);
-  
-  const [isSignOuClicked, setIsSignOutClicked] = useState(false)
+  const [isSubMenuOpen1, setIsSubMenuOpen1] = useState(false);
+  const [isSubMenuOpen2, setIsSubMenuOpen2] = useState(false);
+  const [isSignOutClicked, setIsSignOutClicked] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
-    // Update the window width when the window is resized
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    }
-
+    const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
-
-    // Cleanup: remove the event listener when the component is unmounted
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    }
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const [isSubMenuOpen1, setIsSubMenuOpen1] = useState(false)
-  const [isSubMenuOpen2, setIsSubMenuOpen2] = useState(false)
-
-  const router = useRouter();
-
-
-  function signOut() {
-    // here to make a request to the backend to destroy the 
-    // the cookie, then delete take the user to the landing page or sign in
-    // don't forget to 'setIsSignOutClicked(true)'
+  async function signOutUser() {
+    setIsSignOutClicked(true)
+    const url = 'http://localhost:4050/api/sign-out-user';
+    try {
+      const res = await axios.post(url, {}, { withCredentials: true });
+      if (res.status === 200) {
+        router.push('/sign-in');
+      } else {
+        console.error(`Unexpected status code: ${res.status}`);
+      }
+    } catch (err) {
+      console.error(err);
+      setIsServerErr(true);
+    }
   }
 
+  const renderLinks = (isMobile) => {
+    return signedIn ? renderSignedInLinks(isMobile) : renderSignedOutLinks();
+  };
 
-  const renderLinks = (isMobile) => (
-    <>
-      {
-        signedIn ? (
-          isMobile ? 
-            <div id='mobile-sub-menu-wrapper'>
-              <p onClick={() => setIsSubMenuOpen1(!isSubMenuOpen1)} style={{  
-                color: router.pathname.includes('/dashboard') ? '#484876' : '', margin: '0px' }} >Dashboard <span> {
-                  (router.pathname.includes('/dashboard') || isSubMenuOpen1 ) ? <img style={{ height: 'fit-content' }} src={router.pathname.includes('/dashboard') ? '/menu-dropper-active.svg' : '/menu-dropper-inactive.svg' } /> : <img style={{ width: '16px' }} src='/menu-dropper.svg' />
-                }</span></p>
-                {
-                  (isSubMenuOpen1 || router.pathname.includes('dashboard')) ?
-                  <div id='mobile-sub-menu'>
-                    <Link href='/dashboard/publish-a-post' style={{ color: router.pathname === '/dashboard/publish-a-post' ? 'rgb(72, 72, 118)' : 'none' }}>
-                      Publish Post
-                    </Link>
-                    <Link href='/dashboard/analytics' style={{ color: router.pathname === '/dashboard/analytics' ? 'rgb(72, 72, 118)' : 'none'}}>
-                      Analytics
-                    </Link>
-                    <Link href='/dashboard/posts-status' style={{ color: router.pathname === '/dashboard/posts-status' ? 'rgb(72, 72, 118)' : 'none'}}>
-                      Post Status
-                    </Link>
-                    <Link href='/dashboard/archived-posts' style={{ color: router.pathname === '/dashboard/archived-posts' ? 'rgb(72, 72, 118)' : 'none'}}>
-                      Archive
-                    </Link>
-                  </div> 
-                  : ''
-                }
+  const renderSignedInLinks = (isMobile) => {
+    return isMobile ? renderMobileSignedInLinks() : renderDesktopSignedInLinks();
+  };
 
-            </div>:
-            <Link href='/dashboard'>
-              <p style={{ 
-                borderBottom: router.pathname.includes('/dashboard') ? '2px solid #484876' : 'none', 
-                color: router.pathname.includes('/dashboard') ? '#484876' : '' }} >Dashboard</p>
-          </Link>
-        )
-          : <Link href='/blog'><p style={{ 
-            borderBottom: router.pathname.includes('/blog') ? '2px solid #484876' : 'none', 
-            color: router.pathname.includes('/blog') ? '#484876' : '' }} >Blog</p></Link>
-      }
-      {
-        signedIn ? (
-          isMobile ? 
-            <div id='mobile-sub-menu-wrapper'>
-              <p onClick={() => setIsSubMenuOpen2(!isSubMenuOpen2)} style={{  
-                color: router.pathname.includes('/settings') ? '#484876' : '', margin: '0px', width: '188.67px' }} >Settings <span> {
-                  (router.pathname.includes('/settings') || isSubMenuOpen2 ) ? <img style={{ height: 'fit-content' }} src={router.pathname.includes('/settings') ? '/menu-dropper-active.svg' : '/menu-dropper-inactive.svg' } /> : <img style={{ width: '16px' }} src='/menu-dropper.svg' />
-                }</span></p>
-                {
-                  (isSubMenuOpen2 || router.pathname.includes('settings')) ?
-                  <div id='mobile-sub-menu'>
-                    <Link href='/settings/linked-accounts' style={{ color: router.pathname === '/settings/linked-accounts' ? 'rgb(72, 72, 118)' : 'none'}}>
-                      Linked Accounts
-                    </Link>
-                    <Link href='/settings/account-settings' style={{ color: router.pathname === '/settings/account-settings' ? 'rgb(72, 72, 118)' : 'none'}}>
-                      Account Settings
-                    </Link>
-                    <Link href='/settings/billing' style={{ color: router.pathname === '/settings/billing' ? 'rgb(72, 72, 118)' : 'none'}}>
-                      Billing
-                    </Link>
-                    <button onClick={signOut} className="sign-out" disabled={isSignOuClicked}>
-                      Sign Out
-                    </button>
-                  </div> 
-                  : ''
-                }
+  const renderMobileSignedInLinks = () => {
+    return (
+      <div id='mobile-sub-menu-wrapper'>
+        {renderSubMenu('Dashboard', 'dashboard', isSubMenuOpen1, setIsSubMenuOpen1)}
+        {renderSubMenu('Settings', 'settings', isSubMenuOpen2, setIsSubMenuOpen2)}
+      </div>
+    );
+  };
 
-            </div> :
-            <Link href='/settings'>
-              <p style={{ 
-                borderBottom: router.pathname.includes('/settings') ? '2px solid #484876' : 'none', 
-                color: router.pathname.includes('/settings') ? '#484876' : '' }} >Settings</p>
-            </Link>
-        )
-          : <>
-            <Link href='/pricing'><p style={{ 
-              borderBottom: router.pathname.includes('/pricing') ? '2px solid #484876' : 'none', 
-              color: router.pathname.includes('/pricing') ? '#484876' : '' }} >Pricing</p></Link>
-            <Link href='/sign-in'><p style={{ 
-              borderBottom: router.pathname.includes('/sign-in') ? '2px solid #484876' : 'none', 
-              color: router.pathname.includes('/sign-in') ? '#484876' : '' }}>Sign In</p></Link>
-          </>
-      }
-    </>
-  );
+  const renderDesktopSignedInLinks = () => {
+    if (landing) {
+      return (
+        <>
+          <Link href='/blog'><p>Blog</p></Link>
+          <Link href='/dashboard'><p>Dashboard</p></Link>
+          <Link href='/settings'><p>Settings</p></Link>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Link href='/dashboard'><p>Dashboard</p></Link>
+          <Link href='/settings'><p>Settings</p></Link>
+        </>
+      );
+    }
+  };
+
+  const renderSubMenu = (title, path, isOpen, setOpen) => {
+    return (
+      <>
+        <div onClick={() => setOpen(!isOpen)}>
+          {title}
+          <img src={router.pathname.includes(`/${path}`) || isOpen ? '/menu-dropper-active.svg' : '/menu-dropper.svg'} />
+        </div>
+        {(isOpen || router.pathname.includes(`/${path}`)) && (
+          <div id='mobile-sub-menu'>
+            <Link href={`/${path}/linked-accounts`}>Linked Accounts</Link>
+            <Link href={`/${path}/account-settings`}>Account Settings</Link>
+            <Link href={`/${path}/billing`}>Billing</Link>
+            title === 'Settings' && <button onClick={signOutUser} disabled={isSignOutClicked}>Sign Out</button>
+          </div>
+        )}
+      </>
+    );
+  };
+
+  const renderSignedOutLinks = () => {
+    return (
+      <>
+        <Link href='/blog'><p>Blog</p></Link>
+        <Link href='/pricing'><p>Pricing</p></Link>
+        <Link href='/sign-in'><p>Sign In</p></Link>
+      </>
+    );
+  };
+
+  const isMobile = () => windowWidth < 750;
+
+  const shouldRenderMobileLinks = () => {
+    return (router.pathname.includes('dashboard') || router.pathname.includes('settings')) && windowWidth < 1215 || isMobile();
+  };
 
   return (
     <div id='header'>
@@ -138,14 +117,12 @@ const Header = ({ signedIn }) => {
         </span>
       </span>
 
-      {
-        (router.pathname.includes('dashboard') || router.pathname.includes('settings')) && windowWidth < 1215 || windowWidth < 750 ? 
+      { shouldRenderMobileLinks() ? 
         <SlideMenu links={renderLinks(true)} /> :
         <div className='desktop-menu'>
-          { renderLinks() }
+          { renderLinks(false) }
         </div>
       }
-
     </div>
   );
 };

@@ -786,14 +786,16 @@ a {
 .signUpForm .button.loading,
 .payment-container .button.loading,
 .password-container .button.loading,
-.paymentContainer div .button.loading {
+.paymentContainer div .button.loading,
+.loginForm .button.loading {
     background: #73739a;
     cursor: auto;
 }
 
 .payment-container .button.loading:hover,
-.password-container .button.loading:hover
-.paymentContainer div .button.loading:hover {
+.password-container .button.loading:hover,
+.paymentContainer div .button.loading:hover,
+.loginForm .button.loading {
     background: #73739a;
 }
 
