@@ -26,26 +26,23 @@ const AccountSettings = ({ userData }) => {
       }
     }, []);
 
-    const [userInfo, setUserInfo] = useState({
-      username: '',
-      email: '',
-      newPassword: '',
-      confirmPassword: ''
-    })
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [newPass, setNewPass] = useState('')
+    const [confirmPass, setConfirmPass] = useState('')
 
-    function handleUserInfo(e) {
-        setUserInfo(prev => {
-            return {
-                ...prev,
-                [e.target.name]: e.target.value
-            }
-        })
+
+    function updateName() {
+
     }
 
+    function updateEmail() {
 
-    useEffect(() => {
-      console.log(userInfo)
-    }, [userInfo])
+    }
+
+    function updatePassword() {
+
+    }
 
     return (<div id="parentWrapper">
       <Header signedIn={true}/>
@@ -66,9 +63,9 @@ const AccountSettings = ({ userData }) => {
                           </div>
                           <div>
                               <label className="titles">New Username</label>
-                              <input type="text" placeholder="New username" name="username" onChange={handleUserInfo} />
+                              <input type="text" placeholder="New username" name="username" onChange={(e) => setName(e.target.value)} />
                           </div>
-                          <button>Update Username</button>
+                          <button onClick={updateName}>Update Username</button>
                       </div>
                   </div>
 
@@ -83,9 +80,9 @@ const AccountSettings = ({ userData }) => {
                           </div>
                           <div>
                               <label className="titles">New Email</label>
-                              <input type="email" placeholder="New email" name="email" onChange={handleUserInfo} />
+                              <input type="email" placeholder="New email" name="email" onChange={(e) => setEmail(e.target.value)} />
                           </div>
-                          <button>Update Email</button>
+                          <button onClick={updateEmail}>Update Email</button>
                       </div>
                   </div>
 
@@ -96,13 +93,13 @@ const AccountSettings = ({ userData }) => {
                       <div className='body'>
                           <div>
                               <label className="titles">New password</label>
-                              <input type="password" placeholder="New password" name="newPassword" onChange={handleUserInfo} />
+                              <input type="password" placeholder="New password" name="newPassword" onChange={(e) => setNewPass(e.target.value)} />
                           </div>
                           <div>
                               <label className="titles">Confirm Password</label>
-                              <input type="password" placeholder="Confirm password" name="confirmPassword" onChange={handleUserInfo} />
+                              <input type="password" placeholder="Confirm password" name="confirmPassword" onChange={(e) => setConfirmPass(e.target.value)} />
                           </div>
-                          <button>Update Password</button>
+                          <button onClick={updatePassword}>Update Password</button>
                       </div>
                   </div>
               </div>
