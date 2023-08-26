@@ -6,9 +6,9 @@ let userDbConnection = null;
 let userConnectionEstablishedPromise = null;
 
 let User; 
-let AvAc; // Declare AvAc outside the function to use it elsewhere
+let AvAc;
 
-const connectUserDB = () => {
+const connectUserDB = async () => {
     if (!userConnectionEstablishedPromise) {
         userConnectionEstablishedPromise = new Promise(async (resolve, reject) => {
             try {
@@ -19,14 +19,12 @@ const connectUserDB = () => {
                 userDbConnection.once('open', () => {
                     console.log('USERS MongoDB Connected...');
 
-                    // Associate the existing UserSchema with this connection
                     if (!userDbConnection.models.User) {
                         User = userDbConnection.model('User', UserModel.schema);
                     } else {
                         User = userDbConnection.models.User;
                     }
 
-                    // Associate the existing AvAcSchema with this connection
                     if (!userDbConnection.models.avac) {
                         AvAc = userDbConnection.model('AvAc', AvAcModel.schema);
                     } else {
@@ -45,8 +43,12 @@ const connectUserDB = () => {
             }
         });
     }
-    return userConnectionEstablishedPromise;
+    await userConnectionEstablishedPromise;
+    return {
+        connection: userDbConnection,
+        User: User,
+        AvAc: AvAc
+    };
 };
-
 
 export { connectUserDB, userDbConnection };

@@ -29,15 +29,9 @@ const AccountSettings = ({ userData }) => {
     const [userInfo, setUserInfo] = useState({
       username: '',
       email: '',
-      password: '',
-      oldPassword: ''
+      newPassword: '',
+      confirmPassword: ''
     })
-
-    const data = {
-      username: 'Maker89',
-      email: 'manOnFire@mail.com',
-      password: 'backendSex'
-    }
 
     function handleUserInfo(e) {
         setUserInfo(prev => {
@@ -68,7 +62,7 @@ const AccountSettings = ({ userData }) => {
                       <div className='body'>
                           <div>
                               <span className="titles">Current Username</span>
-                              <span className="old">{data.username}</span>
+                              <span className="old">{userData.username}</span>
                           </div>
                           <div>
                               <label className="titles">New Username</label>
@@ -85,7 +79,7 @@ const AccountSettings = ({ userData }) => {
                       <div className='body'>
                           <div>
                               <span className="titles">Current Email</span>
-                              <span className="old">{data.email}</span>
+                              <span className="old">{userData.email}</span>
                           </div>
                           <div>
                               <label className="titles">New Email</label>
@@ -101,12 +95,12 @@ const AccountSettings = ({ userData }) => {
                       </div>
                       <div className='body'>
                           <div>
-                              <label className="titles">Current password</label>
-                              <input type="password" placeholder="Current password" name="oldPassword" onChange={handleUserInfo} />
+                              <label className="titles">New password</label>
+                              <input type="password" placeholder="New password" name="newPassword" onChange={handleUserInfo} />
                           </div>
                           <div>
-                              <label className="titles">New Password</label>
-                              <input type="password" placeholder="New password" name="password" onChange={handleUserInfo} />
+                              <label className="titles">Confirm Password</label>
+                              <input type="password" placeholder="Confirm password" name="confirmPassword" onChange={handleUserInfo} />
                           </div>
                           <button>Update Password</button>
                       </div>
@@ -123,6 +117,9 @@ export default AccountSettings;
 export async function getServerSideProps(context) {
 
   const jwt = require('jsonwebtoken');
+  const User = require('../../../../utils/User');
+  const { connectUserDB, userDbConnection } = require('../../../../utils/connectUserDB');
+  const mongoSanitize = require('express-mongo-sanitize');
 
     try {
   
@@ -147,14 +144,41 @@ export async function getServerSideProps(context) {
           },
         };
       }
+
+      console.log('user Id', decoded.userId)
+
+      const userId = decoded.userId;
+
+      await connectUserDB()
+
+      console.log('db connecred')
+
+      const sanitizedUserId = mongoSanitize.sanitize(userId);
+
+      console.log('after sanitizatoin')
+      let user = await userDbConnection.model('User').findOne({ sanitizedUserId });
+      console.log0('after user connection')
+
+      console.log(user.name, user.email)
+
+      // send the data to the front end
+      const userData = {
+        username: user.name,
+        email: user.email
+      }
+
+      console.log(userData)
   
       // continue rendering
       return {
-        props: {}
+        props: {
+          userData
+        }
       };
   
   
     } catch (error) {
+      console.error("Error in getServerSideProps:", error);
       return {
         redirect: {
           destination: '/sign-in',
