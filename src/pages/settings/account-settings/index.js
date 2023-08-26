@@ -117,8 +117,7 @@ export default AccountSettings;
 export async function getServerSideProps(context) {
 
   const jwt = require('jsonwebtoken');
-  const User = require('../../../../utils/User');
-  const { connectUserDB, userDbConnection } = require('../../../../utils/connectUserDB');
+  const { connectUserDB } = require('../../../../utils/connectUserDB');
   const mongoSanitize = require('express-mongo-sanitize');
 
     try {
@@ -149,17 +148,13 @@ export async function getServerSideProps(context) {
 
       const userId = decoded.userId;
 
-      await connectUserDB()
-
-      console.log('db connecred')
-
+      
       const sanitizedUserId = mongoSanitize.sanitize(userId);
-
-      console.log('after sanitizatoin')
-      let user = await userDbConnection.model('User').findOne({ sanitizedUserId });
-      console.log0('after user connection')
-
-      console.log(user.name, user.email)
+      
+      const { User } = await connectUserDB();
+      let user = await User.findOne({ _id: sanitizedUserId });
+      
+      console.log('after user connection')
 
       // send the data to the front end
       const userData = {
@@ -187,5 +182,5 @@ export async function getServerSideProps(context) {
       };
     }
   
-  }
+}
   
