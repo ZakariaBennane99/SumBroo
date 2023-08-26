@@ -3,6 +3,8 @@ import Footer from "../../../../components/Footer";
 import SettingsMenu from "../../../../components/SettingsMenu";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Modal from 'react-modal';
+import axios from 'axios';
 
 
 const AccountSettings = ({ userData }) => { 
@@ -26,23 +28,119 @@ const AccountSettings = ({ userData }) => {
       }
     }, []);
 
+    const [isErr, setIsErr] = useState(false)
+
     const [name, setName] = useState('')
+    const [nameClicked, setNameClicked] = useState(false)
     const [email, setEmail] = useState('')
+    const [emailClicked, setEmailClicked] = useState(false)
     const [newPass, setNewPass] = useState('')
     const [confirmPass, setConfirmPass] = useState('')
+    const [passClicked, setPassClicked] = useState(false)
+    const [passErrs, setPassErrs] = useState([])
 
 
-    function updateName() {
+    async function updateName() {
+      setNameClicked(true)
+
+      const apiUrl = 'http://localhost:4050/api/update-name'
+
+      try {
+        const res = await axios.post(apiUrl, {
+          name: name
+        },  {
+          withCredentials: true
+        })
+        console.log(res)
+        if (res.status === 200) {
+          setNameClicked(false)
+          // alert user
+          alert('Your username has been changed.')
+        }
+        // send the user to the dashboard
+      } catch (error) {
+        // set Server error
+        setIsErr(true)
+      }
 
     }
 
-    function updateEmail() {
+    async function updateEmail() {
+      setEmailClicked(true)
+
+      const apiUrl = 'http://localhost:4050/api/update-email'
+
+      try {
+        const res = await axios.post(apiUrl, {
+          email: email
+        },  {
+          withCredentials: true
+        })
+        console.log(res)
+        if (res.status === 200) {
+          setEmailClicked(false)
+          // alert user
+          alert('Your email has been changed.')
+        }
+        // send the user to the dashboard
+      } catch (error) {
+        // set Server error
+        setIsErr(true)
+      }
 
     }
 
-    function updatePassword() {
+    async function updatePassword() {
+
+      // check if password match
+      if (newPass !== confirmPass) {
+        setPassErrs([`Passwords dont't match.`])
+        return
+      }
+
+      setPassClicked(true)
+
+      const apiUrl = 'http://localhost:4050/api/update-password'
+
+      try {
+        const res = await axios.post(apiUrl, {
+          newPass: newPass
+        },  {
+          withCredentials: true
+        })
+        if (res.status === 200) {
+          setPassClicked(false)
+          // alert user
+          alert('Your password has been changed.')
+        }
+        // send the user to the dashboard
+      } catch (error) {
+        // set Server error
+        setPassClicked(false)
+        console.log(error.response.status)
+        if (error.response.status === 400) {
+          setPassErrs(error.response.data.errors)
+        } else {
+          setIsErr(true)
+        }
+        
+      }
 
     }
+
+
+    const customStyles = {
+      content: {
+        width: '20%',
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        fontFamily: 'Ubuntu',
+      },
+    };
 
     return (<div id="parentWrapper">
       <Header signedIn={true}/>
@@ -65,7 +163,7 @@ const AccountSettings = ({ userData }) => {
                               <label className="titles">New Username</label>
                               <input type="text" placeholder="New username" name="username" onChange={(e) => setName(e.target.value)} />
                           </div>
-                          <button onClick={updateName}>Update Username</button>
+                          <button onClick={updateName} disabled={nameClicked}>Update Username</button>
                       </div>
                   </div>
 
@@ -82,7 +180,7 @@ const AccountSettings = ({ userData }) => {
                               <label className="titles">New Email</label>
                               <input type="email" placeholder="New email" name="email" onChange={(e) => setEmail(e.target.value)} />
                           </div>
-                          <button onClick={updateEmail}>Update Email</button>
+                          <button onClick={updateEmail} disabled={emailClicked}>Update Email</button>
                       </div>
                   </div>
 
@@ -91,20 +189,42 @@ const AccountSettings = ({ userData }) => {
                           Password
                       </div>
                       <div className='body'>
+                        {passErrs.length > 0 ? <p style={{ color: 'red', marginTop: '10px' }}>Passwords don't match.</p> : ''}
                           <div>
                               <label className="titles">New password</label>
-                              <input type="password" placeholder="New password" name="newPassword" onChange={(e) => setNewPass(e.target.value)} />
+                              <input type="password" placeholder="New password" name="newPassword" onChange={(e) => { setPassErrs([]); setNewPass(e.target.value) } } />
                           </div>
                           <div>
                               <label className="titles">Confirm Password</label>
-                              <input type="password" placeholder="Confirm password" name="confirmPassword" onChange={(e) => setConfirmPass(e.target.value)} />
+                              <input type="password" placeholder="Confirm password" name="confirmPassword" onChange={(e) => { setPassErrs([]); setConfirmPass(e.target.value) } } />
                           </div>
-                          <button onClick={updatePassword}>Update Password</button>
+                          <button onClick={updatePassword} disabled={passClicked}>Update Password</button>
                       </div>
                   </div>
               </div>
           </div>
       </div>
+        <Modal
+            isOpen={isErr}
+            style={customStyles}
+            contentLabel="Example Modal"
+              >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+              <span onClick={() => location.reload()}
+                style={{ backgroundColor: '#1465e7', 
+                color: "white",
+                padding: '10px', 
+                cursor: 'pointer',
+                fontFamily: 'Ubuntu',
+                borderRadius: '3px',
+                fontSize: '1.1em',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                 }}>Try again</span>
+            </div>
+        </Modal>
       <Footer />
     </div>)
 };
