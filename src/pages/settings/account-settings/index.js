@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 
-const AccountSettings = () => { 
+const AccountSettings = ({ userData }) => { 
 
   const router = useRouter();
 
