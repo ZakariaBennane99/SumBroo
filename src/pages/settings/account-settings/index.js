@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 
 const AccountSettingsNoSSR = dynamic(
-  () => import('../../../../components/AccountSettingsComponent'), // replace with the path to your component
+  () => import('../../../../components/AccountSettingsComponent'),
   { ssr: false }
 );
 
