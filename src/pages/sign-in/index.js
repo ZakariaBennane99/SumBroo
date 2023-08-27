@@ -103,6 +103,7 @@ const SignIn = () => {
         if (res.status === 201) {
           setIsClicked(false)
           // here save the data in the localStorage
+          console.log(res.data.userData)
           localStorage.setItem('userData', JSON.stringify(res.data.userData));
           router.push('/dashboard');
         }

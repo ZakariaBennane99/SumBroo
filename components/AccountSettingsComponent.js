@@ -19,8 +19,6 @@ function updateUserData(newData) {
 const AccountSettingsComponent = () => { 
 
     const userData = JSON.parse(localStorage.getItem('userData'));
-
-    console.log(userData)
   
     const router = useRouter();
   
@@ -176,7 +174,7 @@ const AccountSettingsComponent = () => {
                         <div className='body'>
                             <div>
                                 <span className="titles">Current Username</span>
-                                <span className="old">{userData.username}</span>
+                                <span className="old">{userData.name}</span>
                             </div>
                             <div>
                                 <label className="titles">New Username</label>
