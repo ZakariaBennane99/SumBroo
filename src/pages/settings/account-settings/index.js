@@ -34,6 +34,7 @@ const AccountSettings = ({ userData }) => {
     const [nameClicked, setNameClicked] = useState(false)
     const [email, setEmail] = useState('')
     const [emailClicked, setEmailClicked] = useState(false)
+    const [emailErrs, setEmailErrs] = useState(null)
     const [newPass, setNewPass] = useState('')
     const [confirmPass, setConfirmPass] = useState('')
     const [passClicked, setPassClicked] = useState(false)
@@ -76,7 +77,6 @@ const AccountSettings = ({ userData }) => {
         },  {
           withCredentials: true
         })
-        console.log(res)
         if (res.status === 200) {
           setEmailClicked(false)
           // alert user
@@ -85,7 +85,12 @@ const AccountSettings = ({ userData }) => {
         // send the user to the dashboard
       } catch (error) {
         // set Server error
-        setIsErr(true)
+        setEmailClicked(false)
+        if (error.response.status === 400) {
+          setEmailErrs('Please include a valid email')
+        } else {
+          setIsErr(true)
+        }
       }
 
     }
@@ -94,7 +99,7 @@ const AccountSettings = ({ userData }) => {
 
       // check if password match
       if (newPass !== confirmPass) {
-        setPassErrs([`Passwords dont't match.`])
+        setPassErrs([{ msg: `Passwords dont't match` }])
         return
       }
 
@@ -117,7 +122,6 @@ const AccountSettings = ({ userData }) => {
       } catch (error) {
         // set Server error
         setPassClicked(false)
-        console.log(error.response.status)
         if (error.response.status === 400) {
           setPassErrs(error.response.data.errors)
         } else {
@@ -172,13 +176,18 @@ const AccountSettings = ({ userData }) => {
                           Email
                       </div>
                       <div className='body'>
+                      {emailErrs ?
+                            <p style={{ fontSize: '.9em', color: 'red', marginTop: '10px' }}>{emailErrs}</p>
+                           : ''}
                           <div>
                               <span className="titles">Current Email</span>
                               <span className="old">{userData.email}</span>
                           </div>
                           <div>
                               <label className="titles">New Email</label>
-                              <input type="email" placeholder="New email" name="email" onChange={(e) => setEmail(e.target.value)} />
+                              <input type="email" placeholder="New email" name="email" 
+                              style={{ outline: emailErrs ? '1.5px solid red' : '' }} 
+                              onChange={(e) => { setEmailErrs(null); setEmail(e.target.value) }} />
                           </div>
                           <button onClick={updateEmail} disabled={emailClicked}>Update Email</button>
                       </div>
@@ -189,14 +198,22 @@ const AccountSettings = ({ userData }) => {
                           Password
                       </div>
                       <div className='body'>
-                        {passErrs.length > 0 ? <p style={{ color: 'red', marginTop: '10px' }}>Passwords don't match.</p> : ''}
+                        {passErrs.length > 0 ?
+                            passErrs.map(elem => {
+                              return <p style={{ fontSize: '.9em', color: 'red', marginTop: '10px' }}>{elem.msg}</p>
+                            })
+                           : ''}
                           <div>
                               <label className="titles">New password</label>
-                              <input type="password" placeholder="New password" name="newPassword" onChange={(e) => { setPassErrs([]); setNewPass(e.target.value) } } />
+                              <input style={{ outline: passErrs.length > 0 ? '1.5px solid red' : '' }} 
+                              type="password" placeholder="New password" name="newPassword" 
+                              onChange={(e) => { setPassErrs([]); setNewPass(e.target.value) } } />
                           </div>
                           <div>
                               <label className="titles">Confirm Password</label>
-                              <input type="password" placeholder="Confirm password" name="confirmPassword" onChange={(e) => { setPassErrs([]); setConfirmPass(e.target.value) } } />
+                              <input style={{ outline: passErrs.length > 0 ? '1.5px solid red' : '' }} 
+                              type="password" placeholder="Confirm password" name="confirmPassword" 
+                              onChange={(e) => { setPassErrs([]); setConfirmPass(e.target.value) } } />
                           </div>
                           <button onClick={updatePassword} disabled={passClicked}>Update Password</button>
                       </div>
@@ -261,25 +278,19 @@ export async function getServerSideProps(context) {
         };
       }
 
-      console.log('user Id', decoded.userId)
-
       const userId = decoded.userId;
-
       
       const sanitizedUserId = mongoSanitize.sanitize(userId);
       
       const { User } = await connectUserDB();
       let user = await User.findOne({ _id: sanitizedUserId });
-      
-      console.log('after user connection')
+    
 
       // send the data to the front end
       const userData = {
         username: user.name,
         email: user.email
       }
-
-      console.log(userData)
   
       // continue rendering
       return {
