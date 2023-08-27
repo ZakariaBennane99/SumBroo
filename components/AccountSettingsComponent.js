@@ -42,6 +42,7 @@ const AccountSettingsComponent = () => {
   
       const [name, setName] = useState('')
       const [nameClicked, setNameClicked] = useState(false)
+      const [nameErrs, setNameErrs] = useState('')
       const [email, setEmail] = useState('')
       const [emailClicked, setEmailClicked] = useState(false)
       const [emailErrs, setEmailErrs] = useState(null)
@@ -73,7 +74,12 @@ const AccountSettingsComponent = () => {
           // send the user to the dashboard
         } catch (error) {
           // set Server error
-          setIsErr(true)
+          setEmailClicked(false)
+          if (error.response.status === 400) {
+            setNameErrs('Please include a valid email')
+          } else {
+            setIsErr(true)
+          }
         }
   
       }
