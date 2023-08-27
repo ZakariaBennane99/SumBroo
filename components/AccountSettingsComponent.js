@@ -188,7 +188,9 @@ const AccountSettingsComponent = () => {
                             </div>
                             <div>
                                 <label className="titles">New Username</label>
-                                <input type="text" placeholder="New username" name="username" onChange={(e) => setName(e.target.value)} />
+                                <input type="text" placeholder="New username" name="username"
+                                style={{ outline: emailErrs ? '1.5px solid red' : '' }} 
+                                onChange={(e) => { setNameErrs(null); setName(e.target.value); } } />
                             </div>
                             <button onClick={updateName} disabled={nameClicked}>Update Username</button>
                         </div>
