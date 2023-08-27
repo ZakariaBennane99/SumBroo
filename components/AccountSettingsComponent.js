@@ -8,11 +8,11 @@ import axios from 'axios';
 
 
 function updateUserData(newData, currentData) {
-    const updatedData = {
-        ...currentData,
-        ...newData
-    };
-    localStorage.setItem('userData', JSON.stringify(updatedData))
+  const updatedData = {
+    ...currentData,
+    ...newData
+  };
+  localStorage.setItem('userData', JSON.stringify(updatedData))
 }  
 
 const AccountSettingsComponent = () => { 
@@ -76,7 +76,7 @@ const AccountSettingsComponent = () => {
         } catch (error) {
           // set Server error
           console.log(error)
-          setEmailClicked(false)
+          setNameClicked(false)
           if (error.response.status === 400) {
             setNameErrs('Username must be at least 6 characters long.')
           } else {
