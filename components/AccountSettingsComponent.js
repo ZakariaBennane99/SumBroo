@@ -7,8 +7,7 @@ import Modal from 'react-modal';
 import axios from 'axios';
 
 
-function updateUserData(newData) {
-    const currentData = getUserData();
+function updateUserData(newData, currentData) {
     const updatedData = {
         ...currentData,
         ...newData
@@ -60,7 +59,7 @@ const AccountSettingsComponent = () => {
         try {
           const res = await axios.post(apiUrl, {
             name: name
-          },  {
+          }, {
             withCredentials: true
           })
           console.log(res)
@@ -69,7 +68,7 @@ const AccountSettingsComponent = () => {
             // alert user
             alert('Your username has been changed.')
             // update the data
-            //updateUserData({ name: 'Jane Doe' });
+            //updateUserData({ name: 'Jane Doe' }, userData);
           }
           // send the user to the dashboard
         } catch (error) {
