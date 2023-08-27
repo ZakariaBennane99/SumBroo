@@ -301,7 +301,6 @@ export async function getServerSideProps(context) {
   
   
     } catch (error) {
-      console.error("Error in getServerSideProps:", error);
       return {
         redirect: {
           destination: '/sign-in',

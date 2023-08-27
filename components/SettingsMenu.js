@@ -21,6 +21,7 @@ const SettingsMenu = () => {
       });
   
       if (res.status === 200) {
+        localStorage.clear();
         router.push('/sign-in');
       } else {
         console.error(`Unexpected status code: ${res.status}`);

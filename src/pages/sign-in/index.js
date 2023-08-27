@@ -103,6 +103,7 @@ const SignIn = () => {
         console.log(res)
         if (res.status === 201) {
           setIsClicked(false)
+          // here save the data in the local
           router.push('/dashboard');
         }
         // send the user to the dashboard
@@ -120,7 +121,6 @@ const SignIn = () => {
           setIsServerError(false)
           setIsClicked(false)
         } else if (error.response.status === 401) {
-          console.log(error)
           // here set up the leftErrors
           setleftErrors('Invalid credentials')
           setIsClicked(false)
