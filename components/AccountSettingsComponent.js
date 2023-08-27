@@ -76,7 +76,7 @@ const AccountSettingsComponent = () => {
           // set Server error
           setEmailClicked(false)
           if (error.response.status === 400) {
-            setNameErrs('Please include a valid email')
+            setNameErrs('Username must be at least 6 characters long.')
           } else {
             setIsErr(true)
           }
