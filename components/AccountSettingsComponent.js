@@ -70,6 +70,7 @@ const AccountSettingsComponent = () => {
             alert('Your username has been changed.')
             // update the data
             updateUserData({ name: res.data.name }, userData);
+            setName('')
           }
           // send the user to the dashboard
         } catch (error) {
@@ -101,6 +102,7 @@ const AccountSettingsComponent = () => {
             alert('Your email has been changed.')
             // update the user email
             updateUserData({ email: res.data.email }, userData);
+            setEmail('')
           }
           // send the user to the dashboard
         } catch (error) {
@@ -136,7 +138,9 @@ const AccountSettingsComponent = () => {
           if (res.status === 200) {
             setPassClicked(false)
             // alert user
-            alert('Your password has been changed.')
+            alert('Your password has been changed.');
+            setNewPass('')
+            setConfirmPass('')
           }
           // send the user to the dashboard
         } catch (error) {
@@ -189,7 +193,7 @@ const AccountSettingsComponent = () => {
                             <div>
                                 <label className="titles">New Username</label>
                                 <input type="text" placeholder="New username" name="username"
-                                style={{ outline: emailErrs ? '1.5px solid red' : '' }} 
+                                style={{ outline: nameErrs ? '1.5px solid red' : '' }} 
                                 onChange={(e) => { setNameErrs(null); setName(e.target.value); } } />
                             </div>
                             <button onClick={updateName} disabled={nameClicked}>Update Username</button>
