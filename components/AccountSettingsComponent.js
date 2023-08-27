@@ -93,6 +93,8 @@ const AccountSettingsComponent = () => {
             setEmailClicked(false)
             // alert user
             alert('Your email has been changed.')
+            // update the user email
+            updateUserData({ email: res.data.email }, userData);
           }
           // send the user to the dashboard
         } catch (error) {
