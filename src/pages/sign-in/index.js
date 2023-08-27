@@ -100,10 +100,10 @@ const SignIn = () => {
         const res = await axios.post(apiUrl, formValues,  {
           withCredentials: true
         })
-        console.log(res)
         if (res.status === 201) {
           setIsClicked(false)
-          // here save the data in the local
+          // here save the data in the localStorage
+          localStorage.setItem('userData', JSON.stringify(res.data.userData));
           router.push('/dashboard');
         }
         // send the user to the dashboard
@@ -404,7 +404,6 @@ export async function getServerSideProps(context) {
     }
 
     // continue rendering
-    // the dashboard/settings
     return {
       redirect: {
         destination: '/dashboard',
