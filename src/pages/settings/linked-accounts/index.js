@@ -76,7 +76,7 @@ const LinkedAccounts = ({ AllAccounts, newUser, isServerErr, userId }) => {
                         <div className="linkedAccountsWrapper"> 
                             <div className="linkedAccounts">
                                 <div className="account">
-                                    <span id="sm"><img id="smlg" src={`/sm/${acc.name}.svg`} /> {capitalize(acc.name)}</span>
+                                  <span id="sm"><img id="smlg" src={`/sm/${acc.name}.svg`} /> {capitalize(acc.name)}</span>
                                 </div>
                                 <button>{acc.active ? 'Link Account' : 'Apply To Link'}</button>
                             </div>
@@ -123,7 +123,7 @@ export async function getServerSideProps(context) {
   // this is only for onboarding
   if (context.query.grub) {
       try {
-        
+
           const { grub } = context.query;
       
           const decoded = jwt.verify(grub, process.env.JWT_SECRET);
