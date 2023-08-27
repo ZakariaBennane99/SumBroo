@@ -179,6 +179,9 @@ const AccountSettingsComponent = () => {
                             Username
                         </div>
                         <div className='body'>
+                        {nameErrs ?
+                              <p style={{ fontSize: '.9em', color: 'red', marginTop: '10px' }}>{nameErrs}</p>
+                             : ''}
                             <div>
                                 <span className="titles">Current Username</span>
                                 <span className="old">{userData.name}</span>
