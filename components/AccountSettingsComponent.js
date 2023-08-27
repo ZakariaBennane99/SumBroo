@@ -67,14 +67,15 @@ const AccountSettingsComponent = () => {
           if (res.status === 200) {
             setNameClicked(false)
             // alert user
+            setName('')
             alert('Your username has been changed.')
             // update the data
             updateUserData({ name: res.data.name }, userData);
-            setName('')
           }
           // send the user to the dashboard
         } catch (error) {
           // set Server error
+          console.log(error)
           setEmailClicked(false)
           if (error.response.status === 400) {
             setNameErrs('Username must be at least 6 characters long.')
@@ -96,13 +97,14 @@ const AccountSettingsComponent = () => {
           },  {
             withCredentials: true
           })
+          console.log(res)
           if (res.status === 200) {
             setEmailClicked(false)
             // alert user
+            setEmail('')
             alert('Your email has been changed.')
             // update the user email
             updateUserData({ email: res.data.email }, userData);
-            setEmail('')
           }
           // send the user to the dashboard
         } catch (error) {
@@ -138,9 +140,9 @@ const AccountSettingsComponent = () => {
           if (res.status === 200) {
             setPassClicked(false)
             // alert user
-            alert('Your password has been changed.');
             setNewPass('')
             setConfirmPass('')
+            alert('Your password has been changed.');
           }
           // send the user to the dashboard
         } catch (error) {
@@ -193,6 +195,7 @@ const AccountSettingsComponent = () => {
                             <div>
                                 <label className="titles">New Username</label>
                                 <input type="text" placeholder="New username" name="username"
+                                value={name}
                                 style={{ outline: nameErrs ? '1.5px solid red' : '' }} 
                                 onChange={(e) => { setNameErrs(null); setName(e.target.value); } } />
                             </div>
@@ -215,6 +218,7 @@ const AccountSettingsComponent = () => {
                             <div>
                                 <label className="titles">New Email</label>
                                 <input type="email" placeholder="New email" name="email" 
+                                value={email}
                                 style={{ outline: emailErrs ? '1.5px solid red' : '' }} 
                                 onChange={(e) => { setEmailErrs(null); setEmail(e.target.value) }} />
                             </div>
@@ -235,12 +239,14 @@ const AccountSettingsComponent = () => {
                             <div>
                                 <label className="titles">New password</label>
                                 <input style={{ outline: passErrs.length > 0 ? '1.5px solid red' : '' }} 
+                                value={newPass}
                                 type="password" placeholder="New password" name="newPassword" 
                                 onChange={(e) => { setPassErrs([]); setNewPass(e.target.value) } } />
                             </div>
                             <div>
                                 <label className="titles">Confirm Password</label>
                                 <input style={{ outline: passErrs.length > 0 ? '1.5px solid red' : '' }} 
+                                value={confirmPass}
                                 type="password" placeholder="Confirm password" name="confirmPassword" 
                                 onChange={(e) => { setPassErrs([]); setConfirmPass(e.target.value) } } />
                             </div>
