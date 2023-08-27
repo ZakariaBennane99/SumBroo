@@ -68,7 +68,7 @@ const AccountSettingsComponent = () => {
             // alert user
             alert('Your username has been changed.')
             // update the data
-            //updateUserData({ name: 'Jane Doe' }, userData);
+            updateUserData({ name: res.data.name }, userData);
           }
           // send the user to the dashboard
         } catch (error) {
