@@ -12,7 +12,7 @@ function updateUserData(newData, currentData) {
         ...currentData,
         ...newData
     };
-    saveUserData(updatedData);
+    localStorage.setItem('userData', JSON.stringify(updatedData))
 }  
 
 const AccountSettingsComponent = () => { 
