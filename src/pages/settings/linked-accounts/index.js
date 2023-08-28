@@ -152,13 +152,13 @@ export async function getServerSideProps(context) {
     const sanitizedUserId = mongoSanitize.sanitize(userId);
     let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
     const activeProfiles = user.socialMediaLinks
-        .filter(link => link.profileStatus === "active")
+        .filter(link => link.profileStatus === "active" || link.profileStatus === "pendingSubscriptionPayment")
         .map(link => link.platformName);
     let AvAccounts = await userDbConnection.model('AvAc').findOne({ _id: '64dff175f982d9f8a4304100' });
     let AvAcc = AvAccounts.accounts.map(ac => {
       return {
         name: ac,
-        active: activeProfiles.includes(ac)
+        status: activeProfiles.includes(ac)
       }
     })
     return {
