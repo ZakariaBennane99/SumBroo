@@ -119,54 +119,7 @@ export async function getServerSideProps(context) {
   const { connectUserDB, userDbConnection } = require('../../../../utils/connectUserDB');
   const jwt = require('jsonwebtoken');
   const mongoSanitize = require('express-mongo-sanitize');
-
-  // this is only for onboarding
-  if (context.query.grub) {
-      try {
-          const { grub } = context.query;
-      
-          const decoded = jwt.verify(grub, process.env.JWT_SECRET);
-      
-          if (decoded.action !== 'payment') {
-            throw new Error('Invalid action');
-          }
-          const userId = decoded.userId
-          await connectUserDB()
-          // assuming onboardingStep is 2
-          const sanitizedUserId = mongoSanitize.sanitize(userId);
-          let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
-          if (!user || user.onboardingStep !== 2) throw new Error('User not found');
-          const activeProfiles = user.socialMediaLinks
-              .filter(link => link.profileStatus === "active")
-              .map(link => link.platformName);
-          let AvAccounts = await userDbConnection.model('AvAc').findOne({ _id: '64dff175f982d9f8a4304100' });
-          let AvAcc = AvAccounts.accounts.map(ac => {
-            return {
-              name: ac,
-              active: activeProfiles.includes(ac)
-            }
-          })
-          return {
-            props: {
-              userId, 
-              AllAccounts: AvAcc, 
-              newUser: true,
-              isServerErr: false
-            }
-          }; 
-      
-        } catch (error) {
-          return {
-            props: {
-              userId: false, 
-              AllAccounts: false, 
-              newUser: false,
-              isServerErr: false
-            }
-          };
-        }
-  } else {
-    // general token check for the user
+  
     try {
       // Get cookies from the request headers
       const cookies = context.req.headers.cookie;
@@ -190,7 +143,23 @@ export async function getServerSideProps(context) {
         };
       }
   
-      // continue rendering
+      const userId = decoded.userId
+      await connectUserDB()
+      // assuming onboardingStep is 2
+      const sanitizedUserId = mongoSanitize.sanitize(userId);
+      let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
+
+      const activeProfiles = user.socialMediaLinks
+          .filter(link => link.profileStatus === "active")
+          .map(link => link.platformName);
+      let AvAccounts = await userDbConnection.model('AvAc').findOne({ _id: '64dff175f982d9f8a4304100' });
+      let AvAcc = AvAccounts.accounts.map(ac => {
+        return {
+          name: ac,
+          active: activeProfiles.includes(ac)
+        }
+      })
+
       return {
         props: {}
       };
@@ -202,6 +171,5 @@ export async function getServerSideProps(context) {
         },
       };
     }
-  }
   
   }
