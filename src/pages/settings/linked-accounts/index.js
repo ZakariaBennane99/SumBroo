@@ -10,43 +10,36 @@ function capitalize(wd) {
     return capitalizeWord
 }
 
-const LinkedAccounts = ({ AllAccounts, newUser, isServerErr, userId }) => {
+const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
 
-    const isNewUser = newUser || false
-
-    console.log(AllAccounts)
-
-    const [windowWidth, setWindowWidth] = useState(null);
-
-    useEffect(() => {
+  const [windowWidth, setWindowWidth] = useState(null);
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+    // Update the window width when the window is resized
+    const handleResize = () => {
       setWindowWidth(window.innerWidth);
-      // Update the window width when the window is resized
-      const handleResize = () => {
-        setWindowWidth(window.innerWidth);
-      }
-  
-      window.addEventListener('resize', handleResize);
-  
-      // Cleanup: remove the event listener when the component is unmounted
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      }
-    }, []);
+    }
 
-    const [refresh, setRefresh] = useState(true)
+    window.addEventListener('resize', handleResize);
 
-    /*
-        {
-            refresh ? <div className="refreshWarning"> 
-                <img src="/infotip.svg" /><span>It looks like your connection has expired. To continue posting, please renew your connection.</span> 
-            </div> : ''
-        } 
-        {
-            acc.active ?
-            <img id="check" src="/check.svg" />
-            : ''
-        } 
-    */
+    // Cleanup: remove the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+  const [refresh, setRefresh] = useState(true)
+  /*
+      {
+          refresh ? <div className="refreshWarning"> 
+              <img src="/infotip.svg" /><span>It looks like your connection has expired. To continue posting, please renew your connection.</span> 
+          </div> : ''
+      } 
+      {
+          acc.active ?
+          <img id="check" src="/check.svg" />
+          : ''
+      } 
+  */
 
   
   const customStyles = {
@@ -119,7 +112,9 @@ export async function getServerSideProps(context) {
   const { connectUserDB, userDbConnection } = require('../../../../utils/connectUserDB');
   const jwt = require('jsonwebtoken');
   const mongoSanitize = require('express-mongo-sanitize');
-  
+
+  let decoded;
+  try {
     try {
       // Get cookies from the request headers
       const cookies = context.req.headers.cookie;
@@ -132,7 +127,7 @@ export async function getServerSideProps(context) {
         tokenValue = tokenCookie.split('=')[1];
       }
   
-      const decoded = jwt.verify(tokenValue, process.env.USER_JWT_SECRET);
+      decoded = jwt.verify(tokenValue, process.env.USER_JWT_SECRET);
   
       if (decoded.type !== 'sessionToken') {
         return {
@@ -142,28 +137,7 @@ export async function getServerSideProps(context) {
           },
         };
       }
-  
-      const userId = decoded.userId
-      await connectUserDB()
-      // assuming onboardingStep is 2
-      const sanitizedUserId = mongoSanitize.sanitize(userId);
-      let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
-
-      const activeProfiles = user.socialMediaLinks
-          .filter(link => link.profileStatus === "active")
-          .map(link => link.platformName);
-      let AvAccounts = await userDbConnection.model('AvAc').findOne({ _id: '64dff175f982d9f8a4304100' });
-      let AvAcc = AvAccounts.accounts.map(ac => {
-        return {
-          name: ac,
-          active: activeProfiles.includes(ac)
-        }
-      })
-
-      return {
-        props: {}
-      };
-    } catch (error) {
+    } catch (err) {
       return {
         redirect: {
           destination: '/sign-in',
@@ -171,5 +145,37 @@ export async function getServerSideProps(context) {
         },
       };
     }
-  
+
+    const userId = decoded.userId
+    await connectUserDB()
+    // assuming onboardingStep is 2
+    const sanitizedUserId = mongoSanitize.sanitize(userId);
+    let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
+    const activeProfiles = user.socialMediaLinks
+        .filter(link => link.profileStatus === "active")
+        .map(link => link.platformName);
+    let AvAccounts = await userDbConnection.model('AvAc').findOne({ _id: '64dff175f982d9f8a4304100' });
+    let AvAcc = AvAccounts.accounts.map(ac => {
+      return {
+        name: ac,
+        active: activeProfiles.includes(ac)
+      }
+    })
+    return {
+      props: {
+        AllAccounts: AvAcc,
+        isServerErr: false,
+        userId: userId
+      }
+    };
+  } catch (error) {
+    return {
+      props: {
+        AllAccounts: false,
+        isServerErr: true,
+        userId: false
+      }
+    };
   }
+
+}
