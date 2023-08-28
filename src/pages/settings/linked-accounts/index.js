@@ -113,8 +113,11 @@ export async function getServerSideProps(context) {
   const jwt = require('jsonwebtoken');
   const mongoSanitize = require('express-mongo-sanitize');
 
+  function find
+
   let decoded;
   try {
+
     try {
       // Get cookies from the request headers
       const cookies = context.req.headers.cookie;
@@ -152,13 +155,18 @@ export async function getServerSideProps(context) {
     const sanitizedUserId = mongoSanitize.sanitize(userId);
     let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
     const activeProfiles = user.socialMediaLinks
-        .filter(link => link.profileStatus === "active" || link.profileStatus === "pendingSubscriptionPayment")
-        .map(link => link.platformName);
+        .filter(link => link.profileStatus === "active" || link.profileStatus === "pending")
+        .map(link => {
+          return {
+            name: link.platformName,
+            status: link.profileStatus
+          }
+        });
     let AvAccounts = await userDbConnection.model('AvAc').findOne({ _id: '64dff175f982d9f8a4304100' });
     let AvAcc = AvAccounts.accounts.map(ac => {
       return {
         name: ac,
-        status: activeProfiles.includes(ac)
+        status: find(ac, activeProfiles) ? find(ac, activeProfiles) : 'notActive';
       }
     })
     return {
