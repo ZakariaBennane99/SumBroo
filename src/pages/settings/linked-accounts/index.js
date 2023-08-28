@@ -123,7 +123,6 @@ export async function getServerSideProps(context) {
   // this is only for onboarding
   if (context.query.grub) {
       try {
-
           const { grub } = context.query;
       
           const decoded = jwt.verify(grub, process.env.JWT_SECRET);
