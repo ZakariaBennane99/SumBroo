@@ -71,7 +71,22 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
                                 <div className="account">
                                   <span id="sm"><img id="smlg" src={`/sm/${acc.name}.svg`} /> {capitalize(acc.name)}</span>
                                 </div>
-                                <button>{acc.active ? 'Link Account' : 'Apply To Link'}</button>
+                                {(() => {
+                                  let msg;
+                                  if (acc.status === 'new') {
+                                    msg = 'Apply To Link'
+                                  } else if (acc.status === 'active') {
+                                    msg = 'Linked'
+                                  } else if (acc.status === 'pendingPay') {
+                                    msg = 'Pay To Link'
+                                  } else if (acc.status === 'pendingAuth') {
+                                    msg = 'Link Account'
+                                  } else {
+                                    msg = 'Apply To Link'; 
+                                  }
+                                  return <button>{msg}</button>
+                                  })
+                                ()}
                             </div>
                         </div>
                     </div>
@@ -113,7 +128,13 @@ export async function getServerSideProps(context) {
   const jwt = require('jsonwebtoken');
   const mongoSanitize = require('express-mongo-sanitize');
 
-  function find
+  function getStatus(accountName, accountsArray) {
+    // Find the account in the array
+    const account = accountsArray.find(acc => acc.name === accountName);
+  
+    // If the account is found, return its status; otherwise, return false
+    return account ? account.status : false;
+  }
 
   let decoded;
   try {
@@ -166,7 +187,7 @@ export async function getServerSideProps(context) {
     let AvAcc = AvAccounts.accounts.map(ac => {
       return {
         name: ac,
-        status: find(ac, activeProfiles) ? find(ac, activeProfiles) : 'notActive';
+        status: getStatus(ac, activeProfiles) ? getStatus(ac, activeProfiles) : 'notApplied'
       }
     })
     return {
