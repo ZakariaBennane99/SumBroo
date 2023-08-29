@@ -122,8 +122,11 @@ export default LinkedAccounts;
 
 export async function getServerSideProps(context) {
 
-  const { connectUserDB, userDbConnection } = require('../../../../utils/connectUserDB');
+  const connectDB = require('../../../../utils/connectUserDB');
+  //const { connectUserDB, userDbConnection } = require('../../../../utils/connectUserDB');
   const jwt = require('jsonwebtoken');
+  const User = require('../../../../utils/User').default;
+  const AvAc = require('../../../../utils/AvailableAccounts').default;
   const mongoSanitize = require('express-mongo-sanitize');
 
   function getStatus(accountName, accountsArray) {
@@ -169,10 +172,10 @@ export async function getServerSideProps(context) {
     }
 
     const userId = decoded.userId
-    await connectUserDB()
+    await connectDB();
     // assuming onboardingStep is 2
     const sanitizedUserId = mongoSanitize.sanitize(userId);
-    let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
+    let user = await User.findOne({ _id: sanitizedUserId });
     const activeProfiles = user.socialMediaLinks
         .map(link => {
           return {
@@ -180,13 +183,16 @@ export async function getServerSideProps(context) {
             status: link.profileStatus
           }
         });
-    let AvAccounts = await userDbConnection.model('AvAc').findOne({ _id: '64dff175f982d9f8a4304100' });
+    let AvAccounts = await AvAc.findOne({ _id: '64dff175f982d9f8a4304100' });
+
     let AvAcc = AvAccounts.accounts.map(ac => {
-      return {
-        name: ac,
-        status: getStatus(ac, activeProfiles) ? getStatus(ac, activeProfiles) : 'new'
+      if (ac.status === 'available') {
+        return {
+          name: ac.ac,
+          status: getStatus(ac.status, activeProfiles) ? getStatus(ac.status, activeProfiles) : 'new'
+        }
       }
-    })
+    }).filter(el => el !== undefined)
 
     return {
       props: {
@@ -196,6 +202,7 @@ export async function getServerSideProps(context) {
       }
     };
   } catch (error) {
+    console.log('THIS IS THE ERROR', error)
     return {
       props: {
         AllAccounts: false,

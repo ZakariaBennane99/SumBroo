@@ -14,7 +14,8 @@ export default AccountSettings;
 export async function getServerSideProps(context) {
 
   const jwt = require('jsonwebtoken');
-  const { connectUserDB } = require('../../../../utils/connectUserDB');
+  const User = require('../../../../utils/User').default;
+  const connectDB = require('../../../../utils/connectUserDB');
   const mongoSanitize = require('express-mongo-sanitize');
 
     try {
@@ -45,7 +46,7 @@ export async function getServerSideProps(context) {
       
       const sanitizedUserId = mongoSanitize.sanitize(userId);
       
-      const { User } = await connectUserDB();
+      await connectDB();
       let user = await User.findOne({ _id: sanitizedUserId });
     
 

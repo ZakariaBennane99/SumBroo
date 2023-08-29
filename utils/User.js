@@ -51,12 +51,11 @@ const PostSchema = new Schema({
     },
     platform: String,
     postLink: String, // for published posts
-    postTitle: String, // this is only within SumBroo
+    postId: String, // post ID from the platform API
     publishingDate: Date,
     // before the review, this represents the date at which 
     // user hit publish after the review this should be 
     // updated to the actual publishing date (in case of accepting the post)
-    postId: String, // post ID from the platform API
     content: PostContentSchema, // after publishing remove the content
     comment: String, // for rejected posts
 });
@@ -72,51 +71,32 @@ const SocialMediaLinkSchema = new Schema({
     }, 
     profileStatus: {
         type: String,
-        enum: ["new", "pendingSubscriptionPayment", "active", "canceledSubscriptionPayment"],
-        // "New": profile has just been linked.
+        enum: ["inReview", "pendingPay", "pendingAuth", "active", "canceled"],
+        // "New": profile is available to be applied for.
+        // "InReview": profile is in review.
         // "Disabled": profile disabled by admin for quality and other issues.(rare case)
         // "Active": profile is fully active. 
-        // "Pending": awaiting user upgrading his plan. You'll have to send an email with
-        // a link to the Stripe management page in which he has to upgrade the plan. The email
-        // will expires after 24H. Otherwise, he can find the link above the platform in 
+        // "Pending": awaiting user payment
         // Settings > Linked Accounts, or he/she can click on the manage billing and pay from there. 
         required: true
         // If rejected, we remove the profile and send him a message on why 
         // we rejected him and that when he fulfills the reqs, he can a send a profile linking req
     }, 
-    lastPublished: {
-        type: Date,
-        default: null
-        /*
-            // This is for checking each Platform's publishing limit time window:
-            // You can also have different requirements for each platform
-            const now = new Date();
-            if (!user.lastPublished || (now - user.lastPublished) > (24 * 60 * 60 * 1000)) {
-              // Allow publishing
-              user.lastPublished = now;
-              await user.save();
-            } else {
-              // Deny publishing and inform the user
-            }
-        */
-    },
     pricePlans: {
         type: [String]
-        // for now you only include the 
-        // the monthly and annual plan price 
-        // for Pinterest, then you can add more pricePlan 
-        // (priceIds) of all the plans where this platform exits
-        // this way we will be able to see which plan the user is part 
-        // of
     },
     niche: {
         type: String
+    },
+    lastPublished: {
+        type: Date,
+        default: null
     },
     audience: {
         type: [String],
         validate: {
             validator: function(array) {
-                return array.length <= 8;
+                return array.length <= 6;
             },
             message: 'Audience array size should not exceed 6 tags.'
         }
@@ -142,10 +122,13 @@ const UserSchema = new Schema({
     },
     accountStatus: {
         type: String,
-        enum: ["new", "disabled", "active", "pending"],
-        // "New": account has just been created.
+        enum: ["inReview", "disabled", "active", "pending"],
+        // "inReview": account is being reviewed.
+        // "Disabled": account has been disabled by admin for quality and other issues.(rare case)
         // "Active": account is fully active.
-        // "Pending": awaiting user payment/onboarding 
+        // "Pending": awaiting user payment/onboarding before activation. You'll have to send an email
+        // in which you direct them to pay first, then start onboarding. The email link expires after
+        // 48H after which the user is deleted from the DB.
         required: true
         // If rejected, we remove the user entirely and send him a message on why 
         // we rejected him and that when he fulfills the reqs, he can create an account again
@@ -172,11 +155,13 @@ const UserSchema = new Schema({
     posts: [PostSchema]
 });
 
+
+
 let User;
 try {
-    User = model('user');
+    User = model('User');
 } catch {
-    User = model('user', UserSchema);
+    User = model('User', UserSchema);
 }
 
 export default User;

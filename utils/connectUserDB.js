@@ -1,3 +1,26 @@
+import { connect } from 'mongoose';
+
+const connectDB = async () => {
+    try {
+      await connect(process.env.MONGODB_URI)
+      console.log('MongoDB Connected...')
+    } catch (err) {
+      console.error(err.message)
+      // Exit process with failure
+      process.exit(1)
+    }
+}
+
+module.exports = connectDB;
+
+
+
+
+
+
+
+
+/*
 import mongoose from 'mongoose';
 import UserModel from './User';
 import AvAcModel from './AvailableAccounts';
@@ -52,3 +75,4 @@ const connectUserDB = async () => {
 };
 
 export { connectUserDB, userDbConnection };
+*/
