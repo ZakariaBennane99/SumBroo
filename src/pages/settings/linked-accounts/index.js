@@ -174,7 +174,6 @@ export async function getServerSideProps(context) {
     const sanitizedUserId = mongoSanitize.sanitize(userId);
     let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
     const activeProfiles = user.socialMediaLinks
-        .filter(link => link.profileStatus === "active" || link.profileStatus === "pending")
         .map(link => {
           return {
             name: link.platformName,
@@ -188,6 +187,7 @@ export async function getServerSideProps(context) {
         status: getStatus(ac, activeProfiles) ? getStatus(ac, activeProfiles) : 'notApplied'
       }
     })
+    
     return {
       props: {
         AllAccounts: AvAcc,
