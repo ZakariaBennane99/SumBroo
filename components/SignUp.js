@@ -45,7 +45,7 @@ const SignUp = ({ lookupKey, platforms }) => {
     email: '',
     initialPlanChosen: lookupKey,
     profileLinks: platforms.map(platform => {
-      return { platformName: platform.value, profileLink: '', profileStatus: 'new' }
+      return { platformName: platform.value, profileLink: '', profileStatus: 'inReview' }
     })
   })
 
@@ -106,7 +106,6 @@ const SignUp = ({ lookupKey, platforms }) => {
     try {
       const res = await axios.post(applicationURL, updatedFormValues)
       // after registering the User redirect to the checkout page
-      console.log('the res.ok', res)
       if (res.status === 201) {
         setIsApplicationSent(true)
         setIsLoading(false)

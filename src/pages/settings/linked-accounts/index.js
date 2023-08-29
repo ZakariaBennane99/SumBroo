@@ -184,10 +184,10 @@ export async function getServerSideProps(context) {
     let AvAcc = AvAccounts.accounts.map(ac => {
       return {
         name: ac,
-        status: getStatus(ac, activeProfiles) ? getStatus(ac, activeProfiles) : 'notApplied'
+        status: getStatus(ac, activeProfiles) ? getStatus(ac, activeProfiles) : 'new'
       }
     })
-    
+
     return {
       props: {
         AllAccounts: AvAcc,

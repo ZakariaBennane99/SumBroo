@@ -54,8 +54,12 @@ const Tooltip = ({ content, valueTag }) => {
     );
 };
 
+function capitalize(wd) {
+    return wd.charAt(0).toUpperCase() + word.slice(1);
+}
 
-const Pricing = () => {
+
+const Pricing = ({ AllAccounts }) => {
 
     const [windowWidth, setWindowWidth] = useState(null);
 
@@ -135,9 +139,9 @@ const Pricing = () => {
       setTargetPlatforms(selectedOptions)
     }
 
-    const options = [
-        { value: 'pinterest', label: 'Pinterest' },
-    ];
+    const options = AllAccounts.map(ac => {
+        return { value: ac, label: capitalize(ac) }
+    });
 
     const customStyles2= {
         container: (provided) => ({
@@ -319,3 +323,29 @@ const Pricing = () => {
 };
 
 export default Pricing;
+
+export async function getServerSideProps(context) {
+
+    const { connectUserDB, userDbConnection } = require('../../../../utils/connectUserDB');
+
+    try {
+  
+      await connectUserDB()
+
+      let AvAccounts = await userDbConnection.model('AvAc').findOne({ _id: '64dff175f982d9f8a4304100' });
+      
+      return {
+        props: {
+          AllAccounts: AvAccounts,
+        }
+      };
+    } catch (error) {
+        return {
+            redirect: {
+              destination: '/pricing',
+              permanent: false,
+            },
+        };
+    }
+  
+}
