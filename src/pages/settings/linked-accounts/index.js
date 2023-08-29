@@ -27,19 +27,28 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
       window.removeEventListener('resize', handleResize);
     }
   }, []);
-  const [refresh, setRefresh] = useState(true)
-  /*
-      {
-          refresh ? <div className="refreshWarning"> 
-              <img src="/infotip.svg" /><span>It looks like your connection has expired. To continue posting, please renew your connection.</span> 
-          </div> : ''
-      } 
-      {
-          acc.active ?
-          <img id="check" src="/check.svg" />
-          : ''
-      } 
-  */
+
+  const [componentServerErr, setComponentServerErr] = useState(false)
+  
+
+  function handleAccountClick(e) {
+    const status = e.target.innerText;
+    if (status === 'Subscribe To Link') {
+      // here you have to send him to the 
+      // the billing page
+    } else if (status === 'Link Account') {
+      // here you have to connect to the target platform
+      // and authenticate the user, get the token and store it in the DB
+
+    } else if (status === 'Apply To Link') {
+      // here you connect to a route that will add a new application 
+      // to the Admin DB and update this account to inReview, 
+      // then show an alert 
+    } else {
+      return null
+    }
+
+  }    
 
   
   const customStyles = {
@@ -76,13 +85,16 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
                                   if (acc.status === 'active') {
                                     msg = 'Linked'
                                   } else if (acc.status === 'pendingPay') {
-                                    msg = 'Pay To Link'
+                                    msg = 'Subscribe To Link'
                                   } else if (acc.status === 'pendingAuth') {
                                     msg = 'Link Account'
+                                  } else if (acc.status === 'inReview') {
+                                    msg = 'In Review'
                                   } else {
                                     msg = 'Apply To Link'; 
                                   }
-                                  return <button>{msg}</button>
+                                  console.log(msg) // ( msg === 'In Review' || msg === 'Linked') ? 'grey' : '' 
+                                  return <button style={{ backgroundColor: 'grey', cursor: 'auto' }}>{msg}</button>
                                   })
                                 ()}
                             </div>
@@ -94,7 +106,7 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
         </div>
     </div>
     <Modal
-      isOpen={isServerErr}
+      isOpen={isServerErr || componentServerErr}
       style={customStyles}
       contentLabel="Example Modal"
         >
@@ -189,7 +201,7 @@ export async function getServerSideProps(context) {
       if (ac.status === 'available') {
         return {
           name: ac.ac,
-          status: getStatus(ac.status, activeProfiles) ? getStatus(ac.status, activeProfiles) : 'new'
+          status: getStatus(ac.ac, activeProfiles) ? getStatus(ac.ac, activeProfiles) : 'new'
         }
       }
     }).filter(el => el !== undefined)
@@ -213,3 +225,17 @@ export async function getServerSideProps(context) {
   }
 
 }
+
+
+/*
+  {
+    refresh ? <div className="refreshWarning"> 
+        <img src="/infotip.svg" /><span>It looks like your connection has expired. To continue posting, please renew your connection.</span> 
+    </div> : ''
+  } 
+  {
+    acc.active ?
+    <img id="check" src="/check.svg" />
+    : ''
+  } 
+*/
