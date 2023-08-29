@@ -73,9 +73,7 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
                                 </div>
                                 {(() => {
                                   let msg;
-                                  if (acc.status === 'new') {
-                                    msg = 'Apply To Link'
-                                  } else if (acc.status === 'active') {
+                                  if (acc.status === 'active') {
                                     msg = 'Linked'
                                   } else if (acc.status === 'pendingPay') {
                                     msg = 'Pay To Link'
