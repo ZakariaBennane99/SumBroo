@@ -229,7 +229,6 @@ export async function getServerSideProps(context) {
       }
   }
   
-
   let decoded;
 
   try {
@@ -305,6 +304,12 @@ export async function getServerSideProps(context) {
                 status: 'authExpired'
               }
             }
+          }
+
+          // otherwise return the typical name, status pairs
+          return {
+            name: link.platformName,
+            status: link.profileStatus
           }
 
         });
