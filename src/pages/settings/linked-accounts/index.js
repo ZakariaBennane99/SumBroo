@@ -15,7 +15,7 @@ function capitalize(wd) {
 const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
 
   const router = useRouter();
-  const [message, setMessage] = useState("");
+  const [isLinked, setIsLinked] = useState(false);
 
   const [windowWidth, setWindowWidth] = useState(null);
   useEffect(() => {
@@ -35,9 +35,9 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
 
   useEffect(() => {
     if (router.query.result === 'success') {
-        setMessage('Successfully linked your Pinterest account!');
+      setIsLinked('Yesh')
     } else if (router.query.result === 'failure') {
-        setMessage('Failed to link your Pinterest account. Please try again.');
+      setIsLinked('No');
     }
   }, [router.query]);
 
@@ -100,6 +100,17 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
                                     <span>It looks like your connection has expired. To continue posting, please renew your connection.</span> 
                                 </div>
                                 : ''
+                              }
+                              {
+                                isLinked === 'No' ? 
+                                <div className="refreshWarning"> 
+                                  <img src="/infotip.svg" />
+                                  <span>There was an error authenticating your account. You can try again.</span> 
+                                </div> 
+                                : isLinked === 'Yes' ?
+                                <div className="refreshWarning"> 
+                                  <span>Success! Your account has been linked.</span> 
+                                </div> : ''
                               }
                             <div className="linkedAccounts">
                                 <div className="account">
@@ -170,6 +181,7 @@ export async function getServerSideProps(context) {
   const User = require('../../../../utils/User').default;
   const AvAc = require('../../../../utils/AvailableAccounts').default;
   const mongoSanitize = require('express-mongo-sanitize');
+  const axios = require('axios');
 
   function getStatus(accountName, accountsArray) {
     // Find the account in the array
@@ -179,7 +191,47 @@ export async function getServerSideProps(context) {
     return account ? account.status : false;
   }
 
+
+  async function refreshTokenForUser(refToken) {
+
+      const authorization = `Basic ${Buffer.from(`1484362:${process.env.PINTEREST_APP_SECRET}`).toString('base64')}`;
+  
+      try {
+          const response = await axios.post('https://api.pinterest.com/v5/oauth/token', null, {
+              headers: {
+                  'Authorization': authorization,
+                  'Content-Type': 'application/x-www-form-urlencoded'
+              },
+              params: {
+                  grant_type: 'refresh_token',
+                  refresh_token: refToken
+              }
+          });
+  
+          const data = response.data;
+          const now = new Date();
+          const currentUTCDate = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+  
+          const tokenExpiryDate = new Date(currentUTCDate.getTime() + (data.expires_in * 1000));
+          const theNewToken = data.access_token;
+  
+          return {
+            isError: false,
+            newToken: theNewToken,
+            expiryUTCDate: tokenExpiryDate
+          }
+  
+      } catch (error) {
+          console.error('Error refreshing Pinterest token:', error.message);
+          return {
+            isError: true,
+          }
+      }
+  }
+  
+
   let decoded;
+
   try {
 
     try {
@@ -219,12 +271,46 @@ export async function getServerSideProps(context) {
     const sanitizedUserId = mongoSanitize.sanitize(userId);
     let user = await User.findOne({ _id: sanitizedUserId });
     const activeProfiles = user.socialMediaLinks
-        .map(link => {
-          return {
-            name: link.platformName,
-            status: link.profileStatus
+        .map(async (link) => {
+
+          const now = new Date();
+          const currentUTCDate = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+
+          if (link.accesstokenExpirationDate <= currentUTCDate) {
+            // Token has expired or is about to expire
+            if (link.refreshTokenExpirationDate > currentUTCDate) {
+              // Refresh token is still valid, use it to get a new access token
+              const newToken = await refreshTokenForUser(link.refreshToken);
+
+              if (newToken.isError) {
+                return {
+                  name: link.platformName,
+                  status: 'authExpired'
+                }
+              } 
+
+              // If no error, proceed
+              link.accessToken = newToken.newToken;
+              link.accesstokenExpirationDate = newToken.expiryUTCDate;
+
+              return {
+                name: link.platformName,
+                status: link.profileStatus
+              }
+
+            } else {
+              // Both token and refresh token have expired, prompt user to re-authenticate
+              return {
+                name: link.platformName,
+                status: 'authExpired'
+              }
+            }
           }
+
         });
+    
+    await user.save();    
+        
     let AvAccounts = await AvAc.findOne({ _id: '64dff175f982d9f8a4304100' });
 
     let AvAcc = AvAccounts.accounts.map(ac => {
@@ -244,7 +330,6 @@ export async function getServerSideProps(context) {
       }
     };
   } catch (error) {
-    console.log('THIS IS THE ERROR', error)
     return {
       props: {
         AllAccounts: false,

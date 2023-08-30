@@ -23,7 +23,8 @@ export async function getServerSideProps(context) {
     
 
     function getUTCDate(expiryInSec) {
-        const currentUTCDate = new Date();
+        const now = new Date();
+        const currentUTCDate = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
         const UTCExpiryDate = new Date(currentUTCDate.getTime() + (expiryInSec * 1000));
         return UTCExpiryDate;
     }
@@ -79,20 +80,34 @@ export async function getServerSideProps(context) {
                 let user = await User.findOne({ _id: sanitizedUserId });
 
                 // get UTC date
-                const UTCDate = getUTCDate(authData.expires_in)
+                const tokenExpiryUTCDate = getUTCDate(authData.expires_in)
+                const refreshTokenExpiryUTCDate = getUTCDate(authData.refresh_token_expires_in)
 
-                // add the auth to the DB
-                console.log('THE AUTH DATA', authData)
+                const mediaElem = user.socialMediaLinks.filter(media => media.platformName === 'pinterest');
+                mediaElem.accessToken = authData.access_token;
+                mediaElem.refreshToken = authData.refresh_token;
+                mediaElem.accesstokenExpirationDate = tokenExpiryUTCDate;
+                mediaElem.refreshTokenExpirationDate = refreshTokenExpiryUTCDate;
 
+                await user.save();
+
+                return {
+                    redirect: {
+                        destination: '/settings/linked-accounts?result=success',
+                        permanent: false,
+                    }
+                };
 
             }
 
+            // only runs when the If statement fails
             return {
                 redirect: {
-                    destination: '/settings/linked-accounts?result=success',
+                    destination: '/settings/linked-accounts?result=failure',
                     permanent: false,
                 }
             };
+
         } catch (error) {
             // Handle the error. Log it or take other appropriate actions.
             return {
