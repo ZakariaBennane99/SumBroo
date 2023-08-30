@@ -35,7 +35,7 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
 
   useEffect(() => {
     if (router.query.result === 'success') {
-      setIsLinked('Yesh')
+      setIsLinked('Yes')
     } else if (router.query.result === 'failure') {
       setIsLinked('No');
     }
@@ -109,7 +109,7 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
                                 </div> 
                                 : isLinked === 'Yes' ?
                                 <div className="refreshWarning"> 
-                                  <span>Success! Your account has been linked.</span> 
+                                  <span><b>Success!</b> Your account has been linked.</span> 
                                 </div> : ''
                               }
                             <div className="linkedAccounts">
@@ -269,8 +269,8 @@ export async function getServerSideProps(context) {
     // assuming onboardingStep is 2
     const sanitizedUserId = mongoSanitize.sanitize(userId);
     let user = await User.findOne({ _id: sanitizedUserId });
-    const activeProfiles = user.socialMediaLinks
-        .map(async (link) => {
+    const activeProfilesPromises = user.socialMediaLinks
+        .map(link => {
 
           const now = new Date();
           const currentUTCDate = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
@@ -278,24 +278,24 @@ export async function getServerSideProps(context) {
           if (link.accesstokenExpirationDate <= currentUTCDate) {
             // Token has expired or is about to expire
             if (link.refreshTokenExpirationDate > currentUTCDate) {
-              // Refresh token is still valid, use it to get a new access token
-              const newToken = await refreshTokenForUser(link.refreshToken);
 
-              if (newToken.isError) {
+              const refreshTokenAndUpdate = async (link) => {
+                const newToken = await refreshTokenForUser(link.refreshToken);
+                if (newToken.isError) {
+                    return {
+                        name: link.platformName,
+                        status: 'authExpired'
+                    };
+                } 
+                link.accessToken = newToken.newToken;
+                link.accesstokenExpirationDate = newToken.expiryUTCDate;
                 return {
                   name: link.platformName,
-                  status: 'authExpired'
-                }
-              } 
-
-              // If no error, proceed
-              link.accessToken = newToken.newToken;
-              link.accesstokenExpirationDate = newToken.expiryUTCDate;
-
-              return {
-                name: link.platformName,
-                status: link.profileStatus
+                  status: link.profileStatus
+                };
               }
+
+              return refreshTokenAndUpdate(link); 
 
             } else {
               // Both token and refresh token have expired, prompt user to re-authenticate
@@ -313,19 +313,23 @@ export async function getServerSideProps(context) {
           }
 
         });
-    
+
     await user.save();    
+
+    const activeProfiles = await Promise.all(activeProfilesPromises);
         
     let AvAccounts = await AvAc.findOne({ _id: '64dff175f982d9f8a4304100' });
 
     let AvAcc = AvAccounts.accounts.map(ac => {
       if (ac.status === 'available') {
+        const stats = getStatus(ac.ac, activeProfiles)
         return {
           name: ac.ac,
-          status: getStatus(ac.ac, activeProfiles) ? getStatus(ac.ac, activeProfiles) : 'new'
+          status: stats ? stats : 'new'
         }
       }
     }).filter(el => el !== undefined)
+
 
     return {
       props: {

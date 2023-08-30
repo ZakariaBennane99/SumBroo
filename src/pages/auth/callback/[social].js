@@ -71,7 +71,9 @@ export async function getServerSideProps(context) {
 
             let authData;
 
-            if (context.social === 'pinterest') {
+            console.log('THIS IS THE CONTEXT', context.params.social)
+
+            if (context.params.social === 'pinterest') {
 
                 authData = await PinterestAuth().handleAuthCallback(code);
 
@@ -83,11 +85,12 @@ export async function getServerSideProps(context) {
                 const tokenExpiryUTCDate = getUTCDate(authData.expires_in)
                 const refreshTokenExpiryUTCDate = getUTCDate(authData.refresh_token_expires_in)
 
-                const mediaElem = user.socialMediaLinks.filter(media => media.platformName === 'pinterest');
+                const mediaElem = user.socialMediaLinks.find(media => media.platformName === 'pinterest');
                 mediaElem.accessToken = authData.access_token;
                 mediaElem.refreshToken = authData.refresh_token;
                 mediaElem.accesstokenExpirationDate = tokenExpiryUTCDate;
                 mediaElem.refreshTokenExpirationDate = refreshTokenExpiryUTCDate;
+                mediaElem.profileStatus = 'active';
 
                 await user.save();
 
