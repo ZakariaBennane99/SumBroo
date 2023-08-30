@@ -9,9 +9,11 @@ import Footer from '../../../components/Footer';
 const Home = () => {
 
   const [windowWidth, setWindowWidth] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
+    setLoading(false)
     // Update the window width when the window is resized
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -25,9 +27,12 @@ const Home = () => {
     }
   }, []);
 
+  if (loading) {
+    return <div>...loading</div>
+  }
 
   return (<div id="parentWrapper">
-    <Header signedIn={true}/>
+    <Header signedIn={true} width={windowWidth} />
     <div className="resultsSection">
       <div className="homeContainer">
         {

@@ -10,9 +10,11 @@ import _ from 'lodash';
 const PostsStatus = () => {
 
   const [windowWidth, setWindowWidth] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
+    setLoading(false)
     // Update the window width when the window is resized
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -79,12 +81,16 @@ const PostsStatus = () => {
     },
   ]
 
-  const published = data.filter(elem => elem.status === 'published')
-  const inReview = data.filter(elem => elem.status === 'in-review')
-  const rejected = data.filter(elem => elem.status === 'rejected')
+  const published = data.filter(elem => elem.status === 'published');
+  const inReview = data.filter(elem => elem.status === 'in-review');
+  const rejected = data.filter(elem => elem.status === 'rejected');
+
+  if (loading) {
+    return <div>...loading</div>
+  }
 
   return (<div id="parentWrapper">
-    <Header signedIn={true}/>
+    <Header signedIn={true} width={windowWidth} />
     <div className="resultsSection">
       <div className="homeContainer">
         {

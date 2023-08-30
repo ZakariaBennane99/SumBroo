@@ -12,14 +12,16 @@ function capitalize(wd) {
     return capitalizeWord
 }
 
-const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
+const LinkedAccounts = ({ AllAccounts, isServerErr }) => {
 
   const router = useRouter();
   const [isLinked, setIsLinked] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [windowWidth, setWindowWidth] = useState(null);
   useEffect(() => {
     setWindowWidth(window.innerWidth);
+    setLoading(false)
     // Update the window width when the window is resized
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -80,9 +82,13 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
       fontFamily: 'Ubuntu',
     },
   };
+
+  if (loading) {
+    return <div>...loading</div>
+  }
               
   return (<div id="parentWrapper">
-    <Header signedIn={true}/>
+    <Header signedIn={true} width={windowWidth}/>
     <div className="resultsSection">
         <div className="homeContainer">
             {

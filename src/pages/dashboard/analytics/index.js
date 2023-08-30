@@ -17,9 +17,11 @@ import StatsSummary from '../../../../components/viz/StatsSummary';
 const Analytics = () => {
 
   const [windowWidth, setWindowWidth] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
+    setLoading(false);
     // Update the window width when the window is resized
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -407,8 +409,13 @@ const Analytics = () => {
     })
   };
 
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (<div id="parentWrapper">
-    <Header signedIn={true}/>
+    <Header signedIn={true} width={windowWidth}/>
     <div className="resultsSection">
       <div className="homeContainer">
         {
@@ -417,7 +424,7 @@ const Analytics = () => {
         <div className="rightSectionAnalytics">
           <div className='postSelectorContainer'>
             <Select
-                value={targetPosts}
+              value={targetPosts}
                 onChange={handlePosts}
                 options={options}
                 isMulti

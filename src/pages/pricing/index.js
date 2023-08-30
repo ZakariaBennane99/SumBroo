@@ -62,9 +62,11 @@ function capitalize(wd) {
 const Pricing = ({ AllAccounts }) => {
 
     const [windowWidth, setWindowWidth] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
       setWindowWidth(window.innerWidth);
+      setLoading(false)
       // Update the window width when the window is resized
       const handleResize = () => {
         setWindowWidth(window.innerWidth);
@@ -79,7 +81,6 @@ const Pricing = ({ AllAccounts }) => {
     }, []);
 
     const [hovered, setHovered] = useState(false)
-    const [isMounted, setIsMounted] = useState(false);
     const [tableClicked, setTableClicked] = useState()
     const [lookupKey, setLookupKey] = useState(null)
     const [modalIsOpen, setModalIsOpen] = useState({
@@ -154,13 +155,8 @@ const Pricing = ({ AllAccounts }) => {
         })
     };
 
-
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
-
-    if (!isMounted) {
-        return null;  // or return a loading spinner, etc.
+    if (loading) {
+        return <div>...loading</div>
     }
 
     return (<div className="pricing-parent-section">
@@ -168,7 +164,7 @@ const Pricing = ({ AllAccounts }) => {
             <SignUp lookupKey={lookupKey} platforms={targetPlatforms} />
             :
             <>
-            <Header />
+            <Header width={windowWidth} />
             <div className="pricingParent">
                 <div className="pricingTitle">
                     <h1>Select a Platform(s) and a Plan To Get Started</h1>

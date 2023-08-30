@@ -4,7 +4,7 @@ import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import { useRouter } from 'next/router';
 import Modal from 'react-modal';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { faEye, faEyeSlash, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
@@ -14,6 +14,8 @@ import { Tadpole } from "react-svg-spinners";
 
 const SignIn = () => {
 
+    const [windowWidth, setWindowWidth] = useState(null);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     // password change
@@ -241,9 +243,29 @@ const SignIn = () => {
         fontFamily: 'Ubuntu',
       },
     };
+  
+    useEffect(() => {
+      setWindowWidth(window.innerWidth);
+      setLoading(false);
+      // Update the window width when the window is resized
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      }
+  
+      window.addEventListener('resize', handleResize);
+  
+      // Cleanup: remove the event listener when the component is unmounted
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      }
+    }, []);
+  
+    if (loading) {
+      return <div>...loading</div>
+    }
 
     return (<div className="footerSectionsWrapper">
-        <Header signedIn={false} />
+        <Header signedIn={false} width={windowWidth} />
           <div className='login-container'>
             {!clickedOnForgot ?
                 <form className='loginForm'>

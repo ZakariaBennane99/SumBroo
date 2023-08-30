@@ -47,21 +47,33 @@ const Landing = () => {
 
   const router = useRouter();
 
-  const [browserName, setBrowserName] = useState("");
-  const [token, setToken] = useState("")
+  const [windowWidth, setWindowWidth] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const browser = Bowser.getParser(window.navigator.userAgent);
-      setBrowserName(browser.getBrowser().name.toLowerCase());
+    setWindowWidth(window.innerWidth);
+    setLoading(false);
+    // Update the window width when the window is resized
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
     }
-    setToken(window.localStorage.getItem("userPassToken"))
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup: remove the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    }
   }, []);
+
+  if (loading) {
+    return <div>...loading</div>
+  }
 
   // send the token to the backend
   return (
     <div id='parentWrapper'>
-      <Header singedIn={true} isLanding={true} />
+      <Header singedIn={true} isLanding={true} width={windowWidth} />
       <div id='heroSection'>
         <h1>Efficiently Maximize Your Impact with SumBroo and Grow Faster & Cheaper Than Ever</h1>
         <p>Enjoy a surge in your <span>growth rate</span> and <span>audience reach</span>, experience a daily dose of <span>high-quality content</span>, and keep your wallet happy with our <span>very affordable plans</span>.</p>

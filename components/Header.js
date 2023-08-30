@@ -1,24 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import SlideMenu from './SlideMenu';
 
-const Header = ({ signedIn, isLanding }) => {
+const Header = ({ signedIn, isLanding, width }) => {
 
   const landing = isLanding || false;
 
-  const [windowWidth, setWindowWidth] = useState(null);
   const [isSubMenuOpen1, setIsSubMenuOpen1] = useState(false);
   const [isSubMenuOpen2, setIsSubMenuOpen2] = useState(false);
   const [isSignOutClicked, setIsSignOutClicked] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    setWindowWidth(window.innerWidth);
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   async function signOutUser() {
     setIsSignOutClicked(true)
@@ -101,10 +93,10 @@ const Header = ({ signedIn, isLanding }) => {
     );
   };
 
-  const isMobile = () => windowWidth < 750;
+  const isMobile = () => width < 750;
 
   const shouldRenderMobileLinks = () => {
-    return (router.pathname.includes('dashboard') || router.pathname.includes('settings')) && windowWidth < 1215 || isMobile();
+    return (router.pathname.includes('dashboard') || router.pathname.includes('settings')) && width < 1215 || isMobile();
   };
 
   return (
@@ -112,8 +104,8 @@ const Header = ({ signedIn, isLanding }) => {
       <span className='logo' onClick={() => router.push('/')}>
         <img src='/logo.svg' alt='logo' />
         <span className='logo-text'>
-          <span style={{ fontWeight: 'bold' }}>{windowWidth < 500 ? 'S' : 'Sum'}</span>
-          <span style={{ fontWeight: 'regular' }}>{windowWidth < 500 ? 'B' : 'Broo'}</span>
+          <span style={{ fontWeight: 'bold' }}>{width < 500 ? 'S' : 'Sum'}</span>
+          <span style={{ fontWeight: 'regular' }}>{width < 500 ? 'B' : 'Broo'}</span>
         </span>
       </span>
 

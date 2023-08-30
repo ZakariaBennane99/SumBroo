@@ -35,9 +35,11 @@ function allObjectsHaveSameValueForKey(arr, key) {
 const PublishAPost = ({ isServerError, platforms }) => {
 
   const [windowWidth, setWindowWidth] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
+    setLoading(false)
     // Update the window width when the window is resized
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -92,10 +94,14 @@ const PublishAPost = ({ isServerError, platforms }) => {
   };
 
 
+  if (loading) {
+    return <div>...loading</div>
+  }
+
   // Show this section if all the social Media 
   if (allObjectsHaveSameValueForKey(platforms, 'status') && platforms[0].status !== 'active') {
     return (<div id="parentWrapper">
-    <Header signedIn={true}/>
+    <Header signedIn={true} width={windowWidth}/>
     <div className="resultsSection">
         {
           windowWidth < 620 ?
@@ -173,7 +179,7 @@ const PublishAPost = ({ isServerError, platforms }) => {
     </div>)
   } else {
     return (<div id="parentWrapper">
-    <Header signedIn={true}/>
+    <Header signedIn={true} width={windowWidth}/>
     <div className="resultsSection">
         {
           windowWidth < 620 ?

@@ -140,9 +140,11 @@ function Post({ post }) {
   const [hash, setHash] = useState(null)
 
   const [windowWidth, setWindowWidth] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setWindowWidth(window.innerWidth);
+    setLoading(false);
     // Update the window width when the window is resized
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -300,11 +302,14 @@ function Post({ post }) {
     }, [hash]);
   
   
+    if (loading) {
+      return <div>...loading</div>
+    }
 
     // post.fields.slug
     return (
       <div className='blog-parent-section'>
-        <Header />
+        <Header width={windowWidth} />
         <div className='post-container'>
 
           <Meta 
