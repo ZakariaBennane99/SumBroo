@@ -3,6 +3,8 @@ import Footer from "../../../../components/Footer";
 import SettingsMenu from "../../../../components/SettingsMenu";
 import { useState, useEffect } from "react";
 import Modal from 'react-modal';
+import { useRouter } from "next/router";
+import { PinterestAuth } from '../../../../components/auth/PinterestAuth';
 
 
 function capitalize(wd) {
@@ -11,6 +13,8 @@ function capitalize(wd) {
 }
 
 const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
+
+  const router = useRouter();
 
   const [windowWidth, setWindowWidth] = useState(null);
   useEffect(() => {
@@ -32,21 +36,24 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
   
 
   function handleAccountClick(e) {
+
     const status = e.target.innerText;
+    const media = e.target.dataset.platform;
+
     if (status === 'Subscribe To Link') {
-      // here you have to send him to the 
-      // the billing page
+      // here you have to send the user to the billing page
+      router.push('/settings/billing');
     } else if (status === 'Link Account') {
       // here you have to connect to the target platform
       // and authenticate the user, get the token and store it in the DB
-
+      if (media === 'pinterest') {
+        PinterestAuth().initiateAuth();
+      }
     } else if (status === 'Apply To Link') {
       // here you connect to a route that will add a new application 
       // to the Admin DB and update this account to inReview, 
       // then show an alert 
-    } else {
-      return null
-    }
+    } 
 
   }    
 
@@ -93,8 +100,9 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
                                   } else {
                                     msg = 'Apply To Link'; 
                                   }
-                                  console.log(msg) // ( msg === 'In Review' || msg === 'Linked') ? 'grey' : '' 
-                                  return <button style={{ backgroundColor: 'grey', cursor: 'auto' }}>{msg}</button>
+                                  return <button data-platform={acc.name} style={{ backgroundColor: ( msg === 'In Review' || msg === 'Linked') ? 'grey' : '',
+                                   cursor: ( msg === 'In Review' || msg === 'Linked') ? 'auto' : ''  }}
+                                   onClick={handleAccountClick}>{msg}</button>
                                   })
                                 ()}
                             </div>
