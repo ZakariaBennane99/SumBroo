@@ -136,7 +136,7 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
                                   }
                                   return <button data-platform={acc.name} style={{ backgroundColor: ( msg === 'In Review' || msg === 'Linked') ? 'grey' : '',
                                    cursor: ( msg === 'In Review' || msg === 'Linked') ? 'auto' : ''  }}
-                                   onClick={handleAccountClick}>{msg}</button>
+                                   onClick={handleAccountClick} disabled={msg === 'In Review' || msg === 'Linked'}>{msg}</button>
                                   })
                                 ()}
                             </div>
