@@ -322,17 +322,18 @@ export default Pricing;
 
 export async function getServerSideProps(context) {
 
-    //const { connectUserDB, userDbConnection } = require('../../../../utils/connectUserDB');
+    const connectDB = require('../../../../utils/connectUserDB');
+    const AvAc = require('../../../../utils/AvailableAccounts').default;
 
     try {
   
-      await connectUserDB()
+      await connectDB()
 
-      let AvAccounts = await userDbConnection.model('AvAc').findOne({ _id: '64dff175f982d9f8a4304100' });
+      let AvAccounts = await AvAc.findOne({ _id: '64dff175f982d9f8a4304100' });
       
       return {
         props: {
-          AllAccounts: AvAccounts,
+          AllAccounts: AvAccounts.accounts.filter(acc => acc.status === 'available'),
         }
       };
     } catch (error) {

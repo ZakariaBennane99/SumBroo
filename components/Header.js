@@ -76,7 +76,7 @@ const Header = ({ signedIn, isLanding, width }) => {
             <Link href={`/${path}/linked-accounts`}>Linked Accounts</Link>
             <Link href={`/${path}/account-settings`}>Account Settings</Link>
             <Link href={`/${path}/billing`}>Billing</Link>
-            title === 'Settings' && <button onClick={signOutUser} disabled={isSignOutClicked}>Sign Out</button>
+            { title === 'Settings' && <button onClick={signOutUser} disabled={isSignOutClicked}>Sign Out</button> }
           </div>
         )}
       </>
@@ -86,9 +86,18 @@ const Header = ({ signedIn, isLanding, width }) => {
   const renderSignedOutLinks = () => {
     return (
       <>
-        <Link href='/blog'><p>Blog</p></Link>
-        <Link href='/pricing'><p>Pricing</p></Link>
-        <Link href='/sign-in'><p>Sign In</p></Link>
+        <Link href='/blog'><p style={{ 
+          color: router.pathname.includes('blog') ? '#1c1c57' : '',
+          borderBottom: router.pathname.includes('blog') ? '2px solid #1c1c57' : ''
+         }}>Blog</p></Link>
+        <Link href='/pricing'><p style={{ 
+          color: router.pathname.includes('pricing') ? '#1c1c57' : '',
+          borderBottom: router.pathname.includes('pricing') ? '2px solid #1c1c57' : ''
+         }}>Pricing</p></Link>
+        <Link href='/sign-in'><p style={{ 
+          color: router.pathname.includes('sign-in') ? '#1c1c57' : '',
+          borderBottom: router.pathname.includes('sign-in') ? '2px solid #1c1c57' : ''
+         }}>Sign In</p></Link>
       </>
     );
   };

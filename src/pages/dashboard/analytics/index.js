@@ -454,14 +454,7 @@ const Analytics = () => {
               /> 
             </div>
             <div className='analyticsContainer2'>
-                <MultiLineChart
-                    data={data4}
-                    setMetrics1={handleMetricsData1}
-                  />
-                <GroupedBarChart 
-                  data={data5}
-                  setMetrics2={handleMetricsData2}
-                />
+
             </div>
           </div>
         </div>
