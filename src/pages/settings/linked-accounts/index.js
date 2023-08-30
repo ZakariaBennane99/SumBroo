@@ -15,6 +15,7 @@ function capitalize(wd) {
 const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
 
   const router = useRouter();
+  const [message, setMessage] = useState("");
 
   const [windowWidth, setWindowWidth] = useState(null);
   useEffect(() => {
@@ -32,7 +33,16 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (router.query.result === 'success') {
+        setMessage('Successfully linked your Pinterest account!');
+    } else if (router.query.result === 'failure') {
+        setMessage('Failed to link your Pinterest account. Please try again.');
+    }
+  }, [router.query]);
+
   const [componentServerErr, setComponentServerErr] = useState(false)
+
   
 
   function handleAccountClick(e) {
@@ -43,7 +53,7 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
     if (status === 'Subscribe To Link') {
       // here you have to send the user to the billing page
       router.push('/settings/billing');
-    } else if (status === 'Link Account') {
+    } else if (status === 'Link Account' || 'Renew Connection') {
       // here you have to connect to the target platform
       // and authenticate the user, get the token and store it in the DB
       if (media === 'pinterest') {
@@ -83,9 +93,20 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
                     return (
                     <div className="smAccountsContainer">
                         <div className="linkedAccountsWrapper"> 
+                              {
+                                acc.status === 'authExpired' ? 
+                                <div className="refreshWarning"> 
+                                    <img src="/infotip.svg" />
+                                    <span>It looks like your connection has expired. To continue posting, please renew your connection.</span> 
+                                </div>
+                                : ''
+                              }
                             <div className="linkedAccounts">
                                 <div className="account">
                                   <span id="sm"><img id="smlg" src={`/sm/${acc.name}.svg`} /> {capitalize(acc.name)}</span>
+                                  {
+                                    acc.status === 'active' ? <img id="check" src="/check.svg" /> : ''
+                                  }
                                 </div>
                                 {(() => {
                                   let msg;
@@ -97,6 +118,8 @@ const LinkedAccounts = ({ AllAccounts, isServerErr, userId }) => {
                                     msg = 'Link Account'
                                   } else if (acc.status === 'inReview') {
                                     msg = 'In Review'
+                                  } else if (acc.status === 'authExpired') {
+                                    msg = 'Renew Connection'
                                   } else {
                                     msg = 'Apply To Link'; 
                                   }
@@ -143,7 +166,6 @@ export default LinkedAccounts;
 export async function getServerSideProps(context) {
 
   const connectDB = require('../../../../utils/connectUserDB');
-  //const { connectUserDB, userDbConnection } = require('../../../../utils/connectUserDB');
   const jwt = require('jsonwebtoken');
   const User = require('../../../../utils/User').default;
   const AvAc = require('../../../../utils/AvailableAccounts').default;
@@ -233,17 +255,3 @@ export async function getServerSideProps(context) {
   }
 
 }
-
-
-/*
-  {
-    refresh ? <div className="refreshWarning"> 
-        <img src="/infotip.svg" /><span>It looks like your connection has expired. To continue posting, please renew your connection.</span> 
-    </div> : ''
-  } 
-  {
-    acc.active ?
-    <img id="check" src="/check.svg" />
-    : ''
-  } 
-*/

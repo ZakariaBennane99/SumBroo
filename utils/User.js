@@ -58,6 +58,9 @@ const PostSchema = new Schema({
     // updated to the actual publishing date (in case of accepting the post)
     content: PostContentSchema, // after publishing remove the content
     comment: String, // for rejected posts
+    analytics: {
+        type: Schema.Types.Mixed
+    }
 });
 
 const SocialMediaLinkSchema = new Schema({
@@ -71,7 +74,7 @@ const SocialMediaLinkSchema = new Schema({
     }, 
     profileStatus: {
         type: String,
-        enum: ["inReview", "pendingPay", "pendingAuth", "active", "canceled"],
+        enum: ["inReview", "pendingPay", "pendingAuth", "active", "canceled", "authExpired"],
         // "New": profile is available to be applied for.
         // "InReview": profile is in review.
         // "Disabled": profile disabled by admin for quality and other issues.(rare case)
@@ -84,6 +87,9 @@ const SocialMediaLinkSchema = new Schema({
     }, 
     pricePlans: {
         type: [String]
+    },
+    description: {
+        type: String
     },
     niche: {
         type: String
@@ -104,10 +110,15 @@ const SocialMediaLinkSchema = new Schema({
     accessToken: {
         type: String
     },
+    accesstokenExpirationDate: {
+        type: Date
+    }, 
     refreshToken: {
         type: String
     },
-    tokenExpirationDate: Number,
+    refreshTokenExpirationDate: {
+        type: Date
+    } 
 });
 
 const UserSchema = new Schema({

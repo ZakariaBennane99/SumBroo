@@ -1,21 +1,20 @@
 // auth/PinterestAuth.js
 
-// Define constants for the Pinterest OAuth flow.
+
 const PINTEREST_OAUTH_URL = "https://www.pinterest.com/oauth/";
-const REDIRECT_URI = 'http://localhost:3000/auth/callback'; // The callback endpoint for your app
-const SCOPE = "boards:read,pins:read,pins:write"; // Define the scope you want to access
-const STATE = "vXpd@aSf1nGdgfXTf"; // You can generate a random string for added security
+const REDIRECT_URI = 'http://localhost:3000/auth/callback/pinterest';
+const SCOPE = "boards:read,pins:read,pins:write"; 
+const STATE = "vXpd@aSf1nGdgfXTf"; 
 
 
 export const PinterestAuth = () => {
     // Redirects the user to Pinterest's OAuth page.
     const initiateAuth = () => {
         const authURL = `${PINTEREST_OAUTH_URL}?client_id=1484362&redirect_uri=${REDIRECT_URI}&response_type=code&scope=${SCOPE}&state=${STATE}`;
-        window.open(authURL, '_blank');
+        window.location.href = authURL
     };
 
     // This function will handle the callback from Pinterest with the auth code.
-    // You would call this function in the page or API route that handles the callback specified in REDIRECT_URI.
     const handleAuthCallback = async (code) => {
 
         const headers = new Headers();
@@ -34,8 +33,7 @@ export const PinterestAuth = () => {
         });
 
         const data = await response.json();
-
-        // Here you can store the access_token and refresh_token in your database or wherever you need.
+        
         return data;
     };
 

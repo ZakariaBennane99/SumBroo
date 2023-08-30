@@ -1,43 +1,22 @@
-import { PinterestAuth } from '../../../../components/auth/PinterestAuth';
+// pages/404.js
+import Header from '../../../../components/Header';
+import Footer from '../../../../components/Footer';
 
-const CallbackPage = ({ success }) => {
-    if () {
-
-    } else {
-        
-    }
-    return success ? <div>Successfully linked your Pinterest account!</div> : <div>Failed to link your Pinterest account. Please try again.</div>;
-};
-
-export async function getServerSideProps(context) {
-
-    const code = context.query.code || "";
-
-    if (code) {
-
-        try {
-
-            const authData = await PinterestAuth().handleAuthCallback(code);
-            console.log('THE AUTH DATA', authData)
-
-            return {
-                props: { success: true }
-            };
-        } catch (error) {
-            // Handle the error. Log it or take other appropriate actions.
-            return {
-                props: { success: false }
-            };
-        }
-
-    } else {
-
-        // No code was received.
-        return {
-            props: { success: false }
-        };
-
-    }
+function Custom404() {
+    return (<div className='Er404-parent-section'>
+        <Header />
+            <div className='Error-container'>
+              <h1 style={{ fontSize: '2.5em' }}>Page Not Found</h1>
+              <img src="/404.svg" />
+              <button style={{ width: 'fit-content', 
+                padding: '15px 25px 15px 25px', 
+                fontSize: '1.5em',
+                marginBottom: '70px' }}>Go Back To The Homepage</button>
+            </div>
+        <Footer />
+      </div>
+    );
 }
-
-export default CallbackPage;
+  
+export default Custom404;
+  
