@@ -20,6 +20,13 @@ export async function getServerSideProps(context) {
     const jwt = require('jsonwebtoken');
     const User = require('../../../../utils/User').default;
     const mongoSanitize = require('express-mongo-sanitize');
+    
+
+    function getUTCDate(expiryInSec) {
+        const currentUTCDate = new Date();
+        const UTCExpiryDate = new Date(currentUTCDate.getTime() + (expiryInSec * 1000));
+        return UTCExpiryDate;
+    }
 
     let userId;
 
@@ -70,6 +77,9 @@ export async function getServerSideProps(context) {
                 const sanitizedUserId = mongoSanitize.sanitize(userId);
                 await connectDB();
                 let user = await User.findOne({ _id: sanitizedUserId });
+
+                // get UTC date
+                const UTCDate = getUTCDate(authData.expires_in)
 
                 // add the auth to the DB
                 console.log('THE AUTH DATA', authData)
