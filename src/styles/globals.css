@@ -2982,11 +2982,24 @@ a {
 
 .postStatusContainer {
     width: 78%;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    grid-gap: 40px;
+    display: flex;
+    flex-direction: row;
 }
 
+.postStatusContainer .innerContainer {
+    display: flex;
+    flex-direction: column;
+    width: 48%;
+}
+
+.postStatusContainer .innerContainer .published {
+    margin-bottom: 40px;
+}
+
+.titlesContainer {
+    width: 48%;
+    margin-left: 4%;
+}
 
 /* #f5f6f7 */
 .postStatusContainer div .titles {
@@ -3616,6 +3629,32 @@ a {
     }
 
 }
+
+@media screen and (max-width: 650px) {
+
+    .postStatusContainer {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .postStatusContainer .innerContainer {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .postStatusContainer .innerContainer .published {
+        margin-bottom: 40px;
+    }
+    
+    .titlesContainer {
+        width: 100%;
+        margin-left: 0px;
+    }
+
+}
+
 
 @media screen and (max-width: 1215px) {
 

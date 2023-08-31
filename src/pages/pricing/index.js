@@ -55,7 +55,7 @@ const Tooltip = ({ content, valueTag }) => {
 };
 
 function capitalize(wd) {
-    return wd.charAt(0).toUpperCase() + word.slice(1);
+    return wd.charAt(0).toUpperCase() + wd.slice(1);
 }
 
 
@@ -141,7 +141,7 @@ const Pricing = ({ AllAccounts }) => {
     }
 
     const options = AllAccounts.map(ac => {
-        return { value: ac, label: capitalize(ac) }
+        return { value: ac.ac, label: capitalize(ac.ac) }
     });
 
     const customStyles2= {
@@ -322,18 +322,28 @@ export default Pricing;
 
 export async function getServerSideProps(context) {
 
-    const connectDB = require('../../../../utils/connectUserDB');
-    const AvAc = require('../../../../utils/AvailableAccounts').default;
+    const connectDB = require('../../../utils/connectUserDB');
+    const AvAc = require('../../../utils/AvailableAccounts').default;
 
     try {
   
       await connectDB()
 
       let AvAccounts = await AvAc.findOne({ _id: '64dff175f982d9f8a4304100' });
+
+      const readyDT = AvAccounts.accounts
+        .filter(acc => acc.status === 'available')
+        .map(account => {
+            const plainObject = account.toObject();
+            return {
+                ac: plainObject.ac,
+                status: plainObject.status
+            };
+        });
       
       return {
         props: {
-          AllAccounts: AvAccounts.accounts.filter(acc => acc.status === 'available'),
+          AllAccounts: readyDT,
         }
       };
     } catch (error) {

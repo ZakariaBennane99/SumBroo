@@ -97,21 +97,45 @@ const PostsStatus = () => {
           windowWidth > 1215 ? <HomeMenu /> : ''
         }
         <div className="postStatusContainer">
-          <div>
-            <div className='titles'>Published</div>
-            {
-              published.map(el =>
-                <div className='body'>
-                  <p>{_.startCase(el.title)}</p>
-                  <div>
-                    <span className='platform'><img id='smlg' src='/sm/pin.svg' /> <span>{_.startCase(el.platform)}</span> <img id='link' src='/linkToPost.svg' /></span>
-                    <span className='date'>{el.date}</span>
+          <div className="innerContainer">
+            <div className="published">
+              <div className='titles'>Published</div>
+              {
+                published.map(el =>
+                  <div className='body'>
+                    <p>{_.startCase(el.title)}</p>
+                    <div>
+                      <span className='platform'><img id='smlg' src='/sm/pin.svg' /> <span>{_.startCase(el.platform)}</span> <img id='link' src='/linkToPost.svg' /></span>
+                      <span className='date'>{el.date}</span>
+                    </div>
                   </div>
-                </div>
-              )
-            }
-          </div>
-          <div>
+                )
+              }
+            </div>
+  
+            <div>
+              <div className='titles'>Need Revision</div>
+              {
+                rejected.map(el => 
+                  <div className='body'>
+                    <p className='postTitle'>{_.startCase(el.title)}</p>
+                    <div>
+                        <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src='/sm/pin.svg' /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
+                    </div>
+                    <div id="feedback-box">
+                      {
+                        el.explanation.split('\n').map(elem => 
+                          <div className='feedback-points part'>{elem}</div>
+                        )
+                      }
+                      <button onClick={ () => { router.push('/dashboard/publish-a-post'); } } className="create-post-button">Create a New Post</button>
+                    </div>
+                  </div>
+                )
+              }
+            </div>
+          </div>  
+          <div className="titlesContainer">
             <div className='titles'>In Review</div>
               {
                 inReview.map(el =>
@@ -123,28 +147,7 @@ const PostsStatus = () => {
                   </div>
                 )
               }
-          </div>
-          <div>
-            <div className='titles'>Need Revision</div>
-            {
-              rejected.map(el => 
-                <div className='body'>
-                  <p className='postTitle'>{_.startCase(el.title)}</p>
-                  <div>
-                      <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src='/sm/pin.svg' /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
-                  </div>
-                  <div id="feedback-box">
-                    {
-                      el.explanation.split('\n').map(elem => 
-                        <div className='feedback-points part'>{elem}</div>
-                      )
-                    }
-                    <button onClick={ () => { router.push('/dashboard/publish-a-post'); } } className="create-post-button">Create a New Post</button>
-                  </div>
-                </div>
-              )
-            }
-          </div>
+            </div>
         </div>
       </div>
     </div>
