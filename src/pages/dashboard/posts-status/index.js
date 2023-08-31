@@ -112,8 +112,22 @@ const PostsStatus = () => {
                 )
               }
             </div>
-  
             <div>
+            <div className='titles'>In Review</div>
+              {
+                inReview.map(el =>
+                  <div className='body'>
+                    <p>{_.startCase(el.title)}</p>
+                    <div>
+                      <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src='/sm/pin.svg' /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
+                    </div>
+                  </div>
+                )
+              }
+            </div>
+
+          </div>  
+          <div className="titlesContainer">
               <div className='titles'>Need Revision</div>
               {
                 rejected.map(el => 
@@ -129,20 +143,6 @@ const PostsStatus = () => {
                         )
                       }
                       <button onClick={ () => { router.push('/dashboard/publish-a-post'); } } className="create-post-button">Create a New Post</button>
-                    </div>
-                  </div>
-                )
-              }
-            </div>
-          </div>  
-          <div className="titlesContainer">
-            <div className='titles'>In Review</div>
-              {
-                inReview.map(el =>
-                  <div className='body'>
-                    <p>{_.startCase(el.title)}</p>
-                    <div>
-                      <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src='/sm/pin.svg' /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
                     </div>
                   </div>
                 )
