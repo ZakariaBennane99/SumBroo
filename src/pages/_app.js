@@ -9,8 +9,6 @@ import SettingsMenu from '../../components/SettingsMenu';
 
 export default function MyApp({ Component, pageProps }) {
 
-  console.log(pageProps.signedIn)
-
   const signedIn = pageProps.signedIn;
   const set = pageProps.isSettings
 
@@ -81,7 +79,7 @@ export default function MyApp({ Component, pageProps }) {
             ) : ''
           }
           {loading ? (
-            <h1>Loading...</h1>  // Replace this with your actual loading bar or spinner
+            <h1>Loading...</h1> 
           ) : (
             <Component {...pageProps} windowWidth={windowWidth} />
           )}

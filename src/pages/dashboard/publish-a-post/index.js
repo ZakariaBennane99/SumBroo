@@ -1,9 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
 import { useState, useEffect } from "react";
-import Header from '../../../../components/Header';
-import Footer from '../../../../components/Footer';
-import HomeMenu from '../../../../components/HomeMenu';
 import ActiveAccounts from '../../../../components/ActiveAccounts';
 import Requirements from '../../../../components/Requirements';
 import Targeting from '../../../../components/Targeting';
@@ -75,11 +72,6 @@ const PublishAPost = ({ isServerError, platforms, windowWidth }) => {
   // Show this section if all the social Media 
   if (allObjectsHaveSameValueForKey(platforms, 'status') && platforms[0].status !== 'active') {
     return (<>
-        {
-          windowWidth < 620 ?
-          <>
-            {
-              platforms[0].status === 'canceledSubscriptionPayment' ? 
               <div className="notification">
                 <img src='/infotip.svg' alt="Info Tip" />
                 <p>Your subscription has been canceled.</p>
@@ -87,38 +79,6 @@ const PublishAPost = ({ isServerError, platforms, windowWidth }) => {
                   <button className="link-button">Restart Subscription</button>
                 </Link>
               </div>
-              :
-              <div className="notification">
-                <img src='/infotip.svg' alt="Info Tip" />
-                <p>There seems to be an issue with your billing.</p>
-                <Link href="/settings/billing">
-                  <button className="link-button">Go To Billing</button>
-                </Link>
-              </div>
-            }
-          </>
-          :
-          <>
-            {
-              platforms[0].status === 'canceledSubscriptionPayment' ? 
-              <div className="notification">
-                <img src='/infotip.svg' alt="Info Tip" />
-                <p>Your subscription has been canceled.</p>
-                <Link href="/settings/billing">
-                  <button className="link-button">Restart Subscription</button>
-                </Link>
-              </div>
-              :
-              <div className="notification">
-                <img src='/infotip.svg' alt="Info Tip" />
-                <p>There seems to be an issue with your billing.</p>
-                <Link href="/settings/billing">
-                  <button className="link-button">Go To Billing</button>
-                </Link>
-              </div>
-            }
-          </>
-        }
         <Modal
             isOpen={isServerError}
             style={customStyles}

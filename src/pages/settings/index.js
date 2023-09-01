@@ -1,7 +1,4 @@
 import { useState, useEffect } from "react";
-import SettingsMenu from "../../../components/SettingsMenu";
-import Header from "../../../components/Header";
-import Footer from '../../../components/Footer';
 
 
 const Settings = ({ windowWidth }) => {
