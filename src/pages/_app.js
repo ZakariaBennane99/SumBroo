@@ -3,14 +3,25 @@ import Router from 'next/router';
 import '@/styles/globals.css';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import HomeMenu from '../../components/HomeMenu';
+import { useRouter } from 'next/router';
+import SettingsMenu from '../../components/SettingsMenu';
 
 export default function MyApp({ Component, pageProps }) {
 
-  const { signedIn } = pageProps;
+  console.log(pageProps.signedIn)
+
+  const signedIn = pageProps.signedIn;
+  const set = pageProps.isSettings
+
+  const isSettings = set ? set : false
+
+  const router = useRouter();
 
   const [loading, setLoading] = React.useState(false);
   const [windowWidth, setWindowWidth] = useState(null);
-  const [mountedLoading, setMountedLoading] = useState(false)
+  const [mountedLoading, setMountedLoading] = useState(true);
+  const [currentPath, setCurrentPath] = useState(router.pathname);
 
   React.useEffect(() => {
     setWindowWidth(window.innerWidth);
@@ -48,6 +59,10 @@ export default function MyApp({ Component, pageProps }) {
     };
   }, []);
 
+  React.useEffect(() => {
+    setCurrentPath(router.pathname);
+  }, [router.pathname]);
+
   if (mountedLoading) {
     return <div>loading...</div>
   }
@@ -55,11 +70,23 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <div id="parentWrapper">
       <Header signedIn={signedIn} width={windowWidth}/>
-      {loading ? (
-        <h1>Loading...</h1>  // Replace this with your actual loading bar or spinner
-      ) : (
-        <Component {...pageProps} />
-      )}
+      <div className="resultsSection">
+        <div className='homeContainer'>
+          {
+            (windowWidth > 1215 && signedIn) ? (
+              isSettings ? 
+                <SettingsMenu pathname={currentPath} />
+              :
+                <HomeMenu pathname={currentPath} />
+            ) : ''
+          }
+          {loading ? (
+            <h1>Loading...</h1>  // Replace this with your actual loading bar or spinner
+          ) : (
+            <Component {...pageProps} windowWidth={windowWidth} />
+          )}
+        </div>  
+      </div>  
       <Footer />
     </div>
   );

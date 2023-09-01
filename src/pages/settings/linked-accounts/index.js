@@ -1,6 +1,3 @@
-import Header from "../../../../components/Header";
-import Footer from "../../../../components/Footer";
-import SettingsMenu from "../../../../components/SettingsMenu";
 import { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import { useRouter } from "next/router";
@@ -16,24 +13,6 @@ const LinkedAccounts = ({ AllAccounts, isServerErr }) => {
 
   const router = useRouter();
   const [isLinked, setIsLinked] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  const [windowWidth, setWindowWidth] = useState(null);
-  useEffect(() => {
-    setWindowWidth(window.innerWidth);
-    setLoading(false)
-    // Update the window width when the window is resized
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    }
-
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup: remove the event listener when the component is unmounted
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    }
-  }, []);
 
   useEffect(() => {
     if (router.query.result === 'success') {
@@ -65,6 +44,7 @@ const LinkedAccounts = ({ AllAccounts, isServerErr }) => {
       // here you connect to a route that will add a new application 
       // to the Admin DB and update this account to inReview, 
       // then show an alert 
+      
     } 
 
   }    
@@ -82,18 +62,8 @@ const LinkedAccounts = ({ AllAccounts, isServerErr }) => {
       fontFamily: 'Ubuntu',
     },
   };
-
-  if (loading) {
-    return <div>...loading</div>
-  }
               
-  return (<div id="parentWrapper">
-    <Header signedIn={true} width={windowWidth}/>
-    <div className="resultsSection">
-        <div className="homeContainer">
-            {
-                windowWidth > 1215 ? <SettingsMenu /> : ''
-            }
+  return (<>
             {
                 AllAccounts.map(acc => {
                     return (
@@ -151,31 +121,28 @@ const LinkedAccounts = ({ AllAccounts, isServerErr }) => {
                     )
                 })
             }
-        </div>
-    </div>
-    <Modal
-      isOpen={isServerErr || componentServerErr}
-      style={customStyles}
-      contentLabel="Example Modal"
-        >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
-        <span onClick={() => location.reload()}
-          style={{ backgroundColor: '#1465e7', 
-          color: "white",
-          padding: '10px', 
-          cursor: 'pointer',
-          fontFamily: 'Ubuntu',
-          borderRadius: '3px',
-          fontSize: '1.1em',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-           }}>Try again</span>
-      </div>
-    </Modal>
-    <Footer />
-    </div>)   
+          <Modal
+            isOpen={isServerErr || componentServerErr}
+            style={customStyles}
+            contentLabel="Example Modal"
+              >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+              <span onClick={() => location.reload()}
+                style={{ backgroundColor: '#1465e7', 
+                color: "white",
+                padding: '10px', 
+                cursor: 'pointer',
+                fontFamily: 'Ubuntu',
+                borderRadius: '3px',
+                fontSize: '1.1em',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                 }}>Try again</span>
+            </div>
+          </Modal>
+  </>)   
 };
 
 export default LinkedAccounts;
@@ -341,7 +308,9 @@ export async function getServerSideProps(context) {
       props: {
         AllAccounts: AvAcc,
         isServerErr: false,
-        userId: userId
+        userId: userId,
+        signedIn: true,
+        isSettings: true
       }
     };
   } catch (error) {
@@ -349,7 +318,9 @@ export async function getServerSideProps(context) {
       props: {
         AllAccounts: false,
         isServerErr: true,
-        userId: false
+        userId: false,
+        signedIn: true,
+        isSettings: true
       }
     };
   }

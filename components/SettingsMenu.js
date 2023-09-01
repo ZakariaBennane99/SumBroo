@@ -1,13 +1,10 @@
 import Link from "next/link";
-import { useRouter } from 'next/router';
 import { useState } from "react";
 import Modal from 'react-modal';
 import axios from 'axios';
 
 
-const SettingsMenu = () => {
-  
-  const router = useRouter();
+const SettingsMenu = ({ pathname }) => {
 
   const [isServerErr, setIsServerErr] = useState(false)
 
@@ -47,13 +44,13 @@ const SettingsMenu = () => {
   };
 
   return (<div className="leftSectionHome" style={{ width: '15%' }}>
-      <Link href='/settings/linked-accounts' style={{backgroundColor: router.pathname === '/settings/linked-accounts' ? '#e4e4eb' : 'none'}}>
+      <Link href='/settings/linked-accounts' className={ pathname === '/settings/linked-accounts' ? 'activeLinks' : ''} >
         Linked Accounts
       </Link>
-      <Link href='/settings/account-settings' style={{backgroundColor: router.pathname === '/settings/account-settings' ? '#e4e4eb' : 'none'}}>
+      <Link href='/settings/account-settings' className={ pathname === '/settings/account-settings' ? 'activeLinks' : ''} >
         Account Settings
       </Link>
-      <Link href='/settings/billing' style={{backgroundColor: router.pathname === '/settings/billing' ? '#e4e4eb' : 'none'}}>
+      <Link href='/settings/billing' className={ pathname === '/settings/billing' ? 'activeLinks' : ''} >
         Billing
       </Link>
       <span onClick={signOutUser} className="sign-out">
@@ -80,7 +77,7 @@ const SettingsMenu = () => {
               alignItems: 'center',
                }}>Try again</span>
           </div>
-        </Modal>
+      </Modal>
   </div>)
 };
 

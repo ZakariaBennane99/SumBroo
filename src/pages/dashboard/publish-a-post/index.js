@@ -28,26 +28,8 @@ function allObjectsHaveSameValueForKey(arr, key) {
 }
 
 
-const PublishAPost = ({ isServerError, platforms }) => {
+const PublishAPost = ({ isServerError, platforms, windowWidth }) => {
 
-  const [windowWidth, setWindowWidth] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setWindowWidth(window.innerWidth);
-    setLoading(false)
-    // Update the window width when the window is resized
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    }
-
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup: remove the event listener when the component is unmounted
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    }
-  }, []);
 
   const [selectedPlatform, setSelectedPlatform] = useState(null);
 
@@ -90,21 +72,12 @@ const PublishAPost = ({ isServerError, platforms }) => {
   };
 
 
-  // this tracks the mounting of the component
-  if (loading) {
-    return <div>loading...</div>
-  }
-
   // Show this section if all the social Media 
   if (allObjectsHaveSameValueForKey(platforms, 'status') && platforms[0].status !== 'active') {
     return (<>
-    <div className="resultsSection">
         {
           windowWidth < 620 ?
-          <div className="homeContainer">
-            {
-              windowWidth > 1215 ? <HomeMenu /> : ''
-            }
+          <>
             {
               platforms[0].status === 'canceledSubscriptionPayment' ? 
               <div className="notification">
@@ -123,12 +96,9 @@ const PublishAPost = ({ isServerError, platforms }) => {
                 </Link>
               </div>
             }
-          </div>
+          </>
           :
-          <div className="homeContainer">
-            {
-              windowWidth > 1215 ? <HomeMenu /> : ''
-            }
+          <>
             {
               platforms[0].status === 'canceledSubscriptionPayment' ? 
               <div className="notification">
@@ -147,7 +117,7 @@ const PublishAPost = ({ isServerError, platforms }) => {
                 </Link>
               </div>
             }
-          </div>
+          </>
         }
         <Modal
             isOpen={isServerError}
@@ -170,19 +140,14 @@ const PublishAPost = ({ isServerError, platforms }) => {
                  }}>Try again</span>
             </div>
         </Modal>
-    </div>
     </>)
   } else if (platforms.length === 1 && platforms[0].status === '') {
     return 'BIG FUCK'
   } else {
     return (<>
-    <div className="resultsSection">
         {
           windowWidth < 620 ?
-          <div className="homeContainer">
-          {
-            windowWidth > 1215 ? <HomeMenu /> : ''
-          }
+          <>
           <div className='farRightSectionHome'>
           <div className='postPreview' >
             <h2>Preview</h2>
@@ -213,33 +178,31 @@ const PublishAPost = ({ isServerError, platforms }) => {
               />
               <Targeting />
               <button id='publish-btn'>PUBLISH</button>
-            </div></div>
+            </div>
+          </>
           :
-          <div className="homeContainer">
-              {
-                windowWidth > 1215 ? <HomeMenu /> : ''
-              }
-              <div className="rightSectionHome" >
-              <ActiveAccounts
-                  setPlatform={setTargetPlatform}
-                  platforms={platforms}
-                />
-              <Requirements
-                  platform={targetPlatform}
-                />
-              <PostInput
-                setText={setText}
-                setPostTitle={setPostTitle}
-                setPinTitle={setPinTitle}
-                setPinLink={setPinLink}
-                setImgUrl={setImgUrl}
-                setVideoUrl={setVideoUrl}
-                submitPost={handlePost}
+        <>
+          <div className="rightSectionHome" >
+            <ActiveAccounts
+                setPlatform={setTargetPlatform}
+                platforms={platforms}
+              />
+            <Requirements
                 platform={targetPlatform}
               />
-              <Targeting />
-              <button id='publish-btn'>PUBLISH</button>
-            </div>
+            <PostInput
+              setText={setText}
+              setPostTitle={setPostTitle}
+              setPinTitle={setPinTitle}
+              setPinLink={setPinLink}
+              setImgUrl={setImgUrl}
+              setVideoUrl={setVideoUrl}
+              submitPost={handlePost}
+              platform={targetPlatform}
+            />
+            <Targeting />
+            <button id='publish-btn'>PUBLISH</button>
+          </div>
           <div className='farRightSectionHome'>
           <div className='postPreview' >
             <h2>Preview</h2>
@@ -249,7 +212,8 @@ const PublishAPost = ({ isServerError, platforms }) => {
               pinTitle={pinTitle} text={text} 
               imgUrl={imgUrl} videoUrl={videoUrl} />}
           </div>
-        </div></div>
+        </div>
+        </>
         }
         <Modal
             isOpen={isServerError}
@@ -272,7 +236,6 @@ const PublishAPost = ({ isServerError, platforms }) => {
                  }}>Try again</span>
             </div>
         </Modal>
-    </div>
     </>)
   }
 };

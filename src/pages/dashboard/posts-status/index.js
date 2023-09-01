@@ -9,34 +9,6 @@ import _ from 'lodash';
 
 const PostsStatus = () => {
 
-  const [windowWidth, setWindowWidth] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setWindowWidth(window.innerWidth);
-    setLoading(false)
-    // Update the window width when the window is resized
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    }
-
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup: remove the event listener when the component is unmounted
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    }
-  }, []);
-
-  const [showTooltip, setShowTooltip] = useState(false);
-
-  const handleMouseEnter = () => {
-    setShowTooltip(true);
-  };
-
-  const handleMouseLeave = () => {
-    setShowTooltip(false);
-  };
 
   const data = [
     {
@@ -85,17 +57,8 @@ const PostsStatus = () => {
   const inReview = data.filter(elem => elem.status === 'in-review');
   const rejected = data.filter(elem => elem.status === 'rejected');
 
-  if (loading) {
-    return <div>...loading</div>
-  }
 
-  return (<div id="parentWrapper">
-    <Header signedIn={true} width={windowWidth} />
-    <div className="resultsSection">
-      <div className="homeContainer">
-        {
-          windowWidth > 1215 ? <HomeMenu /> : ''
-        }
+  return (
         <div className="postStatusContainer">
           <div className="innerContainer">
             <div className="published">
@@ -148,10 +111,6 @@ const PostsStatus = () => {
                 )
               }
             </div>
-        </div>
-      </div>
-    </div>
-    <Footer />
     </div>)
 };
 
@@ -187,7 +146,9 @@ export async function getServerSideProps(context) {
     }
 
     return {
-      props: {}
+      props: {
+        signedIn: true
+      }
     };
 
 

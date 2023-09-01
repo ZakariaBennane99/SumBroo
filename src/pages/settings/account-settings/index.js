@@ -59,7 +59,9 @@ export async function getServerSideProps(context) {
       // continue rendering
       return {
         props: {
-          userData
+          userData,
+          signedIn: true,
+          isSettings: true
         }
       };
   

@@ -10,24 +10,6 @@ import _ from 'lodash';
 
 const Archive = () => {
 
-  const [windowWidth, setWindowWidth] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setWindowWidth(window.innerWidth);
-    setLoading(false)
-    // Update the window width when the window is resized
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    }
-
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup: remove the event listener when the component is unmounted
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    }
-  }, []);
 
   const data = [
     {
@@ -67,17 +49,7 @@ const Archive = () => {
     }
   ]
 
-  if (loading) {
-    return <div>...loading</div>
-  }
-
-  return (<div id="parentWrapper">
-    <Header signedIn={true} width={windowWidth}/>
-    <div className="resultsSection">
-      <div className="homeContainer">
-        {
-          windowWidth > 1215 ? <HomeMenu /> : ''
-        }
+  return (
         <div className="archiveSection">
           {
             data.map(el =>
@@ -90,10 +62,6 @@ const Archive = () => {
               </div>
             )
           }
-        </div>
-      </div>
-    </div>
-    <Footer />
     </div>)
 
 };
@@ -131,7 +99,9 @@ export async function getServerSideProps(context) {
 
     // continue rendering
     return {
-      props: {}
+      props: {
+        signedIn: true
+      }
     };
 
 

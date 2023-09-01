@@ -6,45 +6,12 @@ import Header from "../../../components/Header";
 import Footer from '../../../components/Footer';
 
 
-const Home = () => {
+const Home = ({ windowWidth }) => {
 
-  const [windowWidth, setWindowWidth] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setWindowWidth(window.innerWidth);
-    setLoading(false)
-    // Update the window width when the window is resized
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    }
-
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup: remove the event listener when the component is unmounted
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    }
-  }, []);
-
-  if (loading) {
-    return <div>...loading</div>
-  }
-
-  return (<div id="parentWrapper">
-    <Header signedIn={true} width={windowWidth} />
-    <div className="resultsSection">
-      <div className="homeContainer">
-        {
-          windowWidth > 1215 ? <HomeMenu /> : ''
-        }
-        <div style={{ width: windowWidth > 1215 ? '80%' : '100%', height: windowWidth > 1215 ? 'fit-content' : '100vh' }} className="rightSectionZenContainer">
+  return (<div style={{ width: windowWidth > 1215 ? '80%' : '100%', height: windowWidth > 1215 ? 'fit-content' : '100vh' }} className="rightSectionZenContainer">
           <img src="./zenMode.svg" alt="editing"/>
-        </div>
-      </div>
-    </div>
-    <Footer />
-  </div>)
+    </div>)
 };
 
 export default Home;
@@ -80,7 +47,9 @@ export async function getServerSideProps(context) {
 
     // continue rendering
     return {
-      props: {}
+      props: {
+        signedIn: true
+      }
     };
 
 

@@ -1081,6 +1081,10 @@ a {
     background-color: #e4e4eb;
 }
 
+.resultsSection .homeContainer .leftSectionHome .activeLinks {
+    background-color: #e4e4eb;
+}
+
 /* #dcdcdc */
 
 .resultsSection .homeContainer .leftSectionHome a:not(:last-child) {
