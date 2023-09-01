@@ -222,6 +222,7 @@ const PublishAPost = ({ isServerError, platforms }) => {
               <div className="rightSectionHome" >
               <ActiveAccounts
                   setPlatform={setTargetPlatform}
+                  platforms={platforms}
                 />
               <Requirements
                   platform={targetPlatform}
@@ -311,15 +312,18 @@ export async function getServerSideProps(context) {
   }
   
   async function getSubscriptionStatus(customerId, priceId) {
+
+    const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+
     try {
         // List all subscriptions for the customer
-        const subscriptions = await Stripe.subscriptions.list({
-            customer: customerId,
+        const subscriptions = await stripe.subscriptions.list({
+          customer: customerId,
         });
 
         // Find the subscription with the specific price ID
         const targetSubscription = subscriptions.data.find(sub => 
-            sub.items.data.some(item => item.price.id === priceId)
+          sub.items.data.some(item => item.price.id === priceId)
         );
 
         // Return the status of the subscription
@@ -333,10 +337,10 @@ export async function getServerSideProps(context) {
   function getStatus(st) {
     if (st === 'active') {
       return 'active'
-    } else if (['cnaceled', 'unpaid', 'ended'].includes(st)) {
-      return 'canceledSubscriptionPayment'
+    } else if (['canceled', 'unpaid', 'ended'].includes(st)) {
+      return 'canceled'
     } else if (['past_due', 'incomplete', 'incomplete_expired'].includes(st)) {
-      return 'pendingSubscriptionPayment'
+      return 'pendingPay'
     } 
   }
 
@@ -428,13 +432,9 @@ export async function getServerSideProps(context) {
     
     console.log('AFTER THE SUBSTATUS')
 
-    // now query your DB
-    const users = await User.find({ "socialMediaLinks.pricePlans": activePriceId }, 'socialMediaLinks.platformName');
     const avac = await AvAc.find();
-
-    console.log('THIS IS THE PLATFORMS NAMES', platformNames);
     
-    const platformNames = avac.accounts.map(acc => {
+    const platformNames = avac[0].accounts.map(acc => {
       return (
         {
           name: acc.ac,
@@ -445,17 +445,17 @@ export async function getServerSideProps(context) {
 
     console.log('THIS IS THE PLATFORMS NAMES', platformNames);
 
-    users.forEach(user => {
-        user.socialMediaLinks.forEach(link => {
-            if (link.pricePlans.includes(activePriceId)) {
-                link.profileStatus = 'active';
-                updateStatusByName(link.platformName, 'active', platformNames);
-            } else {
-              const st = getStatus(subStatus)
-              link.profileStatus = st
-              updateStatusByName(link.platformName, 'active', platformNames);
-            }
-        });
+    [user].forEach(user => {
+      user.socialMediaLinks.forEach(link => {
+        if (link.pricePlans.includes(activePriceId)) {
+          link.profileStatus = 'active';
+          updateStatusByName(link.platformName, 'active', platformNames);
+        } else {
+          const st = getStatus(subStatus)
+          link.profileStatus = st
+          updateStatusByName(link.platformName, st, platformNames);
+        }
+      });
     });
 
     console.log('THIS IS THE PLATFORMS NAMES', platformNames);

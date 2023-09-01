@@ -11,6 +11,45 @@ function capitalize(word) {
 
 const ActiveAccounts = ({ setPlatform, platforms }) => {
 
+    console.log(platforms)
+
+    const platformsT = [
+        {
+            "name": "pinterest",
+            "status": "active"
+        },
+        {
+            "name": "facebook",
+            "status": "available"
+        },
+        {
+            "name": "instagram",
+            "status": "notAvailable"
+        },
+        {
+            "name": "twitter",
+            "status": "available"
+        },
+        {
+            "name": "tiktok",
+            "status": "canceled"
+        },
+        {
+            "name": "youtube",
+            "status": "canceled"
+        },
+        {
+            "name": "vimeo",
+            "status": "notAvailable"
+        },
+        {
+            "name": "linkedIn",
+            "status": "pendingPay"
+        }
+    ]
+
+    const router = useRouter();
+
     const [isOpen, setIsOpen] = useState(true);
     const [selectedPlatform, setSelectedPlatform] = useState();
 
@@ -23,15 +62,16 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
         setPlatform(platform);
     }
 
-    // don't forget to get the user's info in order to display the right
-    // elements SM platforms
 
-    // below if Instagram is not connected, we display what you
-    // see below
+    function toLinkedAccounts() {
+        // send to the linkedAccounts page
+        router.push('/settings/linked-accounts');
+    }
 
-    // notApplied class to the elements that the user didn't apply for. And Add the following:
-    // <span className='tooltip'><button className='linkAccount'>Apply</button> to connect your account</span>
-    // below it
+    function toBilling() {
+        // send to the linkedAccounts page
+        router.push('/settings/billing');
+    }
 
     return (<div className='activeAccountsDiv'>
         <div className='targetPlatformsTitle' onClick={toggleAccordion}>
@@ -44,7 +84,7 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
         </div>
         {isOpen && <div className='platformsContainer'>
             {
-                platforms.map(platform => {
+                platformsT.map(platform => {
                     if (platform.status === 'active') {
                         return (
                             <div>
@@ -55,7 +95,7 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
                                 </div>
                             </div>
                         )
-                    } else if (platform.status === 'notAvailale') {
+                    } else if (platform.status === 'notAvailable') {
                         return (
                         <div>
                             <div className="cell-content notAvailable">
@@ -64,20 +104,33 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
                             </div>
                         </div>
                         )
-                    } else {
-                        <div>
-                            <div className="cell-content notAvailable">
-                                <img src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAvailableImg' /><span>{capitalize(platform.name)}</span>
-                                <span className='tooltip'>
-                                {
-                                    platform.status === 'canceledSubscriptionPayment' ? 
-                                    'Re-activate your subscription to continue posting.' 
-                                    :
-                                    'Please fix your payment issues.'
-                                }
-                                </span>
+                    } else if (platform.status === 'available') {
+                        return (
+                            <div>
+                                <div className="cell-content notApplied">
+                                    <img src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAppliedImg' /><span>{capitalize(platform.name)}</span>
+                                    <span className='tooltip'><span onClick={toLinkedAccounts} className='linkAccount'>Apply</span> to connect your account</span>
+                                </div>
                             </div>
-                        </div>
+                            )  
+                    } else {
+                        return (
+                            <div>
+                                <div className="cell-content notApplied">
+                                    <img src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAppliedImg' /><span>{capitalize(platform.name)}</span>
+                                    {
+                                        platform.status === 'canceled' ?
+                                        <span className='tooltip'>
+                                            <span onClick={toBilling} className='linkAccount'>Re-activate</span> your subscription to continue posting
+                                        </span>    
+                                        :
+                                        <span className='tooltip'>
+                                        Please <span onClick={toBilling} className='linkAccount'>fix</span> your payment issue
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        )    
                     }
                 })
             }

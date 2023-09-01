@@ -1570,7 +1570,7 @@ a {
     bottom: 100%;
     left: 50%;
     margin-left: -60px;
-    transform: translateX(-50%);
+    transform: translateX(-46%);
     opacity: 0;
     transition: opacity 0.3s;
 }
@@ -1592,13 +1592,22 @@ a {
     visibility: visible;
     opacity: 1;
     background-color: #1c1c57 !important;
-}
+} 
 
 .platformsContainer .notApplied .linkAccount {
+    background-color: #ffffff;
+    color: #12123b;
+    font-size: .9em;
+    border-radius: 3px;
+    padding: 2px;
     cursor: pointer;
     border: none;
     border-radius: 1px;
     font-family: 'Ubuntu';
+}
+
+.platformsContainer .notApplied .linkAccount:hover {
+    background-color: rgb(228, 228, 228);
 }
 
 .cell-content #checkmark {
