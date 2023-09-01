@@ -90,14 +90,14 @@ const PublishAPost = ({ isServerError, platforms }) => {
   };
 
 
+  // this tracks the mounting of the component
   if (loading) {
-    return <div>...loading</div>
+    return <div>loading...</div>
   }
 
   // Show this section if all the social Media 
   if (allObjectsHaveSameValueForKey(platforms, 'status') && platforms[0].status !== 'active') {
-    return (<div id="parentWrapper">
-    <Header signedIn={true} width={windowWidth}/>
+    return (<>
     <div className="resultsSection">
         {
           windowWidth < 620 ?
@@ -171,11 +171,11 @@ const PublishAPost = ({ isServerError, platforms }) => {
             </div>
         </Modal>
     </div>
-    <Footer />
-    </div>)
+    </>)
+  } else if (platforms.length === 1 && platforms[0].status === '') {
+    return 'BIG FUCK'
   } else {
-    return (<div id="parentWrapper">
-    <Header signedIn={true} width={windowWidth}/>
+    return (<>
     <div className="resultsSection">
         {
           windowWidth < 620 ?
@@ -196,7 +196,7 @@ const PublishAPost = ({ isServerError, platforms }) => {
               <div className="rightSectionHome" >
               <ActiveAccounts
                   setPlatform={setTargetPlatform}
-                  activeProfiles={platforms}
+                  platforms={platforms}
                 />
               <Requirements
                   platform={targetPlatform}
@@ -273,8 +273,7 @@ const PublishAPost = ({ isServerError, platforms }) => {
             </div>
         </Modal>
     </div>
-    <Footer />
-    </div>)
+    </>)
   }
 };
 
@@ -299,7 +298,6 @@ export async function getServerSideProps(context) {
       const subscriptions = await stripe.subscriptions.list({
         customer: id,
       });
-      console.log('the subscription', subscriptions)
       const subscription = subscriptions.data[0];
       const activePriceId = subscription.items.data[0].price.id;
       return activePriceId;
@@ -358,15 +356,39 @@ export async function getServerSideProps(context) {
     // Get cookies from the request headers
     const cookies = context.req.headers.cookie;
 
+    if (!cookies) {
+      return {
+        redirect: {
+          destination: '/sign-in',
+          permanent: false,
+        },
+      };
+    }
+
     // Parse the cookies to retrieve the otpTOKEN
     const tokenCookie = cookies.split(';').find(c => c.trim().startsWith('token='));
 
-    let tokenValue;
-    if (tokenCookie) {
-      tokenValue = tokenCookie.split('=')[1];
+    if (!tokenCookie) {
+      return {
+        redirect: {
+          destination: '/sign-in',
+          permanent: false,
+        },
+      };
     }
-
-    const decoded = jwt.verify(tokenValue, process.env.USER_JWT_SECRET);
+    
+    let tokenValue = tokenCookie.split('=')[1];
+    let decoded
+    try {
+      decoded = jwt.verify(tokenValue, process.env.USER_JWT_SECRET);
+    } catch (err) {
+      return {
+        redirect: {
+          destination: '/sign-in',
+          permanent: false,
+        },
+      };
+    }
 
     // if not sessiong token (user not signed in) return
     // so we can avoid unecessary payment checks
@@ -378,8 +400,6 @@ export async function getServerSideProps(context) {
         },
       };
     }
-
-    console.log('after the decoded')
      
     // your token has already the userId
     const userId = decoded.userId;
@@ -390,22 +410,19 @@ export async function getServerSideProps(context) {
     const sanitizedUserId = mongoSanitize.sanitize(userId);
     let user = await User.findOne({ _id: sanitizedUserId });
 
-    console.log('after connecting to the user db')
-
     // the Stripe customer Id
     let stripeId = user.stripeId;
 
-    console.log('the user StripeID', stripeId)
-
     // get the user plan PRICE ID not the plan id
     const activePriceId = await getCusPriceId(stripeId)
-
-    console.log('after getting the priceID for the activePriveID', activePriceId)
+    
+    console.log('after the activePriveID')
 
     if (activePriceId === 'Server error') {
       return {
         props: {
           isServerError: true,
+          signedIn: true,
           platforms: [{
             status: ''
           }]
@@ -414,23 +431,20 @@ export async function getServerSideProps(context) {
     }
 
 
-    console.log('AFTER THE ACTIVE PRICE ID')
-
     // get the subscription status
     const subStatus = await getSubscriptionStatus(stripeId, activePriceId);
-    console.log('THE SUBSTATUS', subStatus);
+    console.log('after the subStatus')
     if (subStatus === 'Server error') {
       return {
         props: {
           isServerError: true,
+          signedIn: true,
           platforms: [{
             status: ''
           }]
         }
       };
     };
-    
-    console.log('AFTER THE SUBSTATUS')
 
     const avac = await AvAc.find();
     
@@ -442,8 +456,6 @@ export async function getServerSideProps(context) {
         }
       )
     });
-
-    console.log('THIS IS THE PLATFORMS NAMES', platformNames);
 
     [user].forEach(user => {
       user.socialMediaLinks.forEach(link => {
@@ -458,11 +470,10 @@ export async function getServerSideProps(context) {
       });
     });
 
-    console.log('THIS IS THE PLATFORMS NAMES', platformNames);
-
     return {
       props: {
         isServerError: false,
+        signedIn: true,
         platforms: platformNames
       }
     };
@@ -471,6 +482,7 @@ export async function getServerSideProps(context) {
     return {
       props: {
         isServerError: true,
+        signedIn: true,
         platforms: [{
           status: ''
         }]

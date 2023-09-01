@@ -50,16 +50,13 @@ const Header = ({ signedIn, isLanding, width }) => {
       return (
         <>
           <Link href='/blog'><p style={{ 
-          color: router.pathname.includes('blog') ? '#1c1c57' : '',
-          borderBottom: router.pathname.includes('blog') ? '2px solid #1c1c57' : ''
+          color: router.pathname.includes('blog') ? '#1c1c57' : ''
           }}>Blog</p></Link>
           <Link href='/dashboard'><p style={{ 
-          color: router.pathname.includes('pricing') ? '#1c1c57' : '',
-          borderBottom: router.pathname.includes('pricing') ? '2px solid #1c1c57' : ''
+          color: router.pathname.includes('pricing') ? '#1c1c57' : ''
           }}>Dashboard</p></Link>
           <Link href='/settings'><p style={{ 
-          color: router.pathname.includes('sign-in') ? '#1c1c57' : '',
-          borderBottom: router.pathname.includes('sign-in') ? '2px solid #1c1c57' : ''
+          color: router.pathname.includes('sign-in') ? '#1c1c57' : ''
           }}>Settings</p></Link>
         </>
       );
@@ -67,12 +64,10 @@ const Header = ({ signedIn, isLanding, width }) => {
       return (
         <>
           <Link href='/dashboard'><p style={{ 
-            color: router.pathname.includes('dashboard') ? '#1c1c57' : '',
-            borderBottom: router.pathname.includes('dashboard') ? '2px solid #1c1c57' : ''
+            color: router.pathname.includes('dashboard') ? '#1c1c57' : ''
           }}>Dashboard</p></Link>
           <Link href='/settings'><p style={{ 
-            color: router.pathname.includes('settings') ? '#1c1c57' : '',
-            borderBottom: router.pathname.includes('settings') ? '2px solid #1c1c57' : ''
+            color: router.pathname.includes('settings') ? '#1c1c57' : ''
           }}>Settings</p></Link>
         </>
       );
@@ -102,16 +97,13 @@ const Header = ({ signedIn, isLanding, width }) => {
     return (
       <>
         <Link href='/blog'><p style={{ 
-          color: router.pathname.includes('blog') ? '#1c1c57' : '',
-          borderBottom: router.pathname.includes('blog') ? '2px solid #1c1c57' : ''
+          color: router.pathname.includes('blog') ? '#1c1c57' : ''
          }}>Blog</p></Link>
         <Link href='/pricing'><p style={{ 
-          color: router.pathname.includes('pricing') ? '#1c1c57' : '',
-          borderBottom: router.pathname.includes('pricing') ? '2px solid #1c1c57' : ''
+          color: router.pathname.includes('pricing') ? '#1c1c57' : ''
          }}>Pricing</p></Link>
         <Link href='/sign-in'><p style={{ 
-          color: router.pathname.includes('sign-in') ? '#1c1c57' : '',
-          borderBottom: router.pathname.includes('sign-in') ? '2px solid #1c1c57' : ''
+          color: router.pathname.includes('sign-in') ? '#1c1c57' : ''
          }}>Sign In</p></Link>
       </>
     );

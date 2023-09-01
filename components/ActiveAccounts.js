@@ -11,42 +11,7 @@ function capitalize(word) {
 
 const ActiveAccounts = ({ setPlatform, platforms }) => {
 
-    console.log(platforms)
-
-    const platformsT = [
-        {
-            "name": "pinterest",
-            "status": "active"
-        },
-        {
-            "name": "facebook",
-            "status": "available"
-        },
-        {
-            "name": "instagram",
-            "status": "notAvailable"
-        },
-        {
-            "name": "twitter",
-            "status": "available"
-        },
-        {
-            "name": "tiktok",
-            "status": "canceled"
-        },
-        {
-            "name": "youtube",
-            "status": "canceled"
-        },
-        {
-            "name": "vimeo",
-            "status": "notAvailable"
-        },
-        {
-            "name": "linkedIn",
-            "status": "pendingPay"
-        }
-    ]
+    console.log('THE PLATFORMS', platforms)
 
     const router = useRouter();
 
@@ -84,7 +49,7 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
         </div>
         {isOpen && <div className='platformsContainer'>
             {
-                platformsT.map(platform => {
+                platforms.map(platform => {
                     if (platform.status === 'active') {
                         return (
                             <div>
