@@ -183,7 +183,7 @@ const AccountSettingsComponent = () => {
         <div className="resultsSection">
             <div className="homeContainer">
                 {
-                    windowWidth > 1215 ? <SettingsMenu /> : ''
+                  windowWidth > 1215 ? <SettingsMenu /> : ''
                 }
                 <div className="accountSettingsContainer">
                     <div className="accountSetting">
