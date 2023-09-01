@@ -10,6 +10,7 @@ import Targeting from '../../../../components/Targeting';
 import PinterestPostPreview from "../../../../components/PinterestPostPreview";
 import dynamic from 'next/dynamic';
 import Modal from 'react-modal';
+import Link from 'next/link';
 
 
 
@@ -18,11 +19,6 @@ const PostInput = dynamic(
   { ssr: false }
 );
 
-
-const options = [
-  { value: 'facebook', label: 'Facebook' },
-  { value: 'instagram', label: 'Instagram' },
-];
 
 function allObjectsHaveSameValueForKey(arr, key) {
   if (arr.length === 0) return true; // or handle empty array as you see fit
@@ -287,10 +283,11 @@ export default PublishAPost;
 export async function getServerSideProps(context) {
 
   const Stripe = require('stripe');
-  const { connectUserDB } = require('../../../../utils/connectUserDB');
-  const User = require('../../../../utils/User');
-  const AvAc = require('../../../../utils/AvailableAccounts')
+  const connectDB = require('../../../../utils/connectUserDB');
   const jwt = require('jsonwebtoken');
+  const User = require('../../../../utils/User').default;
+  const AvAc = require('../../../../utils/AvailableAccounts').default;
+  const mongoSanitize = require('express-mongo-sanitize');
 
   async function getCusPriceId(id) {
 
@@ -298,8 +295,11 @@ export async function getServerSideProps(context) {
     const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
     try {
-      const customer = await stripe.customers.retrieve(id);
-      const subscription = customer.subscriptions.data[0];
+      const subscriptions = await stripe.subscriptions.list({
+        customer: id,
+      });
+      console.log('the subscription', subscriptions)
+      const subscription = subscriptions.data[0];
       const activePriceId = subscription.items.data[0].price.id;
       return activePriceId;
 
@@ -374,46 +374,65 @@ export async function getServerSideProps(context) {
         },
       };
     }
+
+    console.log('after the decoded')
      
     // your token has already the userId
-    const { userId } = decoded.userId;
+    const userId = decoded.userId;
 
     // connect DB
-    await connectUserDB()
+    await connectDB();
 
-    // new get the user Stripe customer id
-    let user = await User.find({ userId });
+    const sanitizedUserId = mongoSanitize.sanitize(userId);
+    let user = await User.findOne({ _id: sanitizedUserId });
+
+    console.log('after connecting to the user db')
 
     // the Stripe customer Id
     let stripeId = user.stripeId;
 
-    // get the user plan PRICE ID not the plan id
+    console.log('the user StripeID', stripeId)
 
+    // get the user plan PRICE ID not the plan id
     const activePriceId = await getCusPriceId(stripeId)
+
+    console.log('after getting the priceID for the activePriveID', activePriceId)
 
     if (activePriceId === 'Server error') {
       return {
         props: {
           isServerError: true,
-          platforms: []
+          platforms: [{
+            status: ''
+          }]
         }
       };
     }
 
+
+    console.log('AFTER THE ACTIVE PRICE ID')
+
     // get the subscription status
     const subStatus = await getSubscriptionStatus(stripeId, activePriceId);
+    console.log('THE SUBSTATUS', subStatus);
     if (subStatus === 'Server error') {
       return {
         props: {
           isServerError: true,
-          platforms: []
+          platforms: [{
+            status: ''
+          }]
         }
       };
     };
+    
+    console.log('AFTER THE SUBSTATUS')
 
     // now query your DB
     const users = await User.find({ "socialMediaLinks.pricePlans": activePriceId }, 'socialMediaLinks.platformName');
     const avac = await AvAc.find();
+
+    console.log('THIS IS THE PLATFORMS NAMES', platformNames);
     
     const platformNames = avac.accounts.map(acc => {
       return (
@@ -423,6 +442,8 @@ export async function getServerSideProps(context) {
         }
       )
     });
+
+    console.log('THIS IS THE PLATFORMS NAMES', platformNames);
 
     users.forEach(user => {
         user.socialMediaLinks.forEach(link => {
@@ -437,7 +458,7 @@ export async function getServerSideProps(context) {
         });
     });
 
-    console.log(platformNames);
+    console.log('THIS IS THE PLATFORMS NAMES', platformNames);
 
     return {
       props: {
@@ -450,7 +471,9 @@ export async function getServerSideProps(context) {
     return {
       props: {
         isServerError: true,
-        platforms: []
+        platforms: [{
+          status: ''
+        }]
       }
     };
   }

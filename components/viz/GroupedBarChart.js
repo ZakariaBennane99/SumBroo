@@ -43,7 +43,7 @@ const GroupedBarChart = ({ data, setMetrics2 }) => {
         setTargetMetrics(selectedOptions)
     }
 
-    const colorScheme = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd'];
+    const colorScheme = ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51'];
 
     const options = [
         { value: '# of people who viewed 95% of the video', label: '# of People Who Viewed 95% of The Video' },
@@ -132,6 +132,7 @@ const GroupedBarChart = ({ data, setMetrics2 }) => {
               .style('left', `${event.pageX + 10}px`)
               .style('font-family', 'Arial, Helvetica, sans-serif')
               .style('font-size', '1.1em')
+              .style('box-shadow', '0px 0 2px 0.5px ' + fillColor)
               .style('padding', '6px')
               .style('background', fillColor);
           })

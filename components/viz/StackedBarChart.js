@@ -134,6 +134,7 @@ const StackedBarChart = ({ data, setMetrics2 }) => {
         .style("padding", '5px')
         .style("color", 'white')
         .style("background-color", fillColor)
+        .style("box-shadow", '0px 0 2px 0.5px ' + fillColor)
         .style('text-align', 'start');
     })
     .on('mouseout', function () {

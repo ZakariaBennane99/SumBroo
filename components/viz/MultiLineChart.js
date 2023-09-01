@@ -160,7 +160,9 @@ const MultiLineChart = ({ data, setMetrics1 }) => {
               .style('left', `${event.pageX + 10}px`)
               .style('font-family', 'Arial, Helvetica, sans-serif')
               .style('font-size', '1.1em')
+              .style('visibility', 'visible')
               .style('padding', '6px')
+              .style("box-shadow", '0px 0 2px 0.5px ' + fillColor)
               .style('background', fillColor);
               svg.append("circle")
                 .attr("class", "halo")
