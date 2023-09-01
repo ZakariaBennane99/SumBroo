@@ -68,6 +68,12 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <div id="parentWrapper">
       <Header signedIn={signedIn} width={windowWidth}/>
+      {
+        signedIn ? 
+
+        :
+
+      }
       <div className="resultsSection">
         <div className='homeContainer'>
           {
