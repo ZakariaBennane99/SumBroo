@@ -1,13 +1,31 @@
 import React from "react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Select from 'react-select';
 
 
-export default function ContentForm({ setText, 
-  setPinTitle, setPinLink, setPostTitle, setVideoUrl, setImgUrl, submitPost, platform }) {
+export default function PinterestPostInput({ setDataForm, platform }) {
 
   const [titleChars, setTitleChars] = useState(0)  
   const [descChars, setDescChars] = useState(0)
+
+  const [postTitle, setPostTitle] = useState("")
+  const [pinBoard, setPinBoard] = useState("")
+  const [pinTitle, setPinTitle] = useState("")
+  const [text, setText] = useState("");
+  const [pinLink, setPinLink] = useState("")
+  const [imgUrl, setImgUrl] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+
+  useEffect(() => {
+    setDataForm({
+      pinTitle: pinTitle,
+      text: text,
+      pinLink: pinLink,
+      imgUrl: imgUrl,
+      videoUrl: videoUrl
+    });
+  }, [pinTitle, text, pinLink, imgUrl, videoUrl]);
+
 
   // for the tooltip
   const [style, setStyle] = useState({
@@ -21,7 +39,7 @@ export default function ContentForm({ setText,
         setStyle({
             visibility: 'hidden'
         })
-    }, 2000)
+    }, 1000)
   }
 
   const [isOpen, setIsOpen] = useState(false);
@@ -188,8 +206,8 @@ export default function ContentForm({ setText,
 
   const [targetMetrics, setTargetMetrics] = useState(null);
 
-  function handleSelectedMetrics(selectedOptions) {
-    setTargetMetrics(selectedOptions)
+  function handleSelectedBoard(selectedOption) {
+    setPinBoard(selectedOption)
   }
 
   const options = [
@@ -238,10 +256,11 @@ export default function ContentForm({ setText,
             </div>
             <div className="inputPinElement" style={{ position: 'relative' }}>
               <label>Pin Board</label>
+                <p style={{ marginTop: '7px' }}>Please select <b>the most relevant board</b> to your pin content.</p>
                 <Select
                   id="noBoxShadow"
                   value={targetMetrics}
-                  onChange={handleSelectedMetrics}
+                  onChange={handleSelectedBoard}
                   options={options}
                   getOptionLabel={(option) => option.label}
                   getOptionValue={(option) => option.value}
@@ -260,7 +279,9 @@ export default function ContentForm({ setText,
             <div className="inputElements" style={{ position: 'relative' }}>
               <label>Pin Title</label>
               <p>Title should be <b>40-100 characters</b>. Keep it concise and clear, ensuring it's relevant to your content.</p>
-              <input type="text" maxLength='100' placeholder="Add your pin title" onChange={(e) => { setPinTitle(e.target.value); setTitleChars(e.target.value.length); }} />
+              <input type="text" maxLength='100' placeholder="Add your pin title" onChange={(e) => { setPinTitle(e.target.value); setTitleChars(e.target.value.length); setDataForm({
+
+              }); }} />
               { titleChars > 0 ? 
               <span className="charsCounter" style={{ 
                 position: 'absolute',

@@ -5,16 +5,11 @@ import ActiveAccounts from '../../../../components/ActiveAccounts';
 import Requirements from '../../../../components/Requirements';
 import Targeting from '../../../../components/Targeting';
 import PinterestPostPreview from "../../../../components/PinterestPostPreview";
-import dynamic from 'next/dynamic';
 import Modal from 'react-modal';
 import Link from 'next/link';
+import PinterestPostInput from "../../../../components/PinterestPostInput";
 
 
-
-const PostInput = dynamic(
-  () => import('../../../../components/PostInput'),
-  { ssr: false }
-);
 
 
 function allObjectsHaveSameValueForKey(arr, key) {
@@ -25,18 +20,13 @@ function allObjectsHaveSameValueForKey(arr, key) {
 }
 
 
-const PublishAPost = ({ isServerError, platforms, windowWidth }) => {
+const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
 
 
   const [selectedPlatform, setSelectedPlatform] = useState(null);
 
   // for the form data
-  const [postTitle, setPostTitle] = useState("")
-  const [pinTitle, setPinTitle] = useState("")
-  const [text, setText] = useState("");
-  const [pinLink, setPinLink] = useState("")
-  const [imgUrl, setImgUrl] = useState(null);
-  const [videoUrl, setVideoUrl] = useState(null);
+  const [postFormData, setPostFormData] = useState(null)
 
   // for the target platforms
   const [targetPlatform, setTargetPlatform] = useState()
@@ -111,11 +101,11 @@ const PublishAPost = ({ isServerError, platforms, windowWidth }) => {
           <div className='farRightSectionHome'>
           <div className='postPreview' >
             <h2>Preview</h2>
-              {selectedPlatform && selectedPlatform === 'pinterest' && (imgUrl || videoUrl || pinLink.length > 0 ||
-              text.length > 0 || pinTitle.length > 0) &&
-              <PinterestPostPreview pinLink={pinLink}
-              pinTitle={pinTitle} text={text} 
-              imgUrl={imgUrl} videoUrl={videoUrl} />}
+              {selectedPlatform && selectedPlatform === 'pinterest' && postFormData && (postFormData.imgUrl || postFormData.videoUrl || (postFormData.pinLink && postFormData.pinLink.length > 0) > 0 ||
+              (postFormData.text && postFormData.text.length > 0) || (postFormData.pinTitle && postFormData.pinTitle.length > 0)) &&
+              <PinterestPostPreview pinLink={postFormData.pinLink}
+              pinTitle={postFormData.pinTitle} text={postFormData.text} 
+              imgUrl={postFormData.imgUrl} videoUrl={postFormData.videoUrl} />}
           </div>
         </div>
               <div className="rightSectionHome" >
@@ -126,17 +116,13 @@ const PublishAPost = ({ isServerError, platforms, windowWidth }) => {
               <Requirements
                   platform={targetPlatform}
                 />
-              <PostInput
-                setText={setText}
-                setPostTitle={setPostTitle}
-                setPinTitle={setPinTitle}
-                setPinLink={setPinLink}
-                setImgUrl={setImgUrl}
-                setVideoUrl={setVideoUrl}
-                submitPost={handlePost}
-                platform={targetPlatform}
-              />
-              <Targeting />
+              <PinterestPostInput
+                  setDataForm={setPostFormData}
+                  platform={targetPlatform} 
+                /> 
+              <Targeting 
+                  nichesAndTags={niches}
+                />
               <button id='publish-btn'>PUBLISH</button>
             </div>
           </>
@@ -150,27 +136,23 @@ const PublishAPost = ({ isServerError, platforms, windowWidth }) => {
             <Requirements
                 platform={targetPlatform}
               />
-            <PostInput
-              setText={setText}
-              setPostTitle={setPostTitle}
-              setPinTitle={setPinTitle}
-              setPinLink={setPinLink}
-              setImgUrl={setImgUrl}
-              setVideoUrl={setVideoUrl}
-              submitPost={handlePost}
-              platform={targetPlatform}
-            />
-            <Targeting />
+            <PinterestPostInput
+                setDataForm={setPostFormData}
+                platform={targetPlatform} 
+              />
+            <Targeting 
+                nichesAndTags={niches}
+              />
             <button id='publish-btn'>PUBLISH</button>
           </div>
           <div className='farRightSectionHome'>
           <div className='postPreview' >
             <h2>Preview</h2>
-              {selectedPlatform && selectedPlatform === 'pinterest' && (imgUrl || videoUrl || pinLink.length > 0 ||
-              text.length > 0 || pinTitle.length > 0) &&
-              <PinterestPostPreview pinLink={pinLink}
-              pinTitle={pinTitle} text={text} 
-              imgUrl={imgUrl} videoUrl={videoUrl} />}
+              {selectedPlatform && selectedPlatform === 'pinterest' && postFormData && (postFormData.imgUrl || postFormData.videoUrl || (postFormData.pinLink && postFormData.pinLink.length > 0) ||
+              (postFormData.text && postFormData.text.length) > 0 || (postFormData.pinTitle && postFormData.pinTitle.length > 0) ) &&
+              <PinterestPostPreview pinLink={postFormData.pinLink}
+              pinTitle={postFormData.pinTitle} text={postFormData.text} 
+              imgUrl={postFormData.imgUrl} videoUrl={postFormData.videoUrl} />}
           </div>
         </div>
         </>
@@ -356,7 +338,7 @@ export async function getServerSideProps(context) {
 
     // get the subscription status
     const subStatus = await getSubscriptionStatus(stripeId, activePriceId);
-    console.log('after the subStatus')
+
     if (subStatus === 'Server error') {
       return {
         props: {
@@ -393,11 +375,28 @@ export async function getServerSideProps(context) {
       });
     });
 
+    // get all the available niches
+    let nichesAndTags = await User.aggregate([
+      { $unwind: "$socialMediaLinks" },
+      { $group: { _id: "$socialMediaLinks.niche", tags: { $addToSet: "$socialMediaLinks.audience" } } },
+      { $project: { _id: 0, niche: "$_id", tags: 1 } }
+    ]);
+  
+    // Flatten the tags arrays
+    nichesAndTags = nichesAndTags.map(({ niche, tags }) => ({ niche, tags: [].concat(...tags) }));
+    
+    // Remove duplicates in tags
+    nichesAndTags = nichesAndTags.map(({ niche, tags }) => ({ niche, tags: [...new Set(tags)] }));
+
+
+    console.log('THE NICHES & TAGS', nichesAndTags)
+
     return {
       props: {
         isServerError: false,
         signedIn: true,
-        platforms: platformNames
+        platforms: platformNames,
+        niches: nichesAndTags
       }
     };
 

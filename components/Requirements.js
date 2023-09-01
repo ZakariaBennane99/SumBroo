@@ -1,7 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import { useRouter } from 'next/router';
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import reqs from './reqs'
 
@@ -25,7 +23,7 @@ const Requirements = ({ platform }) => {
             setStyle({
                 visibility: 'hidden'
             })
-        }, 1500)
+        }, 1000)
     }
 
     if (platform) {
