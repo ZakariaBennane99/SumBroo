@@ -1,10 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import { useState, useEffect } from "react";
-import HomeMenu from "../../../components/HomeMenu";
-import Header from "../../../components/Header";
-import Footer from '../../../components/Footer';
-
 
 const Home = ({ windowWidth }) => {
 
@@ -48,7 +43,8 @@ export async function getServerSideProps(context) {
     // continue rendering
     return {
       props: {
-        signedIn: true
+        signedIn: true,
+        dash: true
       }
     };
 

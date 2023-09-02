@@ -2,9 +2,12 @@ import Link from "next/link";
 import { useState } from "react";
 import Modal from 'react-modal';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 
 const SettingsMenu = ({ pathname }) => {
+
+  const router = useRouter();
 
   const [isServerErr, setIsServerErr] = useState(false)
 

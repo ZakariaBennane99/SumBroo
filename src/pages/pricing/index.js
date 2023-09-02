@@ -155,16 +155,12 @@ const Pricing = ({ AllAccounts }) => {
         })
     };
 
-    if (loading) {
-        return <div>...loading</div>
-    }
 
-    return (<div className="pricing-parent-section">
+    return (<>
             {signUpClicked ?
             <SignUp lookupKey={lookupKey} platforms={targetPlatforms} />
             :
             <>
-            <Header width={windowWidth} />
             <div className="pricingParent">
                 <div className="pricingTitle">
                     <h1>Select a Platform(s) and a Plan To Get Started</h1>
@@ -312,15 +308,14 @@ const Pricing = ({ AllAccounts }) => {
                     dangerouslySetInnerHTML={{__html: modalIsOpen.text}}
                 />
             </Modal>
-            <Footer />
             </>}
-        </div>
+        </>
     )
 };
 
 export default Pricing;
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps() {
 
     const connectDB = require('../../../utils/connectUserDB');
     const AvAc = require('../../../utils/AvailableAccounts').default;
@@ -344,6 +339,8 @@ export async function getServerSideProps(context) {
       return {
         props: {
           AllAccounts: readyDT,
+          isBlog: true,
+          notProtected: true
         }
       };
     } catch (error) {

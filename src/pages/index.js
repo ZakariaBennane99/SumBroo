@@ -1,9 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import { useEffect, useState } from 'react';
-import Bowser from "bowser";
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 
@@ -47,33 +44,8 @@ const Landing = () => {
 
   const router = useRouter();
 
-  const [windowWidth, setWindowWidth] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setWindowWidth(window.innerWidth);
-    setLoading(false);
-    // Update the window width when the window is resized
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    }
-
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup: remove the event listener when the component is unmounted
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    }
-  }, []);
-
-  if (loading) {
-    return <div>...loading</div>
-  }
-
   // send the token to the backend
-  return (
-    <div id='parentWrapper'>
-      <Header singedIn={true} isLanding={true} width={windowWidth} />
+  return (<>
       <div id='heroSection'>
         <h1>Efficiently Maximize Your Impact with SumBroo and Grow Faster & Cheaper Than Ever</h1>
         <p>Enjoy a surge in your <span>growth rate</span> and <span>audience reach</span>, experience a daily dose of <span>high-quality content</span>, and keep your wallet happy with our <span>very affordable plans</span>.</p>
@@ -144,9 +116,18 @@ const Landing = () => {
         <h1>Ready to take your influence<br/> to the next level?</h1>
         <button onClick={() => router.push('/pricing')}>Start Today!</button>
       </div>
-      <Footer />
-    </div>
+  </>
   )
 };
 
 export default Landing;
+
+export async function getServerSideProps() {
+
+  return {
+    props: {
+      notProtected: true
+    }
+  };
+
+}

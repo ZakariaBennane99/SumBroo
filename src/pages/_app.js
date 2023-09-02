@@ -6,13 +6,26 @@ import Footer from '../../components/Footer';
 import HomeMenu from '../../components/HomeMenu';
 import { useRouter } from 'next/router';
 import SettingsMenu from '../../components/SettingsMenu';
+import { OneEightyRing } from 'react-svg-spinners';
 
 export default function MyApp({ Component, pageProps }) {
 
   const signedIn = pageProps.signedIn;
-  const set = pageProps.isSettings
+  const set = pageProps.isSettings;
+  const proct = pageProps.notProtected;
+  const is404 = pageProps.isErr404;
+  const onboard = pageProps.onboarding;
+  const blog = pageProps.isBlog;
+  const dashboard = pageProps.dash;
 
-  const isSettings = set ? set : false
+  const isSettings = set || false;
+  const notProtected = proct || false;
+  const isErr404 = is404 || false;
+  const onboarding = onboard || false;
+  const isBlog = blog || false;
+  const dash = dashboard || false;
+
+  const all = !isErr404 && !onboarding && !isBlog && !notProtected && !isSettings;
 
   const router = useRouter();
 
@@ -62,35 +75,48 @@ export default function MyApp({ Component, pageProps }) {
   }, [router.pathname]);
 
   if (mountedLoading) {
-    return <div>loading...</div>
+    return <div style={{ width: '100%', minHeight: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <OneEightyRing width={70} height={70} color='rgb(28, 28, 87)' />
+    </div> 
   }
 
   return (
-    <div id="parentWrapper">
+    <div id={( (isErr404 || onboarding || isBlog) || (all) ) 
+      ? 'Er404-parent-section' 
+    : 'parentWrapper' }>
       <Header signedIn={signedIn} width={windowWidth}/>
       {
-        signedIn ? 
-
-        :
-
-      }
-      <div className="resultsSection">
-        <div className='homeContainer'>
-          {
-            (windowWidth > 1215 && signedIn) ? (
-              isSettings ? 
-                <SettingsMenu pathname={currentPath} />
-              :
-                <HomeMenu pathname={currentPath} />
-            ) : ''
-          }
+        (notProtected || all) && !dash ? 
+        <>
           {loading ? (
-            <h1>Loading...</h1> 
+            <div style={{ width: '100%', minHeight: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <OneEightyRing width={70} height={70} color='rgb(28, 28, 87)' />
+            </div> 
           ) : (
             <Component {...pageProps} windowWidth={windowWidth} />
           )}
+        </>
+        :
+        <div className="resultsSection">
+          <div className='homeContainer'>
+            {
+              (windowWidth > 1215 && signedIn) ? (
+                isSettings ? 
+                  <SettingsMenu pathname={currentPath} />
+                :
+                  <HomeMenu pathname={currentPath} />
+              ) : ''
+            }
+            {loading ? (
+            <div style={{ width: '76%', minHeight: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <OneEightyRing width={70} height={70} color='rgb(28, 28, 87)' />
+            </div> 
+          ) : (
+              <Component {...pageProps} windowWidth={windowWidth} />
+            )}
+          </div>  
         </div>  
-      </div>  
+      }
       <Footer />
     </div>
   );

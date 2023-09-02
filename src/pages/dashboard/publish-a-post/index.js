@@ -328,6 +328,7 @@ export async function getServerSideProps(context) {
         props: {
           isServerError: true,
           signedIn: true,
+          dash: true,
           platforms: [{
             status: ''
           }]
@@ -344,6 +345,7 @@ export async function getServerSideProps(context) {
         props: {
           isServerError: true,
           signedIn: true,
+          dash: true,
           platforms: [{
             status: ''
           }]
@@ -395,6 +397,7 @@ export async function getServerSideProps(context) {
       props: {
         isServerError: false,
         signedIn: true,
+        dash: true,
         platforms: platformNames,
         niches: nichesAndTags
       }
@@ -405,6 +408,7 @@ export async function getServerSideProps(context) {
       props: {
         isServerError: true,
         signedIn: true,
+        dash: true,
         platforms: [{
           status: ''
         }]

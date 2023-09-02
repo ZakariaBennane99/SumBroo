@@ -1,8 +1,6 @@
-import Header from '../../../components/Header';
-import Footer from '../../../components/Footer';
 import Modal from 'react-modal';
 import { Tadpole } from "react-svg-spinners";
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 
 
@@ -97,34 +95,8 @@ const Onboarding = ({ userId, status }) => {
     },
   };
 
-  const [windowWidth, setWindowWidth] = useState(null);
-  const [loading2, setLoading2] = useState(true);
 
-  useEffect(() => {
-    setWindowWidth(window.innerWidth);
-    setLoading2(false);
-    // Update the window width when the window is resized
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    }
-
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup: remove the event listener when the component is unmounted
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    }
-  }, []);
-
-  if (loading2) {
-    return <div>...loading</div>
-  }
-
-
-  return (<div className='onboarding-parent-container'>
-      <Header signedIn={false} width={windowWidth} />
-      <div className='onboarding-container'>
-
+  return (<div className='onboarding-container'>
         {
           action === 'password' ? 
             <div className='password-container'>
@@ -161,8 +133,6 @@ const Onboarding = ({ userId, status }) => {
             Generic page 
           </div>
         }
-      </div>
-
         <Modal
           isOpen={isError}
           style={customStyles}
@@ -184,9 +154,8 @@ const Onboarding = ({ userId, status }) => {
                }}>Try again</span>
           </div>
         </Modal>
-
-      <Footer />
-  </div>)
+      </div>
+)
 
 }
 
@@ -196,9 +165,10 @@ export default Onboarding;
 
 export async function getServerSideProps(context) {
 
+  const connectDB = require('../../../utils/connectUserDB');
   const jwt = require('jsonwebtoken');
-  const User = require('../../../utils/User');
-  const { connectUserDB, userDbConnection } = require('../../../utils/connectUserDB');
+  const User = require('../../../utils/User').default;
+  const AvAc = require('../../../utils/AvailableAccounts').default;
   const mongoSanitize = require('express-mongo-sanitize');
 
   try {
@@ -212,14 +182,16 @@ export async function getServerSideProps(context) {
     }
 
     const userId = decoded.userId
-    await connectUserDB()
+    await connectDB()
     // assuming onboardingStep is 0
     const sanitizedUserId = mongoSanitize.sanitize(userId);
-    let user = await userDbConnection.model('User').findOne({ _id: sanitizedUserId });
+    let user = await user.findOne({ _id: sanitizedUserId });
     if (!user || user.onboardingStep !== 0) throw new Error('User not found');
     return {
       props: {
-        userId, status: 'password'
+        userId, status: 'password',
+        onboarding: true,
+        notProtected: true
       }
     }; 
 

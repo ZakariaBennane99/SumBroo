@@ -1,10 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import Header from "../../../components/Header";
-import Footer from "../../../components/Footer";
 import { useRouter } from 'next/router';
 import Modal from 'react-modal';
-import React, { useState, useEffect } from 'react';
+import React, { useState, } from 'react';
 import { faEye, faEyeSlash, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
@@ -13,9 +11,7 @@ import { Tadpole } from "react-svg-spinners";
 
 
 const SignIn = () => {
-
-    const [windowWidth, setWindowWidth] = useState(null);
-    const [loading, setLoading] = useState(true);
+  
     const router = useRouter();
 
     // password change
@@ -243,29 +239,9 @@ const SignIn = () => {
         fontFamily: 'Ubuntu',
       },
     };
-  
-    useEffect(() => {
-      setWindowWidth(window.innerWidth);
-      setLoading(false);
-      // Update the window width when the window is resized
-      const handleResize = () => {
-        setWindowWidth(window.innerWidth);
-      }
-  
-      window.addEventListener('resize', handleResize);
-  
-      // Cleanup: remove the event listener when the component is unmounted
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      }
-    }, []);
-  
-    if (loading) {
-      return <div>...loading</div>
-    }
 
-    return (<div className="footerSectionsWrapper">
-        <Header signedIn={false} width={windowWidth} />
+
+    return (
           <div className='login-container'>
             {!clickedOnForgot ?
                 <form className='loginForm'>
@@ -367,30 +343,28 @@ const SignIn = () => {
                   })()}
               </div>
               }
+            <Modal
+              isOpen={isServerError}
+              style={customStyles}
+              contentLabel="Example Modal"
+                >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+                <span onClick={() => location.reload()}
+                  style={{ backgroundColor: '#1465e7', 
+                  color: "white",
+                  padding: '10px', 
+                  cursor: 'pointer',
+                  fontFamily: 'Ubuntu',
+                  borderRadius: '3px',
+                  fontSize: '1.1em',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                   }}>Try again</span>
+              </div>
+            </Modal>
           </div>
-          <Modal
-            isOpen={isServerError}
-            style={customStyles}
-            contentLabel="Example Modal"
-              >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
-              <span onClick={() => location.reload()}
-                style={{ backgroundColor: '#1465e7', 
-                color: "white",
-                padding: '10px', 
-                cursor: 'pointer',
-                fontFamily: 'Ubuntu',
-                borderRadius: '3px',
-                fontSize: '1.1em',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                 }}>Try again</span>
-            </div>
-          </Modal>
-        <Footer />
-    </div>
     )
 };
 
@@ -422,7 +396,9 @@ export async function getServerSideProps(context) {
 
     if (decoded.type !== 'sessionToken') {
       return {
-        props: {}
+        props: {
+          notProtected: true
+        }
       };
     }
 

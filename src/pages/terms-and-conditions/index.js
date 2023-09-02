@@ -1,39 +1,34 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import Header from "../../../components/Header";
-import Footer from "../../../components/Footer";
-import { useState, useEffect } from "react";
 
-const Privacy = () => {
+const TermConditions = () => {
 
-    const [windowWidth, setWindowWidth] = useState(null);
-    const [loading, setLoading] = useState(true);
-  
-    useEffect(() => {
-      setWindowWidth(window.innerWidth);
-      setLoading(false);
-      // Update the window width when the window is resized
-      const handleResize = () => {
-        setWindowWidth(window.innerWidth);
-      }
-  
-      window.addEventListener('resize', handleResize);
-  
-      // Cleanup: remove the event listener when the component is unmounted
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      }
-    }, []);
-  
-    if (loading) {
-      return <div>...loading</div>
-    }
-
-    return (<div className="footerSectionsWrapper">
-        <Header width={windowWidth} />
-        <div className='footerSections'>
+    return (<div className='footerSections'>
             <h1 className="sectionTitle">Terms & Conditions</h1>
             <div className="sectionContent">
+            <div className="tlDr">
+              <strong><em>TL;DR:</em></strong>
+              <ul>
+                <li>Not endorsed by any social media platforms.</li>
+                <li>Agree to terms to access; otherwise, refrain from usage.</li>
+                <li>Access is temporary; changes possible without notice.</li>
+                <li>Registration needs a valid email; accounts are personal.</li>
+                <li>Users manage their password and account actions.</li>
+                <li>Payments via Stripe after account approval.</li>
+                <li>Users must obey laws and are responsible for posted content.</li>
+                <li>Adhere to the platform's Privacy Policy and data laws.</li>
+                <li>Accounts can be terminated for term breaches.</li>
+                <li>Terms can be updated; check often.</li>
+                <li>All content copyrighted by Driven Dynamics Limited.</li>
+                <li>Service limits its liability.</li>
+                <li>Adherence to UK and Great Britain laws.</li>
+                <li>Third-party links present but not responsible for them.</li>
+                <li>Subscription fees are recurring till cancellation.</li>
+                <li>Email communications on account and services agreement.</li>
+                <li>Questions? Contact <a href="mailto:hey@sumbroo.com">hey@sumbroo.com</a>.</li>
+              </ul>  
+            </div> 
+
             <p><strong><em>Last updated: August 13, 2023</em></strong></p>
   <p>These Terms and Conditions (&quot;Terms&quot;, &quot;Terms and Conditions&quot;) govern your relationship with SumBroo (the &quot;Service&quot;) operated by Driven Dynamics Limited (&quot;us&quot;, &quot;we&quot;, or &quot;our&quot;). SumBroo and its parent company are not associated with, nor are endorsed by, the social media platforms. The inclusion of social media links and logos is solely for reference and does not imply any association or endorsement by the respective platforms.</p>
   <p>Please read these Terms and Conditions carefully before using our Service.</p>
@@ -48,8 +43,28 @@ const Privacy = () => {
   <p>Upon approval of your account, a payment link will be sent to complete your registration. You must agree to pay the fees at the rates notified to you at the time you purchase one of our Services. Payment for all Services must be made online via our payment partners, Stripe.</p>
   <h2>&#73;&#86;. User Conduct</h2>
   <p>When using SumBroo, you agree to use the service as intended and not to use it for any purposes that violate any laws or regulations.</p>
-  <h2>&#86;. Content</h2>
-  <p>You are responsible for the content that you post on the SumBroo platform. All content must comply with applicable legal rules and must not infringe on the rights of others.</p>
+  <h2>&#86;. Content Responsibility </h2>
+  <p>As a user of the SumBroo platform, you are accountable for the content you publish. We uphold a strict policy of quality content and constructive communication. We respect others’ legal and intellectual rights, and expect you likewise so to ensure a safe and valuable experience for all our users. The content must not:</p>
+
+  <ol>
+      <li>Be pornographic, sexually explicit, or depict nudity in a non-artistic or gratuitous manner.</li>
+      <li>Support or glorify the use, sale, or distribution of illegal substances.</li>
+      <li>Showcase extreme violence, gore, self-harm, or any harmful actions.</li>
+      <li>Discriminate or promote hate speech based on race, gender, religion, nationality, disability, sexual orientation, or age.</li>
+      <li>Spread misleading information, falsehoods, or promote misinformation.</li>
+      <li>Infringe on someone else's intellectual property, copyright, or trademark rights.</li>
+      <li>Promote or glorify criminal activities or contain material that could provoke harm or danger.</li>
+      <li>Consist of the personal information of others without their explicitconsent - this includes, but is not restricted to addresses, phone numbers, or email addresses.</li>
+      <li>Feature excessive promotional content, spam, or solicit business activities without prior approval from SumBroo.</li>
+      <li>Have any form of malicious software or links that could impair or disrupt any hardware or software devices.</li>
+  </ol>
+  <p>We encourage all our users to create content that aligns with SumBroo's mission of connecting influencers and promoting high-quality engagement. Unhealthy or inappropriate content violates our terms and community values, and may lead to account deactivation or suspension. </p> 
+
+  <h2>&#86;. Automated Content Posting</h2>
+  <p>By applying to join the SumBroo network, you consent to having one high-quality post from another vetted account, selected based on your chosen target audience, posted to your connected social media accounts every 24 hours. While this policy applies to all platforms, please note a different frequency applies to YouTube. For YouTube, one video will be shared on your account every week. This time restricted content sharing exercise is designed to foster community engagement and extend your social reach. Please note, this scheduled posting arrangement applies whether or not you personally post any content within the given timeframe.</p>
+
+  <p>In order to maintain a consistent online presence and provide fresh and relevant content for your audience, you cannot opt out of this daily content sharing process. By accepting these terms, you agree to this policy of daily automated posting on your connected social media accounts. Should you wish to no longer receive these posts, your only recourse is to discontinue your SumBroo membership.</p>
+
   <h2>&#86;&#73;. Data Protection</h2> 
   <p>You must comply with our Privacy Policy and all applicable data protection and privacy laws while using our Service.</p>
   <h2>&#86;&#73;&#73;. Termination of Service</h2>
@@ -80,6 +95,9 @@ const Privacy = () => {
     <li><strong>Payment Receipt Confirmation:</strong> We will send you an email confirmation when a payment has been successfully processed for your account. This email will include relevant details such as the payment amount, date, and the product or service purchased.</li>
     <li><strong>Upgrade/Downgrade Notification:</strong> If you decide to upgrade or downgrade your account or subscription, we will send you an email notification informing you of the successful upgrade, along with any changes to your account access, features, or pricing as a result of the upgrade/downgrade.</li>
     <li><strong>Canceling Notification:</strong> Should you choose to cancel your account or subscription, we will send you an email confirming your cancellation. This email will include information on the date your access to our services will be terminated, and any relevant refund or proration details, if applicable.</li>
+    <li><strong>Payment Method Expiry:</strong> Before the expiration of your saved payment method, such as a credit card, we will send you a reminder email to update your payment details. This is to ensure a seamless service experience and prevent any potential payment hiccups.</li>
+    <li><strong>Subscription Payment Issues:</strong> In case there's an issue processing the payment for your subscription, we will send you an email alerting you of the problem. Please ensure to address the issue promptly to avoid service interruption.</li>
+    <li><strong>Password Reset Email:</strong> If you forget your password or request a password reset, we will send you an email containing an OTP code to reset your password. Ensure that you only use this function if you requested it and always make sure to use a strong, unique password.</li>
     <li><strong>Product Updates:</strong> We may send you email updates regarding new features, enhancements, or changes to our service. These updates may include information on how to access and use new functionality, as well as any potential impacts on your current account or experience with our services.</li>
     <li><strong>Approval Email:</strong> We will send you an email once you are approved. The email will include a link via which you will be able to start the onboarding process.</li>
 </ol>
@@ -87,9 +105,17 @@ const Privacy = () => {
 <p>If you have any questions about these Terms, please contact us at hey@sumbroo.com</p>
             </div>
         </div>
-        <Footer />
-    </div>
     )
 };
 
-export default Privacy;
+export default TermConditions;
+
+export async function getServerSideProps() {
+
+  return {
+    props: {
+      notProtected: true
+    }
+  };
+
+}

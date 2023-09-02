@@ -1,11 +1,5 @@
-const contentful = require('contentful');
-import { useEffect, useState, useMemo } from 'react';
-import Link from 'next/link';
-import Header from '../../../../components/Header';
-import Footer from '../../../../components/Footer';
-import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
-import { useState, useEffect } from 'react';
 
+import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
 
 
 function slugTag(tag) {
@@ -58,33 +52,7 @@ function formatDate(inputDate) {
 
 function Blog({ posts }) {
 
-    const [windowWidth, setWindowWidth] = useState(null);
-    const [loading, setLoading] = useState(true);
-  
-    useEffect(() => {
-      setWindowWidth(window.innerWidth);
-      setLoading(false);
-      // Update the window width when the window is resized
-      const handleResize = () => {
-        setWindowWidth(window.innerWidth);
-      }
-  
-      window.addEventListener('resize', handleResize);
-  
-      // Cleanup: remove the event listener when the component is unmounted
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      }
-    }, []);
-  
-    if (loading) {
-      return <div>...loading</div>
-    }
-
-    return (
-        <div className='blog-parent-section'>
-            <Header width={windowWidth} />
-            <div className='post-infos-container'>
+    return (<div className='post-infos-container'>
                 {posts.map(post =>
                 (
                   <div key={post.sys.id} className='post-info-container'>
@@ -116,8 +84,6 @@ function Blog({ posts }) {
                   </div>
                 ))}
             </div>
-            <Footer />
-        </div>
     )
 }
 
@@ -125,6 +91,9 @@ function Blog({ posts }) {
 export default Blog;
 
 export async function getStaticPaths() {
+
+    const contentful = require('contentful');
+
     const client = contentful.createClient({
         space: process.env.CONTENTFUL_SPACE_ID,
         accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
@@ -143,6 +112,8 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
 
+    const contentful = require('contentful');
+
     const client = contentful.createClient({
         space: process.env.CONTENTFUL_SPACE_ID,
         accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
@@ -157,7 +128,9 @@ export async function getStaticProps({ params }) {
 
     return {
         props: {
-            posts: entries.items
+            posts: entries.items,
+            isBlog: true,
+            notProtected: true,
         }
     };
 }

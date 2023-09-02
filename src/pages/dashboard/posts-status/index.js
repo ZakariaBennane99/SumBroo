@@ -1,9 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import { useState, useEffect } from "react";
-import Header from '../../../../components/Header';
-import Footer from '../../../../components/Footer';
-import HomeMenu from '../../../../components/HomeMenu';
 import _ from 'lodash';
 
 
@@ -147,7 +143,8 @@ export async function getServerSideProps(context) {
 
     return {
       props: {
-        signedIn: true
+        signedIn: true,
+        dash: true
       }
     };
 

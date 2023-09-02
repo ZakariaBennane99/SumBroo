@@ -1,8 +1,5 @@
-import Header from '../../../components/Header'
-import Footer from '../../../components/Footer';
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
 
 
 
@@ -45,38 +42,13 @@ function formatDate(inputDate) {
 
 function Blog({ posts }) {
 
-    const [windowWidth, setWindowWidth] = useState(null);
-    const [loading, setLoading] = useState(true);
-  
-    useEffect(() => {
-      setWindowWidth(window.innerWidth);
-      setLoading(false);
-      // Update the window width when the window is resized
-      const handleResize = () => {
-        setWindowWidth(window.innerWidth);
-      }
-  
-      window.addEventListener('resize', handleResize);
-  
-      // Cleanup: remove the event listener when the component is unmounted
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      }
-    }, []);
-  
-    if (loading) {
-      return <div>...loading</div>
-    }
 
-    return (
-        <div className='blog-parent-section'>
-            <Header width={windowWidth} />
-            <div className='post-infos-container'>
+    return (<div className='post-infos-container'>
                 {posts.map(post =>
                 (
                   <div key={post.sys.id} className='post-info-container'>
                     <div className='category'>
-                        <a href={`blog/category/${slugTag(post.metadata.tags[0].sys.id)}`} rel='tag'>
+                        <a href={`/blog/category/${slugTag(post.metadata.tags[0].sys.id)}`} rel='tag'>
                             {camelToWords(post.metadata.tags[0].sys.id).join(' ').toUpperCase()}</a>
                     </div>
                     <h2>
@@ -102,9 +74,7 @@ function Blog({ posts }) {
                     
                   </div>
                 ))}
-            </div>
-            <Footer />
-        </div>
+    </div>
     )
 }
 
@@ -123,7 +93,9 @@ export async function getStaticProps() {
     const entries = await client.getEntries({ content_type: 'blogPost' }); 
     return {
       props: {
-        posts: entries.items
+        posts: entries.items,
+        isBlog: true,
+        notProtected: true
       }
     };
 }

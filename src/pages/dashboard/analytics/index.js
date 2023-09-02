@@ -1,9 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import { useState, useEffect, useRef } from "react";
-import Header from '../../../../components/Header';
-import Footer from '../../../../components/Footer';
-import HomeMenu from '../../../../components/HomeMenu';
+import { useState } from "react";
 import Select from 'react-select';
 import GroupedBarChart from '../../../../components/viz/GroupedBarChart';
 import StackedBarChart from '../../../../components/viz/StackedBarChart';
@@ -471,6 +468,7 @@ export async function getServerSideProps(context) {
     return {
       props: {
         signedIn: true,
+        dash: true
       }
     };
 

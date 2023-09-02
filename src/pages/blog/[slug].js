@@ -1,7 +1,4 @@
-
-const contentful = require('contentful');
-
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import Meta from '../../../components/Meta';
 import { BLOCKS, INLINES } from '@contentful/rich-text-types';
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
@@ -12,9 +9,7 @@ import {
     TwitterIcon,
     LinkedinShareButton,
     LinkedinIcon
-  } from 'next-share'
-import Header from '../../../components/Header';
-import Footer from '../../../components/Footer';
+  } from 'next-share';
 import { documentToPlainTextString } from '@contentful/rich-text-plain-text-renderer';
 
 
@@ -135,29 +130,9 @@ const SocialSharing = ({ slug, under }) => {
   </>)
 }
 
-function Post({ post }) {
+function Post({ post, windowWidth }) {
 
   const [hash, setHash] = useState(null)
-
-  const [windowWidth, setWindowWidth] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setWindowWidth(window.innerWidth);
-    setLoading(false);
-    // Update the window width when the window is resized
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    }
-
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup: remove the event listener when the component is unmounted
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    }
-  }, []);
-
 
     const options = {
         renderNode: {
@@ -301,24 +276,15 @@ function Post({ post }) {
       };
     }, [hash]);
   
-  
-    if (loading) {
-      return <div>...loading</div>
-    }
 
     // post.fields.slug
-    return (
-      <div className='blog-parent-section'>
-        <Header width={windowWidth} />
-        <div className='post-container'>
-
+    return (<div className='post-container'>
           <Meta 
               title={post.fields.title}
               description={post.fields.excerpt}
               image={`https:${post.fields.featuredImage.fields.file}`}
               url={`https://yourdomain.com/blog/${post.fields.slug}`}
           />
-
           {
             windowWidth > 1000 ? <Content bd={post.fields.body} hash={hash} setHash={setHash} under={false} /> : ''
           }
@@ -328,7 +294,7 @@ function Post({ post }) {
             <div className='blog-main-meta'>
   
               <div className='category'>
-                <a href={`blog/category/${slugTag(post.metadata.tags[0].sys.id)}`} rel='tag'>
+                <a href={`/blog/category/${slugTag(post.metadata.tags[0].sys.id)}`} rel='tag'>
                   {camelToWords(post.metadata.tags[0].sys.id).join(' ').toUpperCase()}</a>
               </div>
   
@@ -363,14 +329,15 @@ function Post({ post }) {
           }
 
         </div>
-        <Footer />
-      </div>
     );
 }
 
 export default Post;
 
 export async function getStaticPaths() {
+
+  const contentful = require('contentful');
+
   const client = contentful.createClient({
     space: process.env.CONTENTFUL_SPACE_ID,
     accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
@@ -390,6 +357,8 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
 
+  const contentful = require('contentful');
+
   const client = contentful.createClient({
     space: process.env.CONTENTFUL_SPACE_ID,
     accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
@@ -405,7 +374,9 @@ export async function getStaticProps({ params }) {
     const entry = entries.items[0];
     return {
       props: {
-        post: entry
+        post: entry,
+        isBlog: true,
+        notProtected: true
       }
     };
   } else {

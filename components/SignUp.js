@@ -150,8 +150,7 @@ const SignUp = ({ lookupKey, platforms }) => {
   }
 
 
-  return (<div className="footerSectionsWrapper">
-    <Header />
+  return (<>
     {
       isApplicationSent ? 
       <div className="applicationSentMessageContainer">
@@ -209,9 +208,17 @@ const SignUp = ({ lookupKey, platforms }) => {
       </form>
     </div>
     }
-    <Footer />
-  </div>
-  )
+    </>)
 };
 
 export default SignUp;
+
+export async function getServerSideProps() {
+
+  return {
+    props: {
+      notProtected: true
+    }
+  };
+
+}
