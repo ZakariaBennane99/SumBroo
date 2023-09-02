@@ -84,7 +84,7 @@ export default function MyApp({ Component, pageProps }) {
     <div id={( (isErr404 || onboarding || isBlog) || (all) ) 
       ? 'Er404-parent-section' 
     : 'parentWrapper' }>
-      <Header signedIn={signedIn} width={windowWidth}/>
+      <Header signedIn={signedIn} width={windowWidth} currentPath={currentPath} />
       {
         (notProtected || all) && !dash ? 
         <>

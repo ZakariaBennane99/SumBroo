@@ -1,16 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import SlideMenu from './SlideMenu';
 
-const Header = ({ signedIn, isLanding, width }) => {
-
-  const landing = isLanding || false;
+const Header = ({ signedIn, width, currentPath }) => {
 
   const [isSubMenuOpen1, setIsSubMenuOpen1] = useState(false);
   const [isSubMenuOpen2, setIsSubMenuOpen2] = useState(false);
   const [isSignOutClicked, setIsSignOutClicked] = useState(false);
   const router = useRouter();
+
+  const [localPath, setLocalPath] = useState(currentPath);
+
+  useEffect(() => {
+    setLocalPath(currentPath);
+  }, [currentPath]);
 
   async function signOutUser() {
     setIsSignOutClicked(true)
@@ -37,51 +41,65 @@ const Header = ({ signedIn, isLanding, width }) => {
   };
 
   const renderMobileSignedInLinks = () => {
-    return (
-      <div id='mobile-sub-menu-wrapper'>
-        {renderSubMenu('Dashboard', 'dashboard', isSubMenuOpen1, setIsSubMenuOpen1)}
-        {renderSubMenu('Settings', 'settings', isSubMenuOpen2, setIsSubMenuOpen2)}
-      </div>
-    );
+    if (localPath === '/' || localPath.includes('blog')) {
+      return (
+        <div id='mobile-sub-menu-wrapper'>
+          <Link href='/blog'>Blog</Link>
+          <Link href='/dashboard'>Dashboard</Link>
+          <Link href='/settings'>Settings</Link>
+        </div>
+      );
+    } else {
+      return (
+        <div id='mobile-sub-menu-wrapper'>
+          {renderSubMenu('Dashboard', 'dashboard', isSubMenuOpen1, setIsSubMenuOpen1)}
+          {renderSubMenu('Settings', 'settings', isSubMenuOpen2, setIsSubMenuOpen2)}
+        </div>
+      );
+    }
   };
+  
 
   const renderDesktopSignedInLinks = () => {
-    if (landing) {
+    if (localPath === '/' || localPath.includes('blog')) {  // Checking if it's landing or blog page
       return (
         <>
           <Link href='/blog'><p style={{ 
-          color: router.pathname.includes('blog') ? '#1c1c57' : ''
+            color: localPath.includes('blog') ? '#1c1c57' : ''
           }}>Blog</p></Link>
           <Link href='/dashboard'><p style={{ 
-          color: router.pathname.includes('pricing') ? '#1c1c57' : ''
+            color: localPath.includes('dashboard') ? '#1c1c57' : ''
           }}>Dashboard</p></Link>
           <Link href='/settings'><p style={{ 
-          color: router.pathname.includes('sign-in') ? '#1c1c57' : ''
+            color: localPath.includes('settings') ? '#1c1c57' : ''
           }}>Settings</p></Link>
         </>
       );
     } else {
+      // Existing logic for other pages
       return (
         <>
           <Link href='/dashboard'><p style={{ 
-            color: router.pathname.includes('dashboard') ? '#1c1c57' : ''
+            color: localPath.includes('dashboard') ? '#1c1c57' : ''
           }}>Dashboard</p></Link>
           <Link href='/settings'><p style={{ 
-            color: router.pathname.includes('settings') ? '#1c1c57' : ''
+            color: localPath.includes('settings') ? '#1c1c57' : ''
           }}>Settings</p></Link>
         </>
       );
     }
   };
+  
+  
 
   const renderSubMenu = (title, path, isOpen, setOpen) => {
     return (
       <>
         <div onClick={() => setOpen(!isOpen)}>
           {title}
-          <img src={router.pathname.includes(`/${path}`) || isOpen ? '/menu-dropper-active.svg' : '/menu-dropper.svg'} />
+          <img src={localPath.includes(`/${path}`) || isOpen ? '/menu-dropper-active.svg' : '/menu-dropper.svg'} />
         </div>
-        {(isOpen || router.pathname.includes(`/${path}`)) && (
+        {(isOpen || localPath.includes(`/${path}`)) && (
           <div id='mobile-sub-menu'>
             <Link href={`/${path}/linked-accounts`}>Linked Accounts</Link>
             <Link href={`/${path}/account-settings`}>Account Settings</Link>
@@ -97,13 +115,13 @@ const Header = ({ signedIn, isLanding, width }) => {
     return (
       <>
         <Link href='/blog'><p style={{ 
-          color: router.pathname.includes('blog') ? '#1c1c57' : ''
+          color: localPath.includes('blog') ? '#1c1c57' : ''
          }}>Blog</p></Link>
         <Link href='/pricing'><p style={{ 
-          color: router.pathname.includes('pricing') ? '#1c1c57' : ''
+          color: localPath.includes('pricing') ? '#1c1c57' : ''
          }}>Pricing</p></Link>
         <Link href='/sign-in'><p style={{ 
-          color: router.pathname.includes('sign-in') ? '#1c1c57' : ''
+          color: localPath.includes('sign-in') ? '#1c1c57' : ''
          }}>Sign In</p></Link>
       </>
     );
@@ -112,7 +130,7 @@ const Header = ({ signedIn, isLanding, width }) => {
   const isMobile = () => width < 750;
 
   const shouldRenderMobileLinks = () => {
-    return (router.pathname.includes('dashboard') || router.pathname.includes('settings')) && width < 1215 || isMobile();
+    return (localPath.includes('dashboard') || localPath.includes('settings')) && width < 1215 || isMobile();
   };
 
   return (
