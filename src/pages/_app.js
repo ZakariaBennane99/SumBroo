@@ -10,7 +10,7 @@ import { OneEightyRing } from 'react-svg-spinners';
 
 export default function MyApp({ Component, pageProps }) {
 
-  const signedIn = pageProps.signedIn;
+  const signed = pageProps.signedIn;
   const set = pageProps.isSettings;
   const proct = pageProps.notProtected;
   const is404 = pageProps.isErr404;
@@ -19,6 +19,7 @@ export default function MyApp({ Component, pageProps }) {
   const dashboard = pageProps.dash;
 
   const isSettings = set || false;
+  const signedIn = signed || false;
   const notProtected = proct || false;
   const isErr404 = is404 || false;
   const onboarding = onboard || false;
@@ -84,7 +85,7 @@ export default function MyApp({ Component, pageProps }) {
     <div id={( (isErr404 || onboarding || isBlog) || (all) ) 
       ? 'Er404-parent-section' 
     : 'parentWrapper' }>
-      <Header signedIn={signedIn} width={windowWidth} currentPath={currentPath} />
+      <Header key={router.pathname} signedIn={true} width={windowWidth} currentPath={router.pathname} />
       {
         (notProtected || all) && !dash ? 
         <>

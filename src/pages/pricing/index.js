@@ -315,13 +315,48 @@ const Pricing = ({ AllAccounts }) => {
 
 export default Pricing;
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
 
     const connectDB = require('../../../utils/connectUserDB');
     const AvAc = require('../../../utils/AvailableAccounts').default;
+    const jwt = require('jsonwebtoken');
 
     try {
-  
+      
+      let signedIn = false;
+      
+      try {
+
+        const cookies = context.req.headers.cookie;
+
+        const tokenCookie = cookies.split(';').find(c => c.trim().startsWith('token='));
+        
+        let tokenValue;
+        if (tokenCookie) {
+          tokenValue = tokenCookie.split('=')[1];
+        }
+        
+        const decoded = jwt.verify(tokenValue, process.env.USER_JWT_SECRET);
+        
+        if (decoded.type !== 'sessionToken') {
+            signedIn = false
+        }
+
+        signedIn = true;
+
+      } catch (err) {
+        signedIn = false
+      }
+
+      if (signedIn) {
+        return {
+            redirect: {
+              destination: '/dashboard',
+              permanent: false,
+            },
+        };
+      } 
+
       await connectDB()
 
       let AvAccounts = await AvAc.findOne({ _id: '64dff175f982d9f8a4304100' });
@@ -335,7 +370,8 @@ export async function getServerSideProps() {
                 status: plainObject.status
             };
         });
-      
+    
+
       return {
         props: {
           AllAccounts: readyDT,
@@ -343,6 +379,7 @@ export async function getServerSideProps() {
           notProtected: true
         }
       };
+
     } catch (error) {
         return {
             redirect: {

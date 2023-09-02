@@ -5,16 +5,19 @@ import SlideMenu from './SlideMenu';
 
 const Header = ({ signedIn, width, currentPath }) => {
 
+  console.log('signedIn', signedIn)
+
   const [isSubMenuOpen1, setIsSubMenuOpen1] = useState(false);
   const [isSubMenuOpen2, setIsSubMenuOpen2] = useState(false);
   const [isSignOutClicked, setIsSignOutClicked] = useState(false);
   const router = useRouter();
+  const { asPath } = useRouter();
 
   const [localPath, setLocalPath] = useState(currentPath);
 
   useEffect(() => {
     setLocalPath(currentPath);
-  }, [currentPath]);
+  }, [asPath]);
 
   async function signOutUser() {
     setIsSignOutClicked(true)
@@ -39,56 +42,43 @@ const Header = ({ signedIn, width, currentPath }) => {
   const renderSignedInLinks = (isMobile) => {
     return isMobile ? renderMobileSignedInLinks() : renderDesktopSignedInLinks();
   };
+  
 
   const renderMobileSignedInLinks = () => {
-    if (localPath === '/' || localPath.includes('blog')) {
-      return (
-        <div id='mobile-sub-menu-wrapper'>
-          <Link href='/blog'>Blog</Link>
-          <Link href='/dashboard'>Dashboard</Link>
-          <Link href='/settings'>Settings</Link>
-        </div>
-      );
-    } else {
-      return (
-        <div id='mobile-sub-menu-wrapper'>
-          {renderSubMenu('Dashboard', 'dashboard', isSubMenuOpen1, setIsSubMenuOpen1)}
-          {renderSubMenu('Settings', 'settings', isSubMenuOpen2, setIsSubMenuOpen2)}
-        </div>
-      );
-    }
+    return (
+      <div id='mobile-sub-menu-wrapper'>
+        <Link href='/blog'>Blog</Link>
+        {renderSubMenu('Dashboard', 'dashboard', isSubMenuOpen1, setIsSubMenuOpen1)}
+        {renderSubMenu('Settings', 'settings', isSubMenuOpen2, setIsSubMenuOpen2)}
+      </div>
+    );
   };
+  
+  
   
 
   const renderDesktopSignedInLinks = () => {
-    if (localPath === '/' || localPath.includes('blog')) {  // Checking if it's landing or blog page
-      return (
-        <>
-          <Link href='/blog'><p style={{ 
+    return (
+      <>
+        <Link href='/blog'>
+          <p style={{ 
             color: localPath.includes('blog') ? '#1c1c57' : ''
-          }}>Blog</p></Link>
-          <Link href='/dashboard'><p style={{ 
+          }}>Blog</p>
+        </Link>
+        <Link href='/dashboard'>
+          <p style={{ 
             color: localPath.includes('dashboard') ? '#1c1c57' : ''
-          }}>Dashboard</p></Link>
-          <Link href='/settings'><p style={{ 
+          }}>Dashboard</p>
+        </Link>
+        <Link href='/settings'>
+          <p style={{ 
             color: localPath.includes('settings') ? '#1c1c57' : ''
-          }}>Settings</p></Link>
-        </>
-      );
-    } else {
-      // Existing logic for other pages
-      return (
-        <>
-          <Link href='/dashboard'><p style={{ 
-            color: localPath.includes('dashboard') ? '#1c1c57' : ''
-          }}>Dashboard</p></Link>
-          <Link href='/settings'><p style={{ 
-            color: localPath.includes('settings') ? '#1c1c57' : ''
-          }}>Settings</p></Link>
-        </>
-      );
-    }
+          }}>Settings</p>
+        </Link>
+      </>
+    );
   };
+  
   
   
 
