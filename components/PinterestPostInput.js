@@ -16,13 +16,14 @@ export default function PinterestPostInput({ setDataForm, platform, errors }) {
 
   useEffect(() => {
     setDataForm({
+      postTitle: postTitle,
       pinTitle: pinTitle,
       text: text,
       pinLink: pinLink,
       imgUrl: imgUrl,
       videoUrl: videoUrl
     });
-  }, [pinTitle, text, pinLink, imgUrl, videoUrl]);
+  }, [postTitle , pinTitle, text, pinLink, imgUrl, videoUrl]);
 
 
   // for the tooltip
@@ -224,14 +225,18 @@ export default function PinterestPostInput({ setDataForm, platform, errors }) {
             <div className="inputElements">
               <label>Post Title</label>
               <p><em>This helps you to easily identify and locate your post within Sumbroo, but it will not be published.</em></p>
-              <input type="text" placeholder="Enter post title" onChange={(e) => { setPostTitle(e.target.value) }} />
+              {errors.postTitle ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.postTitle}</p> : '' }
+              <input type="text" placeholder="Enter post title" 
+                onChange={(e) => { setPostTitle(e.target.value) }}
+                style={{ outline: errors.postTitle ? '2px solid red' : '' }} />
             </div>
             <div className="inputElements" style={{ position: 'relative' }}>
               <label>Pin Title</label>
               <p>Title should be <b>40-100 characters</b>. Keep it concise and clear, ensuring it's relevant to your content.</p>
-              <input type="text" maxLength='100' placeholder="Add your pin title" onChange={(e) => { setPinTitle(e.target.value); setTitleChars(e.target.value.length); setDataForm({
-
-              }); }} />
+              {errors.pinTitle ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.pinTitle}</p> : '' }
+              <input type="text" maxLength='100' placeholder="Add your pin title" 
+                onChange={(e) => { setPinTitle(e.target.value); setTitleChars(e.target.value.length); }}
+                style={{ outline: errors.pinTitle ? '2px solid red' : '' }} />
               { titleChars > 0 ? 
               <span className="charsCounter" style={{ 
                 position: 'absolute',
@@ -253,11 +258,13 @@ export default function PinterestPostInput({ setDataForm, platform, errors }) {
             <div className="inputElements" style={{ position: 'relative' }}>
               <label>Pin Description</label>
               <p>Include a description of <b>100-500 characters</b> for your Pin, along with relevant hashtags. A detailed description helps Pinterest match your content with the right audience, amplifying its visibility and significance beyond just your host's current followers.</p>
+              {errors.text ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.text}</p> : '' }
               <textarea
                 name="text"
                 maxLength="500"
                 placeholder="What your Pin is about"
                 onChange={(e) => { setText(e.target.value); setDescChars(e.target.value.length); }}
+                style={{ outline: errors.text ? '2px solid red' : '' }}
               />
               { descChars > 0 ?
               <span className="charsCounter" style={{ 
@@ -279,7 +286,10 @@ export default function PinterestPostInput({ setDataForm, platform, errors }) {
             </div>
             <div className="inputElements">
               <label>Destination Link</label>
-              <input type="text" placeholder="Your link here" onChange={(e) => { setPinLink(e.target.value) }} />
+              {errors.pinLink ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.pinLink}</p> : '' }
+              <input type="text" placeholder="Your link here" 
+                onChange={(e) => { setPinLink(e.target.value) }} 
+                style={{ outline: errors.pinLink ? '2px solid red' : '' }} />
             </div>
             <div className="file-input-wrapper inputElements">
               <label>Media File</label>

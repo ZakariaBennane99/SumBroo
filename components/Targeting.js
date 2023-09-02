@@ -1,14 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
 import Select from 'react-select'
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 
 const capitalize = (string) => {
   return string.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 };
 
-const Targeting = ({ nichesAndTags }) => {
+const Targeting = ({ nichesAndTags, errors }) => {
 
   const options = nichesAndTags.map(el => {
     return {
@@ -22,7 +22,7 @@ const Targeting = ({ nichesAndTags }) => {
 
   const selectedStyle = {
     backgroundColor: '#8383a4',
-    outline: 'none',
+    outlin: errors.audience ? 'red' : 'none',
     color: 'white'
   }
 
@@ -68,8 +68,6 @@ const Targeting = ({ nichesAndTags }) => {
     </>);
   };
 
-  console.log(targetField, tags)
-
   return (<div className='requirementsDiv'>
       <div className='reqsTitle' onClick={toggleAccordion}>
           <div>
@@ -86,29 +84,36 @@ const Targeting = ({ nichesAndTags }) => {
               <li>Select an audience that closely aligns with both your account theme and the content of the post.</li>
           </ul>
           <div className='target-audience-wrapper'>
-              <Select
-                value={targetField}
-                onChange={handleFieldChange}
-                options={options}
-                theme={(theme) => ({
-                  ...theme,
-                  colors: {
+            {errors.niche ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.niche}</p> : '' }
+            <Select
+              value={targetField}
+              onChange={handleFieldChange}
+              options={options}
+              theme={(theme) => ({
+                ...theme,
+                colors: {
                   ...theme.colors,
-                    primary25: '#e8e8ee',  // color of the option when hovering
-                    primary: '#a4a4bb',  // color of the selected option
-                  },
-                })}
-                styles={{
-                  option: (provided, state) => ({
-                      ...provided,
-                      color: state.isSelected ? 'white' : '#1c1c57',
-                  }),
-                  singleValue: (provided) => {
-                      const color = '#1c1c57';
-                      return { ...provided, color };
-                  }
-                }}
-              />
+                  primary25: '#e8e8ee',  // color of the option when hovering
+                  primary: '#a4a4bb',  // color of the selected option
+                },
+              })}
+              styles={{
+                option: (provided, state) => ({
+                    ...provided,
+                    color: state.isSelected ? 'white' : '#1c1c57',
+                }),
+                singleValue: (provided) => {
+                    const color = '#1c1c57';
+                    return { ...provided, color };
+                },
+                control: (provided) => ({
+                  ...provided,
+                  borderColor: errors.niche ? 'red' : provided.borderColor, // If there's an error, set border color to red
+                  boxShadow: errors.niche ? '0 0 0 1px red' : provided.boxShadow, // If there's an error, set boxShadow to red
+                })
+              }}
+            />
+
           </div>
               { targetField ?
                 <div className='sub-fields-wrapper'>
