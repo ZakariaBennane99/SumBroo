@@ -117,6 +117,7 @@ const Targeting = ({ nichesAndTags, errors }) => {
           </div>
               { targetField ?
                 <div className='sub-fields-wrapper'>
+                  {errors.audience ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.audience}</p> : '' }
                   {renderTags()}
                 </div>
                : ""

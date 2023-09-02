@@ -255,10 +255,12 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
                 setDataForm={setPostFormData}
                 platform={targetPlatform} 
                 errors={pinterestPostErrors}
+                resetErrors={setPinterestPostErrors}
               />
             <Targeting 
                 nichesAndTags={niches}
                 errors={targetingErrors}
+                resetErrors={setTargetingErrors}
               />
             <button id='publish-btn' onClick={handlePostSubmit}>PUBLISH</button>
           </div>
