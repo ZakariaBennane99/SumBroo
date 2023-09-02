@@ -232,11 +232,13 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
                   setDataForm={setPostFormData}
                   platform={targetPlatform} 
                   errors={pinterestPostErrors}
+                  resetErrors={setPinterestPostErrors}
                 /> 
               <Targeting 
                   nichesAndTags={niches}
                   chosenNicheAndTags={setNicheAndTags}
                   errors={targetingErrors}
+                  resetErrors={setTargetingErrors}
                 />
               <button id='publish-btn' onClick={handlePostSubmit}>PUBLISH</button>
             </div>
@@ -260,6 +262,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
             <Targeting 
                 nichesAndTags={niches}
                 errors={targetingErrors}
+                chosenNicheAndTags={setNicheAndTags}
                 resetErrors={setTargetingErrors}
               />
             <button id='publish-btn' onClick={handlePostSubmit}>PUBLISH</button>

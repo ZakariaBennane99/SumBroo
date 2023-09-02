@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useRef, useEffect } from "react";
 
 
-export default function PinterestPostInput({ setDataForm, platform, errors }) {
+export default function PinterestPostInput({ setDataForm, platform, errors, resetErrors }) {
 
   const [titleChars, setTitleChars] = useState(0)  
   const [descChars, setDescChars] = useState(0)
@@ -107,6 +107,13 @@ export default function PinterestPostInput({ setDataForm, platform, errors }) {
 
   function imageValidation(file) {
 
+    resetErrors(prev => {
+      return {
+        ...prev,
+        imgUrl: null
+      }
+    })
+
     return new Promise((resolve, reject) => {
 
       let errors = []
@@ -149,6 +156,13 @@ export default function PinterestPostInput({ setDataForm, platform, errors }) {
 
 
   function videoValidation(file) {
+
+    resetErrors(prev => {
+      return {
+        ...prev,
+        videoUrl: null
+      }
+    })
 
     return new Promise((resolve, reject) => {
 
@@ -227,7 +241,12 @@ export default function PinterestPostInput({ setDataForm, platform, errors }) {
               <p><em>This helps you to easily identify and locate your post within Sumbroo, but it will not be published.</em></p>
               {errors.postTitle ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.postTitle}</p> : '' }
               <input type="text" placeholder="Enter post title" 
-                onChange={(e) => { setPostTitle(e.target.value) }}
+                onChange={(e) => { setPostTitle(e.target.value); resetErrors(prev => {
+                  return {
+                    ...prev,
+                    postTitle: null
+                  }
+                }); }}
                 style={{ outline: errors.postTitle ? '2px solid red' : '' }} />
             </div>
             <div className="inputElements" style={{ position: 'relative' }}>
@@ -235,7 +254,12 @@ export default function PinterestPostInput({ setDataForm, platform, errors }) {
               <p>Title should be <b>40-100 characters</b>. Keep it concise and clear, ensuring it's relevant to your content.</p>
               {errors.pinTitle ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.pinTitle}</p> : '' }
               <input type="text" maxLength='100' placeholder="Add your pin title" 
-                onChange={(e) => { setPinTitle(e.target.value); setTitleChars(e.target.value.length); }}
+                onChange={(e) => { setPinTitle(e.target.value); setTitleChars(e.target.value.length); resetErrors(prev => {
+                  return {
+                    ...prev,
+                    pinTitle: null
+                  }
+                }) }}
                 style={{ outline: errors.pinTitle ? '2px solid red' : '' }} />
               { titleChars > 0 ? 
               <span className="charsCounter" style={{ 
@@ -263,7 +287,12 @@ export default function PinterestPostInput({ setDataForm, platform, errors }) {
                 name="text"
                 maxLength="500"
                 placeholder="What your Pin is about"
-                onChange={(e) => { setText(e.target.value); setDescChars(e.target.value.length); }}
+                onChange={(e) => { setText(e.target.value); setDescChars(e.target.value.length); resetErrors(prev => {
+                  return {
+                    ...prev,
+                    text: null
+                  }
+                }) }}
                 style={{ outline: errors.text ? '2px solid red' : '' }}
               />
               { descChars > 0 ?
@@ -288,7 +317,12 @@ export default function PinterestPostInput({ setDataForm, platform, errors }) {
               <label>Destination Link</label>
               {errors.pinLink ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.pinLink}</p> : '' }
               <input type="text" placeholder="Your link here" 
-                onChange={(e) => { setPinLink(e.target.value) }} 
+                onChange={(e) => { setPinLink(e.target.value); resetErrors(prev => {
+                  return {
+                    ...prev,
+                    pinLink: null
+                  }
+                }) }} 
                 style={{ outline: errors.pinLink ? '2px solid red' : '' }} />
             </div>
             <div className="file-input-wrapper inputElements">
@@ -302,13 +336,42 @@ export default function PinterestPostInput({ setDataForm, platform, errors }) {
                 accept="image/*,video/*"
                 onChange={handleFileChange}
               />
-              { fileInfo.fileName.length > 0 ?
-                (<>{fileInfo.errors.length > 0 ? fileInfo.errors.map((err, e) =>
-                  <span className="file-upload-errors" key={e}>{err}</span>) : ''}
-                <div className="file-name-wrapper" style={{ backgroundColor: fileInfo.errors.length > 0 ? '#e00520' : '#00d605' }}>
-                  <p>{fileInfo.fileName}</p><img style={{ maxWidth: fileInfo.errors.length > 0 ? '3.5%' : '5%' }} src={fileInfo.errors.length > 0 ? '/wrong.svg' : '/correct.svg'} alt={fileInfo.errors.length > 0 ? 'wrong icon' : 'correct icon'} /></div></>)
-                : <span>No file chosen</span>
-              }
+              {fileInfo.fileName.length > 0 ? (
+                <>
+                  {
+                    // Check if there's any error to display from fileInfo.errors
+                    fileInfo.errors.length > 0 && (
+                      fileInfo.errors.map((err, e) => 
+                        <span className="file-upload-errors" key={e}>{err}</span>
+                      )
+                    )
+                  }
+                        
+                  {
+                    // Check if there's an error to display from errors.imgUrl
+                    errors.imgUrl && <span className="file-upload-errors">{errors.imgUrl}</span>
+                  }
+              
+                  {
+                    // Check if there's an error to display from errors.videoUrl
+                    errors.videoUrl && <span className="file-upload-errors">{errors.videoUrl}</span>
+                  }
+              
+                  <div 
+                    className="file-name-wrapper" 
+                    style={{ backgroundColor: fileInfo.errors.length > 0 || errors.imgUrl || errors.videoUrl ? '#e00520' : '#00d605' }}
+                  >
+                    <p>{fileInfo.fileName}</p>
+                    <img 
+                      style={{ maxWidth: fileInfo.errors.length > 0 || errors.imgUrl || errors.videoUrl ? '3.5%' : '5%' }} 
+                      src={fileInfo.errors.length > 0 || errors.imgUrl || errors.videoUrl ? '/wrong.svg' : '/correct.svg'} 
+                      alt={fileInfo.errors.length > 0 || errors.imgUrl || errors.videoUrl ? 'wrong icon' : 'correct icon'} 
+                    />
+                  </div>
+                </>
+              ) : (
+                <span>No file chosen</span>
+              )}
             </div>
           </form>
         </div>}

@@ -1,14 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import Select from 'react-select'
-import { useState } from "react";
+import Select from 'react-select';
+import { useState, useEffect } from "react";
 
 
 const capitalize = (string) => {
   return string.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 };
 
-const Targeting = ({ nichesAndTags, errors }) => {
+const Targeting = ({ nichesAndTags, errors, chosenNicheAndTags, resetErrors }) => {
 
   const options = nichesAndTags.map(el => {
     return {
@@ -19,6 +19,13 @@ const Targeting = ({ nichesAndTags, errors }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [targetField, setTargetField] = useState(null);
   const [tags, setTags] = useState([])
+
+  useEffect(() => {
+    chosenNicheAndTags({
+      niche: targetField, 
+      tags: tags
+    })
+  }, [targetField, tags]);
 
   const selectedStyle = {
     backgroundColor: '#8383a4',
@@ -31,11 +38,23 @@ const Targeting = ({ nichesAndTags, errors }) => {
   };
 
   function handleFieldChange(selectedOption) {
+    resetErrors(prev => {
+      return {
+        ...prev,
+        niche: null
+      }
+    })
     setTags([])
     setTargetField(selectedOption)
   }
 
   function handleTags(e) {
+    resetErrors(prev => {
+      return {
+        ...prev,
+        audience: null
+      }
+    })
     const tag = e.target.dataset.value
     const isInTags = tags.includes(tag)
     if (!isInTags) {
