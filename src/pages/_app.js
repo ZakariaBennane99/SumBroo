@@ -80,12 +80,12 @@ export default function MyApp({ Component, pageProps }) {
       <OneEightyRing width={70} height={70} color='rgb(28, 28, 87)' />
     </div> 
   }
-
+  
   return (
     <div id={( (isErr404 || onboarding || isBlog) || (all) ) 
       ? 'Er404-parent-section' 
     : 'parentWrapper' }>
-      <Header key={router.pathname} signedIn={true} width={windowWidth} currentPath={router.pathname} />
+      <Header key={router.pathname} signedIn={signedIn} width={windowWidth} currentPath={router.pathname} />
       {
         (notProtected || all) && !dash ? 
         <>

@@ -334,28 +334,36 @@ function Post({ post, windowWidth }) {
 
 export default Post;
 
-export async function getStaticPaths() {
+export async function getServerSideProps(context) {
 
-  const contentful = require('contentful');
+  const params = context.params;
 
-  const client = contentful.createClient({
-    space: process.env.CONTENTFUL_SPACE_ID,
-    accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
-  });
+  const jwt = require('jsonwebtoken');
 
-  const entries = await client.getEntries({ content_type: 'blogPost' });
-  
-  const paths = entries.items.map(item => ({
-    params: { slug: item.fields.slug } // Assuming you have a "slug" field in Contentful
-  }));
+  let signedIn = false;
+      
+  try {
 
-  return {
-    paths,
-    fallback: false
-  };
-}
+    const cookies = context.req.headers.cookie;
 
-export async function getStaticProps({ params }) {
+    const tokenCookie = cookies.split(';').find(c => c.trim().startsWith('token='));
+    
+    let tokenValue;
+    if (tokenCookie) {
+      tokenValue = tokenCookie.split('=')[1];
+    }
+    
+    const decoded = jwt.verify(tokenValue, process.env.USER_JWT_SECRET);
+    
+    if (decoded.type !== 'sessionToken') {
+        signedIn = false
+    }
+
+    signedIn = true;
+
+  } catch (err) {
+    signedIn = false
+  }
 
   const contentful = require('contentful');
 
@@ -376,7 +384,8 @@ export async function getStaticProps({ params }) {
       props: {
         post: entry,
         isBlog: true,
-        notProtected: true
+        notProtected: true,
+        signedIn: signedIn
       }
     };
   } else {

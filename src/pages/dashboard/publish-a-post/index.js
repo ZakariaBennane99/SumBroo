@@ -22,20 +22,54 @@ function allObjectsHaveSameValueForKey(arr, key) {
 
 const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
 
-
   const [selectedPlatform, setSelectedPlatform] = useState(null);
 
   // for the form data
   const [postFormData, setPostFormData] = useState(null)
-
   // for the target platforms
-  const [targetPlatform, setTargetPlatform] = useState()
+  const [targetPlatform, setTargetPlatform] = useState(null)
+  // this is for the selected niche and tags
+  const [nicheAndTags, setNicheAndTags] = useState(null)
+
+  // for the inputs errors
+  const [pinterestPostErrors, setPinterestPostErrors] = useState({
+    postTitle: null,
+    pinTitle: null, 
+    text: null,
+    pinLink: null,
+    imgUrl: null,
+    videoUrl: null
+  })
+  const [targetingErrors, setTargetingErrors] = useState(null)
 
   // submitting the post for backend validation
   // then a message to the user to either 
-  function handlePost() {
+  async function handlePostSubmit() {
 
+    if (targetPlatform === 'pinterest') {
+
+      const apiUrl = 'http://localhost:4050/api/handle-post-submit/pinterest'
+
+      try {
+        const res = await axios.post(apiUrl, {
+          name: name
+        }, {
+          withCredentials: true
+        })
+  
+        console.log('this is the server Data', res)
+  
+      } catch (error) {
+        setIsError(true)
+        console.error('Server error', error);
+      }
+
+    } 
+    // you can continue the if-else statement or use switch when adding more
+    // platforms
   }
+
+
 
   useEffect(() => {
     // Check if targetPlatforms is not empty, then set the first platform as selectedPlatform
@@ -101,7 +135,8 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
           <div className='farRightSectionHome'>
           <div className='postPreview' >
             <h2>Preview</h2>
-              {selectedPlatform && selectedPlatform === 'pinterest' && postFormData && (postFormData.imgUrl || postFormData.videoUrl || (postFormData.pinLink && postFormData.pinLink.length > 0) > 0 ||
+              {selectedPlatform && selectedPlatform === 'pinterest' && postFormData && (postFormData.imgUrl || postFormData.videoUrl || 
+              (postFormData.pinLink && postFormData.pinLink.length > 0) > 0 ||
               (postFormData.text && postFormData.text.length > 0) || (postFormData.pinTitle && postFormData.pinTitle.length > 0)) &&
               <PinterestPostPreview pinLink={postFormData.pinLink}
               pinTitle={postFormData.pinTitle} text={postFormData.text} 
@@ -119,11 +154,14 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
               <PinterestPostInput
                   setDataForm={setPostFormData}
                   platform={targetPlatform} 
+                  errors={pinterestPostErrors}
                 /> 
               <Targeting 
                   nichesAndTags={niches}
+                  chosenNicheAndTags={setNicheAndTags}
+                  errors={targetingErrors}
                 />
-              <button id='publish-btn'>PUBLISH</button>
+              <button id='publish-btn' onClick={handlePostSubmit}>PUBLISH</button>
             </div>
           </>
           :
@@ -139,11 +177,12 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
             <PinterestPostInput
                 setDataForm={setPostFormData}
                 platform={targetPlatform} 
+                errors={pinterestPostErrors}
               />
             <Targeting 
                 nichesAndTags={niches}
               />
-            <button id='publish-btn'>PUBLISH</button>
+            <button id='publish-btn' onClick={handlePostSubmit}>PUBLISH</button>
           </div>
           <div className='farRightSectionHome'>
           <div className='postPreview' >

@@ -53,6 +53,7 @@ const PostSchema = new Schema({
     postLink: String, // for published posts
     postId: String, // post ID from the platform API
     publishingDate: Date,
+    // UTC time
     // before the review, this represents the date at which 
     // user hit publish after the review this should be 
     // updated to the actual publishing date (in case of accepting the post)

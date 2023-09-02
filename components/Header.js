@@ -5,8 +5,6 @@ import SlideMenu from './SlideMenu';
 
 const Header = ({ signedIn, width, currentPath }) => {
 
-  console.log('signedIn', signedIn)
-
   const [isSubMenuOpen1, setIsSubMenuOpen1] = useState(false);
   const [isSubMenuOpen2, setIsSubMenuOpen2] = useState(false);
   const [isSignOutClicked, setIsSignOutClicked] = useState(false);
@@ -135,7 +133,7 @@ const Header = ({ signedIn, width, currentPath }) => {
 
       { shouldRenderMobileLinks() ? 
         <SlideMenu links={renderLinks(true)} /> :
-        <div className='desktop-menu'>
+        <div className='desktop-menu' style={{ width: signedIn ? '24%' : '21%' }}>
           { renderLinks(false) }
         </div>
       }

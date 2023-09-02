@@ -1,15 +1,13 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
-import Select from 'react-select';
 
 
-export default function PinterestPostInput({ setDataForm, platform }) {
+export default function PinterestPostInput({ setDataForm, platform, errors }) {
 
   const [titleChars, setTitleChars] = useState(0)  
   const [descChars, setDescChars] = useState(0)
 
   const [postTitle, setPostTitle] = useState("")
-  const [pinBoard, setPinBoard] = useState("")
   const [pinTitle, setPinTitle] = useState("")
   const [text, setText] = useState("");
   const [pinLink, setPinLink] = useState("")
@@ -204,32 +202,6 @@ export default function PinterestPostInput({ setDataForm, platform }) {
   }
 
 
-  const [targetMetrics, setTargetMetrics] = useState(null);
-
-  function handleSelectedBoard(selectedOption) {
-    setPinBoard(selectedOption)
-  }
-
-  const options = [
-    { value: 'test', label: 'Test' },
-    { value: 'mothers gifts', label: 'Mothers Gifts' },
-    { value: 'my people', label: 'My Family' },
-    { value: 'travels', label: 'Travels' }
-  ];
-
-  const customStyles = {
-    container: (provided) => ({
-      ...provided,
-      width: '100%',
-      marginTop: '10px',
-      fontFamily: 'Arial, Helvetica, sans-serif;'
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      color: state.isSelected ? 'white' : '#1c1c57',
-    })
-  };
-
   if (platform) {
     return (
       <div className='requirementsDiv'>
@@ -253,28 +225,6 @@ export default function PinterestPostInput({ setDataForm, platform }) {
               <label>Post Title</label>
               <p><em>This helps you to easily identify and locate your post within Sumbroo, but it will not be published.</em></p>
               <input type="text" placeholder="Enter post title" onChange={(e) => { setPostTitle(e.target.value) }} />
-            </div>
-            <div className="inputPinElement" style={{ position: 'relative' }}>
-              <label>Pin Board</label>
-                <p style={{ marginTop: '7px' }}>Please select <b>the most relevant board</b> to your pin content.</p>
-                <Select
-                  id="noBoxShadow"
-                  value={targetMetrics}
-                  onChange={handleSelectedBoard}
-                  options={options}
-                  getOptionLabel={(option) => option.label}
-                  getOptionValue={(option) => option.value}
-                  styles={ customStyles }
-                  theme={(theme) => ({
-                      ...theme,
-                      colors: {
-                      ...theme.colors,
-                        primary25: '#e8e8ee',  // color of the option when hovering
-                        primary: '#1c1c57',  // color of the selected option
-                      },
-                  })}
-                  placeholder='Select a board for your pin'
-                />
             </div>
             <div className="inputElements" style={{ position: 'relative' }}>
               <label>Pin Title</label>

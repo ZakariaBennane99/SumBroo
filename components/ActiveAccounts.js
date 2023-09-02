@@ -11,8 +11,6 @@ function capitalize(word) {
 
 const ActiveAccounts = ({ setPlatform, platforms }) => {
 
-    console.log('THE PLATFORMS', platforms)
-
     const router = useRouter();
 
     const [isOpen, setIsOpen] = useState(true);
@@ -41,7 +39,7 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
     return (<div className='activeAccountsDiv'>
         <div className='targetPlatformsTitle' onClick={toggleAccordion}>
             <div>
-                <h1>1/ Target Platform</h1>
+                <h1>1/ Select A Platform</h1>
             </div>
             <div>
                 <img src='/arrow.svg' style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)' }} />

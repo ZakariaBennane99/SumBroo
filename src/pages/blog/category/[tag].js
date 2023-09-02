@@ -90,27 +90,39 @@ function Blog({ posts }) {
 
 export default Blog;
 
-export async function getStaticPaths() {
 
-    const contentful = require('contentful');
+export async function getServerSideProps(context) {
+    
+    
+    const jwt = require('jsonwebtoken');
 
-    const client = contentful.createClient({
-        space: process.env.CONTENTFUL_SPACE_ID,
-        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN
-    });
 
-    const entries = await client.getEntries({ content_type: 'blogPost' }); // Replace 'tagContentType' with your actual Contentful content type for tags.
+    const params = context.params;
 
-    const tags = entries.items.map(entry => entry.metadata.tags[0].sys.id); // This assumes your tag has a field named 'name'.
-
-    const paths = tags.map(tag => ({
-        params: { tag: slugTag(tag) } // You're using the slugTag function to slugify the tag.
-    }));
-
-    return { paths, fallback: 'blocking' }; // Using 'blocking' as a fallback mode ensures a smooth user experience.
-}
-
-export async function getStaticProps({ params }) {
+    let signedIn = false;
+        
+    try {
+  
+      const cookies = context.req.headers.cookie;
+  
+      const tokenCookie = cookies.split(';').find(c => c.trim().startsWith('token='));
+      
+      let tokenValue;
+      if (tokenCookie) {
+        tokenValue = tokenCookie.split('=')[1];
+      }
+      
+      const decoded = jwt.verify(tokenValue, process.env.USER_JWT_SECRET);
+      
+      if (decoded.type !== 'sessionToken') {
+          signedIn = false
+      }
+  
+      signedIn = true;
+  
+    } catch (err) {
+      signedIn = false
+    }
 
     const contentful = require('contentful');
 
@@ -131,6 +143,7 @@ export async function getStaticProps({ params }) {
             posts: entries.items,
             isBlog: true,
             notProtected: true,
+            signedIn: signedIn
         }
     };
 }

@@ -122,11 +122,39 @@ const Landing = () => {
 
 export default Landing;
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+
+  const jwt = require('jsonwebtoken');
+
+  let signedIn = false;
+      
+  try {
+
+    const cookies = context.req.headers.cookie;
+
+    const tokenCookie = cookies.split(';').find(c => c.trim().startsWith('token='));
+    
+    let tokenValue;
+    if (tokenCookie) {
+      tokenValue = tokenCookie.split('=')[1];
+    }
+    
+    const decoded = jwt.verify(tokenValue, process.env.USER_JWT_SECRET);
+    
+    if (decoded.type !== 'sessionToken') {
+        signedIn = false
+    }
+
+    signedIn = true;
+
+  } catch (err) {
+    signedIn = false
+  }
 
   return {
     props: {
-      notProtected: true
+      notProtected: true,
+      signedIn: signedIn
     }
   };
 

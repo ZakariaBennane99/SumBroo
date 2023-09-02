@@ -30,6 +30,7 @@ const AccountSettingsComponent = () => {
   
   
     async function updateName() {
+
       setNameClicked(true)
 
       const apiUrl = 'http://localhost:4050/api/update-name'
@@ -40,7 +41,7 @@ const AccountSettingsComponent = () => {
         }, {
           withCredentials: true
         })
-        console.log(res)
+        
         if (res.status === 200) {
           setNameClicked(false)
           // alert user
