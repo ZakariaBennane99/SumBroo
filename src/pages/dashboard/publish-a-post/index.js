@@ -35,9 +35,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
     postTitle: null,
     pinTitle: null, 
     text: null,
-    pinLink: null,
-    imgUrl: null,
-    videoUrl: null
+    pinLink: null
   })
   const [targetingErrors, setTargetingErrors] = useState({
     niche: null,

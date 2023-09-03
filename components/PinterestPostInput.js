@@ -1,11 +1,17 @@
 import React from "react";
+import Modal from 'react-modal';
 import { useState, useRef, useEffect } from "react";
+import { v4 as uuidv4 } from 'uuid';
+import { Tadpole } from "react-svg-spinners";
 
 
 export default function PinterestPostInput({ setDataForm, platform, errors, resetErrors }) {
 
   const [titleChars, setTitleChars] = useState(0)  
   const [descChars, setDescChars] = useState(0)
+  const [isServerError, setIsServerError] = useState(false)
+
+  const [uploadIsProcessing, setUploadIsProcessing] = useState(false)
 
   const [postTitle, setPostTitle] = useState("")
   const [pinTitle, setPinTitle] = useState("")
@@ -50,10 +56,71 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
     setIsOpen(!isOpen);
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    submitPost();
-  }
+  const handleFileUploadInServer = async (file, platform) => {
+    try {
+      setUploadIsProcessing(true)
+      // Get the presigned URL
+      const response = await axios.post('http://localhost:4050/api/get-aws-preSignedUrl', {
+        platform: platform
+      }, {
+        withCredentials: true
+      });
+  
+      if (response.status !== 201) {
+        setIsServerError(true);
+        setUploadIsProcessing(false);
+        return
+      }
+  
+      const presignedUrl = response.data.url;
+  
+      // Define a function that first uploads to S3, and then sends the second request.
+      const sequentialRequests = async (file, platform) => {
+        const requestId = uuidv4(); // generate a unique identifier for the request
+    
+        // First, upload the file
+        await axios.put(presignedUrl, file, {
+            headers: {
+                'Content-Type': file.type,
+                'x-amz-meta-request-id': requestId,
+                'x-amz-meta-platform': platform
+            }
+        });
+    
+        // Now, set up the SSE
+        return new Promise((resolve, reject) => {
+            const sse = new EventSource(`/api/lambda-notification/${requestId}`);
+    
+            sse.onmessage = function(event) {
+              const result = JSON.parse(event.data);
+              setUploadIsProcessing(false);
+              setIsServerError(true);
+              sse.close();
+              resolve(result); // Resolve the promise with the result
+            };
+    
+            sse.onerror = function(error) {
+              console.error("SSE failed:", error);
+              setUploadIsProcessing(false);
+              setIsServerError(true);
+              sse.close();
+              reject(error); // Reject the promise in case of an error
+            };
+        });
+      };
+  
+      // Use Promise.all to wait for the sequential requests to complete
+      const results = await Promise.all([sequentialRequests(file)]);
+      setUploadIsProcessing(false);
+  
+      // Log and return success if everything is good
+      console.log('The results of the request', results);
+  
+    } catch (error) {
+      console.error('Error during requests:', error);
+      setIsServerError(true);
+    }
+  };
 
   const handleFileChange = async (e) => {
     
@@ -72,19 +139,18 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
     const file = files[0]
 
     const url = URL.createObjectURL(file);
-    const mediaObject = {
-      url: url,
-      type: file.type.startsWith('image/') ? 'image' : 'video'
-    };
 
     let errors = [];
     if (file.type.startsWith('image/')) {
-      errors = await imageValidation(file);
+      // here you start the process to validating
+      // the image in the AWS
+      const res = await handleFileUploadInServer(file, platform);
       if (errors.length === 0) {
         setImgUrl(url)
       }
     } else if (file.type.startsWith('video/')) {
-      errors = await videoValidation(file);
+      const res = await handleFileUploadInServer(file, platform);
+      // you can set the errors here
       if (errors.length === 0) {
         setVideoUrl(url)
       }
@@ -106,13 +172,6 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
   }
 
   function imageValidation(file) {
-
-    resetErrors(prev => {
-      return {
-        ...prev,
-        imgUrl: null
-      }
-    })
 
     return new Promise((resolve, reject) => {
 
@@ -156,13 +215,6 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
 
 
   function videoValidation(file) {
-
-    resetErrors(prev => {
-      return {
-        ...prev,
-        videoUrl: null
-      }
-    })
 
     return new Promise((resolve, reject) => {
 
@@ -217,6 +269,20 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
   }
 
 
+  const customStyles = {
+    content: {
+      width: '20%',
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      fontFamily: 'Ubuntu',
+    },
+  };
+
+
   if (platform) {
     return (
       <div className='requirementsDiv'>
@@ -235,7 +301,7 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
             <li>If all your files are not visible, on the file selection dialog box switch from <b>Custom Files</b> to <b>All Files</b>.</li>
             <li>The preview on the right provides a rough estimation of how your content will be displayed.</li>
           </ul>
-          <form className='publishForm' onSubmit={handleFormSubmit}>
+          <form className='publishForm'>
             <div className="inputElements">
               <label>Post Title</label>
               <p><em>This helps you to easily identify and locate your post within Sumbroo, but it will not be published.</em></p>
@@ -327,7 +393,14 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
             </div>
             <div className="file-input-wrapper inputElements">
               <label>Media File</label>
-              <button type="button" className="btn-file-input" onClick={handleFileClick}><img src="/upload.svg" alt="upload-icon" /> Upload File</button>
+              <button type="button" className="btn-file-input" onClick={handleFileClick}>
+                {
+                  uploadIsProcessing ? 
+                  ''
+                  :
+                  <><img src="/upload.svg" alt="upload-icon" /> Upload File </>
+                }
+              </button>
               <input
                 type="file"
                 name="media"
@@ -335,6 +408,7 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
                 style={{display: 'none'}}
                 accept="image/*,video/*"
                 onChange={handleFileChange}
+                disabled={uploadIsProcessing}
               />
               {fileInfo.fileName.length > 0 ? (
                 <>
@@ -346,26 +420,16 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
                       )
                     )
                   }
-                        
-                  {
-                    // Check if there's an error to display from errors.imgUrl
-                    errors.imgUrl && <span className="file-upload-errors">{errors.imgUrl}</span>
-                  }
-              
-                  {
-                    // Check if there's an error to display from errors.videoUrl
-                    errors.videoUrl && <span className="file-upload-errors">{errors.videoUrl}</span>
-                  }
               
                   <div 
                     className="file-name-wrapper" 
-                    style={{ backgroundColor: fileInfo.errors.length > 0 || errors.imgUrl || errors.videoUrl ? '#e00520' : '#00d605' }}
+                    style={{ backgroundColor: fileInfo.errors.length > 0 ? '#e00520' : '#00d605' }}
                   >
                     <p>{fileInfo.fileName}</p>
                     <img 
-                      style={{ maxWidth: fileInfo.errors.length > 0 || errors.imgUrl || errors.videoUrl ? '3.5%' : '5%' }} 
-                      src={fileInfo.errors.length > 0 || errors.imgUrl || errors.videoUrl ? '/wrong.svg' : '/correct.svg'} 
-                      alt={fileInfo.errors.length > 0 || errors.imgUrl || errors.videoUrl ? 'wrong icon' : 'correct icon'} 
+                      style={{ maxWidth: fileInfo.errors.length > 0 ? '3.5%' : '5%' }} 
+                      src={fileInfo.errors.length > 0 ? '/wrong.svg' : '/correct.svg'} 
+                      alt={fileInfo.errors.length > 0 ? 'wrong icon' : 'correct icon'} 
                     />
                   </div>
                 </>
@@ -375,6 +439,27 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
             </div>
           </form>
         </div>}
+        <Modal
+            isOpen={isServerError}
+            style={customStyles}
+            contentLabel="Example Modal"
+              >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+              <span onClick={() => location.reload()}
+                style={{ backgroundColor: '#1465e7', 
+                color: "white",
+                padding: '10px', 
+                cursor: 'pointer',
+                fontFamily: 'Ubuntu',
+                borderRadius: '3px',
+                fontSize: '1.1em',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                 }}>Try again</span>
+            </div>
+        </Modal>
       </div>
     );
   } else {
