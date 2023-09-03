@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import { useState, useRef, useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { Tadpole } from "react-svg-spinners";
+import axios from 'axios';
 
 
 export default function PinterestPostInput({ setDataForm, platform, errors, resetErrors }) {
@@ -60,9 +61,16 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
     try {
       setUploadIsProcessing(true)
       // Get the presigned URL
-      const response = await axios.post('http://localhost:4050/api/get-aws-preSignedUrl', {
-        platform: platform
-      }, {
+      const fileType = file.type;
+      const generateId = uuidv4();
+      const requestData = {
+        platform: platform, 
+        contentType: fileType,
+        requestId: generateId
+      };
+
+      console.log('THE REQUEST ID BEFORE SIGNING', requestData.requestId)
+      const response = await axios.post('http://localhost:4050/api/get-aws-preSignedUrl', requestData , {
         withCredentials: true
       });
   
@@ -73,22 +81,25 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
       }
   
       const presignedUrl = response.data.url;
+
+      console.log('The URL on the front-end', presignedUrl)
   
       // Define a function that first uploads to S3, and then sends the second request.
-      const sequentialRequests = async (file, platform) => {
-        const requestId = uuidv4(); // generate a unique identifier for the request
+      const sequentialRequests = async (file, platform, requestId) => {
+ 
     
+        console.log('THE REQUEST ID AFTER SIGNING'. requestId)
         // First, upload the file
         await axios.put(presignedUrl, file, {
-            headers: {
-                'Content-Type': file.type,
-                'x-amz-meta-request-id': requestId,
-                'x-amz-meta-platform': platform
-            }
+          headers: {
+            'Content-Type': fileType,
+            'x-amz-meta-request-id': requestData.requestId
+          }
         });
     
         // Now, set up the SSE
         return new Promise((resolve, reject) => {
+
             const sse = new EventSource(`/api/lambda-notification/${requestId}`);
     
             sse.onmessage = function(event) {
@@ -110,14 +121,14 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
       };
   
       // Use Promise.all to wait for the sequential requests to complete
-      const results = await Promise.all([sequentialRequests(file)]);
+      const results = await Promise.all([sequentialRequests(file, platform, requestData.requestId)]);
       setUploadIsProcessing(false);
   
       // Log and return success if everything is good
       console.log('The results of the request', results);
   
     } catch (error) {
-      console.error('Error during requests:', error);
+      console.error('Error during requests:', error.response ? error.response.data : error);
       setIsServerError(true);
     }
   };
@@ -144,6 +155,7 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
     if (file.type.startsWith('image/')) {
       // here you start the process to validating
       // the image in the AWS
+      console.log('This is the file', file)
       const res = await handleFileUploadInServer(file, platform);
       if (errors.length === 0) {
         setImgUrl(url)
@@ -393,10 +405,10 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
             </div>
             <div className="file-input-wrapper inputElements">
               <label>Media File</label>
-              <button type="button" className="btn-file-input" onClick={handleFileClick}>
+              <button type="button" className={`btn-file-input ${uploadIsProcessing ? 'loading' : ''}`} onClick={handleFileClick}>
                 {
                   uploadIsProcessing ? 
-                  ''
+                  <Tadpole width={14} color='white' />
                   :
                   <><img src="/upload.svg" alt="upload-icon" /> Upload File </>
                 }
