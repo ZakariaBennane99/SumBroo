@@ -69,7 +69,6 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
         requestId: generateId
       };
 
-      console.log('THE REQUEST ID BEFORE SIGNING', requestData.requestId)
       const response = await axios.post('http://localhost:4050/api/get-aws-preSignedUrl', requestData , {
         withCredentials: true
       });
@@ -81,26 +80,25 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
       }
   
       const presignedUrl = response.data.url;
-
-      console.log('The URL on the front-end', presignedUrl)
   
       // Define a function that first uploads to S3, and then sends the second request.
       const sequentialRequests = async (file, platform, requestId) => {
  
-    
-        console.log('THE REQUEST ID AFTER SIGNING'. requestId)
         // First, upload the file
         await axios.put(presignedUrl, file, {
           headers: {
             'Content-Type': fileType,
-            'x-amz-meta-request-id': requestData.requestId
+            Metadata: {
+              'x-amz-meta-request-id': requestId,
+              'x-amz-meta-platform': platform
+            }
           }
         });
     
         // Now, set up the SSE
         return new Promise((resolve, reject) => {
 
-            const sse = new EventSource(`/api/lambda-notification/${requestId}`);
+            const sse = new EventSource(`http://localhost:4050/api/lambda-notification/${requestId}`);
     
             sse.onmessage = function(event) {
               const result = JSON.parse(event.data);
