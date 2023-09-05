@@ -108,7 +108,6 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
                 return reject(new Error('Mismatched requestId'));
               }
               setUploadIsProcessing(false);
-              setIsServerError(true);
               sse.close();
               resolve(result); // Resolve the promise with the result
             };
