@@ -414,7 +414,7 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
             </div>
             <div className="file-input-wrapper inputElements">
               <label>Media File</label>
-              <button type="button" className={`btn-file-input ${uploadIsProcessing ? 'loading' : ''}`} onClick={handleFileClick}>
+              <button type="button" className={`btn-file-input ${uploadIsProcessing ? 'loadingMediaBtn' : ''}`} onClick={handleFileClick}>
                 {
                   uploadIsProcessing ? 
                   <Tadpole width={14} color='white' />
@@ -444,7 +444,7 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
               
                   <div 
                     className="file-name-wrapper" 
-                    style={{ backgroundColor: fileInfo.errors.length > 0 ? '#e00520' : '#00d605' }}
+                    style={{ backgroundColor: fileInfo.errors.length > 0 ? '#e00520' : '#00d605', marginTop: '7px' }}
                   >
                     <p>{fileInfo.fileName}</p>
                     <img 

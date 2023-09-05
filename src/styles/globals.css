@@ -801,10 +801,16 @@ a {
     cursor: auto;
 }
 
+.rightSectionHome .publishBodyContainer .file-input-wrapper .btn-file-input.loadingMediaBtn {
+    background: #8383b5;
+    cursor: auto;
+}
+
 .payment-container .button.loading:hover,
 .password-container .button.loading:hover,
 .paymentContainer div .button.loading:hover,
-.loginForm .button.loading {
+.loginForm .button.loading:hover, 
+.file-input-wrapper button.loading:hover {
     background: #73739a;
 }
 
