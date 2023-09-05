@@ -102,6 +102,11 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
     
             sse.onmessage = function(event) {
               const result = JSON.parse(event.data);
+              if (result.requestId !== requestId) {
+                console.error("Mismatched requestId:", result.requestId, "expected:", requestId);
+                sse.close();
+                return reject(new Error('Mismatched requestId'));
+            }
               setUploadIsProcessing(false);
               setIsServerError(true);
               sse.close();
