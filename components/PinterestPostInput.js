@@ -106,7 +106,7 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
                 console.error("Mismatched requestId:", result.requestId, "expected:", requestId);
                 sse.close();
                 return reject(new Error('Mismatched requestId'));
-            }
+              }
               setUploadIsProcessing(false);
               setIsServerError(true);
               sse.close();
@@ -129,6 +129,7 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
   
       // Log and return success if everything is good
       console.log('The results of the request', results);
+      return results[0]
   
     } catch (error) {
       console.error('Error during requests:', error.response ? error.response.data : error);
@@ -154,19 +155,18 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
 
     const url = URL.createObjectURL(file);
 
-    let errors = [];
     if (file.type.startsWith('image/')) {
       // here you start the process to validating
       // the image in the AWS
       console.log('This is the file', file)
       const res = await handleFileUploadInServer(file, platform);
-      if (errors.length === 0) {
+      if (res.isValid) {
         setImgUrl(url)
       }
     } else if (file.type.startsWith('video/')) {
       const res = await handleFileUploadInServer(file, platform);
       // you can set the errors here
-      if (errors.length === 0) {
+      if (res.isValid) {
         setVideoUrl(url)
       }
     }

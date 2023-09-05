@@ -183,7 +183,7 @@ const PinterestPostPreview = ({ pinTitle, pinLink, text, imgUrl, videoUrl }) => 
                 <p className='pinDesc'>{parseText(text)} | 📌 by <span className='hashtag' onClick={ () => {window.open(`https://www.pinterest.com/search/pins/?q=${userName}`, '_blank')} }>#{userName}</span></p>
                 <div className='pinnerInfo'>
                     <div>
-                        <img src='/sm/pin.svg' />
+                        <img src='/sm/pinterest.svg' />
                         <div>
                             <p>Nayla's List</p>
                             <p>23.2K followers</p>
@@ -205,7 +205,7 @@ const PinterestPostPreview = ({ pinTitle, pinLink, text, imgUrl, videoUrl }) => 
                     <span><img src='/pinterest/love.svg' /></span>
                 </div>
                 <div>
-                    <img src='/sm/pin.svg' />
+                    <img src='/sm/pinterest.svg' />
                     <div>Add a comment</div>
                 </div>
             </div>
