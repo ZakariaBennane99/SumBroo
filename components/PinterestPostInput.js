@@ -158,7 +158,6 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
     if (file.type.startsWith('image/')) {
       // here you start the process to validating
       // the image in the AWS
-      console.log('This is the file', file)
       const res = await handleFileUploadInServer(file, platform);
       if (res.isValid) {
         setImgUrl(url)
