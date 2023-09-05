@@ -154,19 +154,27 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
 
     const url = URL.createObjectURL(file);
 
+    let errors
     if (file.type.startsWith('image/')) {
       // here you start the process to validating
-      // the image in the AWS
       const res = await handleFileUploadInServer(file, platform);
-      if (res.isValid) {
-        setImgUrl(url)
-      }
+      if (res) {
+        if (res.isValid) {
+          setImgUrl(url)
+        } else {
+          errors = res.errors;
+        }
+      } 
     } else if (file.type.startsWith('video/')) {
       const res = await handleFileUploadInServer(file, platform);
       // you can set the errors here
-      if (res.isValid) {
-        setVideoUrl(url)
-      }
+      if (res) {
+        if (res.isValid) {
+          setImgUrl(url)
+        } else {
+          errors = res.errors;
+        }
+      } 
     }
 
     const fileInfo = { fileName: file.name, errors: errors };
@@ -423,7 +431,7 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
                 onChange={handleFileChange}
                 disabled={uploadIsProcessing}
               />
-              {fileInfo.fileName.length > 0 ? (
+              {fileInfo.fileName.length > 0 && !uploadIsProcessing ? (
                 <>
                   {
                     // Check if there's any error to display from fileInfo.errors
@@ -446,9 +454,9 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
                     />
                   </div>
                 </>
-              ) : (
+              ) : !uploadIsProcessing ? (
                 <span>No file chosen</span>
-              )}
+              ) : '' } 
             </div>
           </form>
         </div>}
