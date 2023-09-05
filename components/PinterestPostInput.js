@@ -154,7 +154,7 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
 
     const url = URL.createObjectURL(file);
 
-    let errors
+    let errors = []
     if (file.type.startsWith('image/')) {
       // here you start the process to validating
       const res = await handleFileUploadInServer(file, platform);
