@@ -154,27 +154,20 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
 
     const url = URL.createObjectURL(file);
 
-    let errors = []
+    let errors;
     if (file.type.startsWith('image/')) {
       // here you start the process to validating
-      const res = await imageValidation(file);
-      if (res) {
-        if (res.isValid) {
-          setImgUrl(url)
-        } else {
-          errors = res.errors;
-        }
-      } 
+      const err = await imageValidation(file);
+      errors = err;
+      if (err.length !== 0) {
+        setImgUrl(url)
+      }
     } else if (file.type.startsWith('video/')) {
-      const res = await videoValidation(file);
-      // you can set the errors here
-      if (res) {
-        if (res.isValid) {
-          setImgUrl(url)
-        } else {
-          errors = res.errors;
-        }
-      } 
+      const err = await videoValidation(file);
+      errors = err;
+      if (err.length !== 0) {
+        setVideoUrl(file)
+      }
     }
 
     const fileInfo = { fileName: file.name, errors: errors };
