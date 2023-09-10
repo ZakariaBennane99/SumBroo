@@ -8,7 +8,6 @@ import PinterestPostPreview from "../../../../components/PinterestPostPreview";
 import Modal from 'react-modal';
 import Link from 'next/link';
 import PinterestPostInput from "../../../../components/PinterestPostInput";
-import validator from 'validator';
 
 
 
@@ -30,86 +29,41 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
   // this is for the selected niche and tags
   const [nicheAndTags, setNicheAndTags] = useState(null)
 
-  // for the inputs errors
-  const [pinterestPostErrors, setPinterestPostErrors] = useState({
-    postTitle: null,
-    pinTitle: null, 
-    text: null,
-    pinLink: null
-  })
+  const [validatedNicheAndTags, setValidatedNicheAndTags] = useState(null) 
+
   const [targetingErrors, setTargetingErrors] = useState({
     niche: null,
     audience: null
   })
 
-  function validatePinterestPostData() {
-    const errors = {
-        postTitle: null,
-        pinTitle: null, 
-        text: null,
-        pinLink: null,
-        imgUrl: null,
-        videoUrl: null
-    };
-
-    // Validate postTitle
-    if (!postFormData.postTitle) {
-        errors.postTitle = "Post title is required";
-    }
-
-    // Validate pinTitle
-    if (!postFormData.pinTitle) {
-        errors.pinTitle = "Pin title is required";
-    } else if (postFormData.pinTitle.length < 40) {
-        errors.pinTitle = "Pin title should be at least 40 characters";
-    }
-
-    // Validate text
-    if (!postFormData.text) {
-        errors.text = "Text is required";
-    } else if (postFormData.text.length < 100) {
-        errors.text = "Text should be at least 100 characters";
-    }
-
-    // Validate pinLink
-    if (!postFormData.pinLink) {
-        errors.pinLink = "Pin link is required";
-    } else if (!validator.isURL(pinLink, { require_protocol: false })) {
-      errors.pinLink = "Please provide a valid link";
-    }
-
-    // Update pinterestPostErrors state
-    setPinterestPostErrors(errors);
-
-    // Check if there are any errors
-    return !Object.values(errors).some(error => error !== null);
-  }
-
   // Validate niche and tags
   function validateNicheAndTags() {
+
     const errors = {
       niche: null,
       audience: null
     };
+
     const { niche, audience } = nicheAndTags;
 
     if (!niches.some(n => n.niche === niche)) {
-        errors.niche = "Invalid niche selected";
+      errors.niche = "Invalid niche selected";
     }
   
     if (audience.length < 3) {
-        errors.audience = "At least 3 tags should be selected";
+      errors.audience = "At least 3 tags should be selected";
     } else {
-        const selectedNiche = niches.find(n => n.niche === niche);
-        if (!audience.every(tag => selectedNiche.audience.includes(tag))) {
-            errors.audience = "Some selected tags are invalid";
-        }
+      const selectedNiche = niches.find(n => n.niche === niche);
+      if (!audience.every(tag => selectedNiche.audience.includes(tag))) {
+        errors.audience = "Some selected tags are invalid";
+      }
     }
   
     // Update targetingErrors state
     setTargetingErrors(errors);
   
     return !Object.values(errors).some(error => error);
+
   }
 
   // submitting the post for backend validation
@@ -118,26 +72,11 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
 
     if (targetPlatform === 'pinterest') {
 
-      const isPinterestPostValid = validatePinterestPostData();
       const isNicheAndTagsValid = validateNicheAndTags();
 
-      if (isPinterestPostValid && isNicheAndTagsValid) {
+      if (isNicheAndTagsValid) {
 
-        const apiUrl = 'http://localhost:4050/api/handle-post-submit/pinterest'
-
-        try {
-          const res = await axios.post(apiUrl, {
-            name: name
-          }, {
-            withCredentials: true
-          })
-    
-          console.log('this is the server Data', res)
-    
-        } catch (error) {
-          setIsError(true)
-          console.error('Server error', error);
-        }
+        setValidatedNicheAndTags(nicheAndTags)
 
       }
 
@@ -229,8 +168,8 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
               <PinterestPostInput
                   setDataForm={setPostFormData}
                   platform={targetPlatform} 
-                  errors={pinterestPostErrors}
-                  resetErrors={setPinterestPostErrors}
+                  nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
+                  nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
                 /> 
               <Targeting 
                   nichesAndTags={niches}

@@ -4,9 +4,10 @@ import { useState, useRef, useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { Tadpole } from "react-svg-spinners";
 import axios from 'axios';
+import validator from 'validator';
 
 
-export default function PinterestPostInput({ setDataForm, platform, errors, resetErrors }) {
+export default function PinterestPostInput({ setDataForm, platform, nicheAndTags, nicheAndTagsErrors }) {
 
   const [titleChars, setTitleChars] = useState(0)  
   const [descChars, setDescChars] = useState(0)
@@ -16,10 +17,97 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
 
   const [postTitle, setPostTitle] = useState("")
   const [pinTitle, setPinTitle] = useState("")
-  const [text, setText] = useState("");
+  const [text, setText] = useState("")
   const [pinLink, setPinLink] = useState("")
   const [imgUrl, setImgUrl] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
+
+  // for the inputs errors
+  const [pinterestPostErrors, setPinterestPostErrors] = useState({
+    postTitle: null,
+    pinTitle: null, 
+    text: null,
+    pinLink: null
+  })
+
+  async function handlePublishRequest() {
+
+    const apiUrl = 'http://localhost:4050/api/handle-post-submit/pinterest'
+
+    try {
+      // here you send the data
+      // the nicheAndTags and the content data above
+      const res = await axios.post(apiUrl, {
+        postTitle: postTitle,
+        pinTitle: pinTitle,
+        text: text,
+        pinLink: pinLink,
+        image: imgUrl,
+        video: videoUrl,
+        targeting: nicheAndTags
+      }, {
+        withCredentials: true
+      })
+
+      // here we will set the 
+
+      console.log(res)
+
+    } catch (error) {
+      // isServerError(true)
+      console.error('Server error', error);
+    }
+
+  }
+
+  useEffect(() => {
+
+    if (nicheAndTags) {
+
+      const errors = {
+        postTitle: null,
+        pinTitle: null, 
+        text: null,
+        pinLink: null
+      };
+  
+      // Validate postTitle
+      if (postTitle.length === 0) {
+        errors.postTitle = "Post title is required.";
+      }
+  
+      // Validate pinTitle
+      if (pinTitle.length === 0) {
+        errors.pinTitle = "Pin title is required.";
+      } else if (pinTitle.length < 40) {
+        errors.pinTitle = "Pin title should be at least 40 characters.";
+      }
+  
+      // Validate text
+      if (text.length === 0) {
+        errors.text = "Text is required.";
+      } else if (text.length < 100) {
+        errors.text = "Text should be at least 100 characters.";
+      }
+  
+      // Validate pinLink
+      if (pinLink.length === 0) {
+        errors.pinLink = "Pin link is required.";
+      } else if (!validator.isURL(pinLink, { require_protocol: false })) {
+        errors.pinLink = "Please provide a valid link.";
+      }
+  
+      // Update pinterestPostErrors state
+      setPinterestPostErrors(errors);
+
+      if (!Object.values(errors).some(error => error)) {
+        // here we will send the request to the backend
+        handlePublishRequest()
+      }
+
+    }
+
+  }, [nicheAndTags])
 
   useEffect(() => {
     setDataForm({
@@ -319,28 +407,28 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
             <div className="inputElements">
               <label>Post Title</label>
               <p><em>This helps you to easily identify and locate your post within Sumbroo, but it will not be published.</em></p>
-              {errors.postTitle ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.postTitle}</p> : '' }
+              {pinterestPostErrors.postTitle ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{pinterestPostErrors.postTitle}</p> : '' }
               <input type="text" placeholder="Enter post title" 
-                onChange={(e) => { setPostTitle(e.target.value); resetErrors(prev => {
+                onChange={(e) => { setPostTitle(e.target.value); setPinterestPostErrors(prev => {
                   return {
                     ...prev,
                     postTitle: null
                   }
                 }); }}
-                style={{ outline: errors.postTitle ? '2px solid red' : '' }} />
+                style={{ outline: pinterestPostErrors.postTitle ? '2px solid red' : '' }} />
             </div>
             <div className="inputElements" style={{ position: 'relative' }}>
               <label>Pin Title</label>
               <p>Title should be <b>40-100 characters</b>. Keep it concise and clear, ensuring it's relevant to your content.</p>
-              {errors.pinTitle ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.pinTitle}</p> : '' }
+              {pinterestPostErrors.pinTitle ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{pinterestPostErrors.pinTitle}</p> : '' }
               <input type="text" maxLength='100' placeholder="Add your pin title" 
-                onChange={(e) => { setPinTitle(e.target.value); setTitleChars(e.target.value.length); resetErrors(prev => {
+                onChange={(e) => { setPinTitle(e.target.value); setTitleChars(e.target.value.length); setPinterestPostErrors(prev => {
                   return {
                     ...prev,
                     pinTitle: null
                   }
                 }) }}
-                style={{ outline: errors.pinTitle ? '2px solid red' : '' }} />
+                style={{ outline: pinterestPostErrors.pinTitle ? '2px solid red' : '' }} />
               { titleChars > 0 ? 
               <span className="charsCounter" style={{ 
                 position: 'absolute',
@@ -362,18 +450,18 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
             <div className="inputElements" style={{ position: 'relative' }}>
               <label>Pin Description</label>
               <p>Include a description of <b>100-500 characters</b> for your Pin, along with relevant hashtags. A detailed description helps Pinterest match your content with the right audience, amplifying its visibility and significance beyond just your host's current followers.</p>
-              {errors.text ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.text}</p> : '' }
+              {pinterestPostErrors.text ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{pinterestPostErrors.text}</p> : '' }
               <textarea
                 name="text"
                 maxLength="500"
                 placeholder="What your Pin is about"
-                onChange={(e) => { setText(e.target.value); setDescChars(e.target.value.length); resetErrors(prev => {
+                onChange={(e) => { setText(e.target.value); setDescChars(e.target.value.length); setPinterestPostErrors(prev => {
                   return {
                     ...prev,
                     text: null
                   }
                 }) }}
-                style={{ outline: errors.text ? '2px solid red' : '' }}
+                style={{ outline: pinterestPostErrors.text ? '2px solid red' : '' }}
               />
               { descChars > 0 ?
               <span className="charsCounter" style={{ 
@@ -395,15 +483,15 @@ export default function PinterestPostInput({ setDataForm, platform, errors, rese
             </div>
             <div className="inputElements">
               <label>Destination Link</label>
-              {errors.pinLink ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.pinLink}</p> : '' }
+              {pinterestPostErrors.pinLink ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{pinterestPostErrors.pinLink}</p> : '' }
               <input type="text" placeholder="Your link here" 
-                onChange={(e) => { setPinLink(e.target.value); resetErrors(prev => {
+                onChange={(e) => { setPinLink(e.target.value); setPinterestPostErrors(prev => {
                   return {
                     ...prev,
                     pinLink: null
                   }
                 }) }} 
-                style={{ outline: errors.pinLink ? '2px solid red' : '' }} />
+                style={{ outline: pinterestPostErrors.pinLink ? '2px solid red' : '' }} />
             </div>
             <div className="file-input-wrapper inputElements">
               <label>Media File</label>
