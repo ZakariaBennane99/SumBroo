@@ -53,20 +53,18 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
     }
   
     if (audience.length < 4) {
-      errors.audience = "At least 4 tags should be selected";
+      errors.audience = "At least 4 tags should be selected.";
     } else {
       const selectedNiche = niches.find(n => n.niche === niche);
       if (!audience.every(tag => selectedNiche.audience.includes(tag))) {
-        errors.audience = "Some selected tags are invalid";
+        errors.audience = "Some selected tags are invalid.";
       }
     }
   
     // Update targetingErrors state
     setTargetingErrors(errors);
   
-    const isValid = !Object.values(errors).some(error => error);
-    console.log('the isValid', isValid)
-    return isValid
+    return !Object.values(errors).some(error => error);
 
   }
 

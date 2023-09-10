@@ -112,11 +112,11 @@ const Targeting = ({ nichesAndTags, errors, chosenNicheAndTags, resetErrors, pla
             <img src='/arrow.svg' style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)' }} />
         </div>
     </div>
-    {isOpen && <div className='targetingBodyContainer'>
+      {isOpen && <div className='targetingBodyContainer'>
         <ul>
-            <li>After selecting the field, you can refine your audience selection based on specific interests. A range of tags or subfields will appear, enabling you to target more precisely.</li>
-            <li>Each post permits targeting of one specific audience segment.</li>
-            <li>Select an audience that closely aligns with both your account theme and the content of the post.</li>
+          <li>After selecting the field, you can refine your audience selection based on specific interests. A range of tags or subfields will appear, enabling you to target more precisely.</li>
+          <li>Each post permits targeting of one specific audience segment.</li>
+          <li>Select an audience that closely aligns with both your account theme and the content of the post.</li>
         </ul>
         <div className='target-audience-wrapper'>
           {errors.niche ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.niche}</p> : '' }
@@ -153,21 +153,22 @@ const Targeting = ({ nichesAndTags, errors, chosenNicheAndTags, resetErrors, pla
           {
             targetField ? (
               <>
+                <div className="sub-fields-wrapper">
+                  {renderTags()}
+                </div>
                 {errors.audience ? (
                   <p
                     style={{
-                      fontSize: '.7em',
+                      fontSize: '.8em',
                       marginBottom: '10px',
                       marginTop: '0px',
+                      marginLeft: '10px',
                       color: 'red',
                     }}
                   >
                     {errors.audience}
                   </p>
                 ) : null}
-                <div className="sub-fields-wrapper">
-                  {renderTags()}
-                </div>
               </>
             ) : null
           }

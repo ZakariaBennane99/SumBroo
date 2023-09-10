@@ -33,57 +33,48 @@ export default function PinterestPostInput({ setDataForm,
     pinLink: null
   })
 
-  async function getBlobStream(blobUrl) {
+  async function getBlob(blobUrl) {
     try {
-      // Step 1: Fetch the blob from the URL
       const response = await fetch(blobUrl);
-      
-      // Step 2: Get the blob object
       const blob = await response.blob();
-      
-      // Step 3: Create a file stream using the Blob object
-      const stream = blob.stream();
-      
-      return stream;
+      return blob;
     } catch (error) {
       console.error('Error fetching the blob:', error);
       throw error;
     }
   }
-
+  
   async function handlePublishRequest() {
-
-    const apiUrl = 'http://localhost:4050/api/handle-post-submit/pinterest'
-
+    
+    const apiUrl = 'http://localhost:4050/api/handle-post-submit/pinterest';
+  
     try {
-      // here you send the data
-      // the nicheAndTags and the content data above
-      const res = await axios.post(apiUrl, {
-        postTitle: postTitle,
-        pinTitle: pinTitle,
-        text: text,
-        pinLink: pinLink,
-        image: await getBlobStream(imgUrl),
-        video: await getBlobStream(videoUrl),
-        targeting: nicheAndTags
-      }, {
-        withCredentials: true
-      })
-
-      // here we will set the 
-
-      console.log(res)
-
+      const formData = new FormData();
+      formData.append('postTitle', postTitle);
+      formData.append('pinTitle', pinTitle);
+      formData.append('text', text);
+      formData.append('pinLink', pinLink);
+      if (imgUrl) formData.append('image', await getBlob(imgUrl));
+      if (videoUrl) formData.append('video', await getBlob(videoUrl));
+      formData.append('targeting', JSON.stringify(nicheAndTags));
+  
+      const res = await axios.post(apiUrl, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        withCredentials: true,
+      });
+  
+      console.log(res);
     } catch (error) {
-      // isServerError(true)
       console.error('Server error', error);
     }
 
   }
+  
 
   useEffect(() => {
 
-    console.log('THE NICHEAND TAGSES', nicheAndTags)
     if (nicheAndTags) {
 
       const errors = {
@@ -122,6 +113,7 @@ export default function PinterestPostInput({ setDataForm,
       // Update pinterestPostErrors state
       setPinterestPostErrors(errors);
 
+      console.log('')
       if (!Object.values(errors).some(error => error) && noTargetingErrs) {
         // here we will send the request to the backend
         handlePublishRequest()
@@ -429,7 +421,6 @@ export default function PinterestPostInput({ setDataForm,
             <div className="inputElements">
               <label>Post Title</label>
               <p><em>This helps you to easily identify and locate your post within Sumbroo, but it will not be published.</em></p>
-              {pinterestPostErrors.postTitle ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{pinterestPostErrors.postTitle}</p> : '' }
               <input type="text" placeholder="Enter post title" 
                 onChange={(e) => { setPostTitle(e.target.value); setPinterestPostErrors(prev => {
                   return {
@@ -438,11 +429,11 @@ export default function PinterestPostInput({ setDataForm,
                   }
                 }); }}
                 style={{ outline: pinterestPostErrors.postTitle ? '2px solid red' : '' }} />
+              {pinterestPostErrors.postTitle ? <p style={{ fontSize: '.8em', marginBottom: '0px', marginTop: '10px', color: 'red' }}>{pinterestPostErrors.postTitle}</p> : '' }  
             </div>
             <div className="inputElements" style={{ position: 'relative' }}>
               <label>Pin Title</label>
               <p>Title should be <b>40-100 characters</b>. Keep it concise and clear, ensuring it's relevant to your content.</p>
-              {pinterestPostErrors.pinTitle ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{pinterestPostErrors.pinTitle}</p> : '' }
               <input type="text" maxLength='100' placeholder="Add your pin title" 
                 onChange={(e) => { setPinTitle(e.target.value); setTitleChars(e.target.value.length); setPinterestPostErrors(prev => {
                   return {
@@ -468,11 +459,11 @@ export default function PinterestPostInput({ setDataForm,
                 color: 'white'
                  }}>{100 - titleChars}</span> : ''
               }   
+              {pinterestPostErrors.pinTitle ? <p style={{ fontSize: '.8em', marginBottom: '0px', marginTop: '10px', color: 'red' }}>{pinterestPostErrors.pinTitle}</p> : '' }
             </div>
             <div className="inputElements" style={{ position: 'relative' }}>
               <label>Pin Description</label>
               <p>Include a description of <b>100-500 characters</b> for your Pin, along with relevant hashtags. A detailed description helps Pinterest match your content with the right audience, amplifying its visibility and significance beyond just your host's current followers.</p>
-              {pinterestPostErrors.text ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{pinterestPostErrors.text}</p> : '' }
               <textarea
                 name="text"
                 maxLength="500"
@@ -502,10 +493,10 @@ export default function PinterestPostInput({ setDataForm,
                 color: 'white'
                  }}>{500 - descChars}</span> : ''
               }   
+              {pinterestPostErrors.text ? <p style={{ fontSize: '.8em', marginBottom: '0px', marginTop: '10px', color: 'red' }}>{pinterestPostErrors.text}</p> : '' }
             </div>
             <div className="inputElements">
               <label>Destination Link</label>
-              {pinterestPostErrors.pinLink ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{pinterestPostErrors.pinLink}</p> : '' }
               <input type="text" placeholder="Your link here" 
                 onChange={(e) => { setPinLink(e.target.value); setPinterestPostErrors(prev => {
                   return {
@@ -514,6 +505,7 @@ export default function PinterestPostInput({ setDataForm,
                   }
                 }) }} 
                 style={{ outline: pinterestPostErrors.pinLink ? '2px solid red' : '' }} />
+              {pinterestPostErrors.pinLink ? <p style={{ fontSize: '.8em', marginBottom: '0px', marginTop: '10px', color: 'red' }}>{pinterestPostErrors.pinLink}</p> : '' }
             </div>
             <div className="file-input-wrapper inputElements">
               <label>Media File</label>
