@@ -31,6 +31,8 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
 
   const [validatedNicheAndTags, setValidatedNicheAndTags] = useState(null) 
 
+  const [isTargetingErr, setIsTargetingErr] = useState(false)
+
   const [targetingErrors, setTargetingErrors] = useState({
     niche: null,
     audience: null
@@ -44,14 +46,14 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
       audience: null
     };
 
-    const { niche, audience } = nicheAndTags;
+    const { niche, tags: audience } = nicheAndTags;
 
-    if (!niches.some(n => n.niche === niche)) {
+    if (!niches.some(n => n.niche === niche.value)) {
       errors.niche = "Invalid niche selected";
     }
   
-    if (audience.length < 3) {
-      errors.audience = "At least 3 tags should be selected";
+    if (audience.length < 4) {
+      errors.audience = "At least 4 tags should be selected";
     } else {
       const selectedNiche = niches.find(n => n.niche === niche);
       if (!audience.every(tag => selectedNiche.audience.includes(tag))) {
@@ -62,7 +64,9 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
     // Update targetingErrors state
     setTargetingErrors(errors);
   
-    return !Object.values(errors).some(error => error);
+    const isValid = !Object.values(errors).some(error => error);
+    console.log('the isValid', isValid)
+    return isValid
 
   }
 
@@ -74,11 +78,8 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
 
       const isNicheAndTagsValid = validateNicheAndTags();
 
-      if (isNicheAndTagsValid) {
-
-        setValidatedNicheAndTags(nicheAndTags)
-
-      }
+      setIsTargetingErr(isNicheAndTagsValid)
+      setValidatedNicheAndTags(nicheAndTags)
 
     } 
     // you can continue the if-else statement or use switch when adding more
@@ -170,12 +171,14 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
                   platform={targetPlatform} 
                   nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
                   nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
+                  noTargetingErrs={isTargetingErr}
                 /> 
               <Targeting 
                   nichesAndTags={niches}
                   chosenNicheAndTags={setNicheAndTags}
                   errors={targetingErrors}
                   resetErrors={setTargetingErrors}
+                  platform={targetPlatform} 
                 />
               <button id='publish-btn' onClick={handlePostSubmit}>PUBLISH</button>
             </div>
@@ -191,16 +194,18 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
                 platform={targetPlatform}
               />
             <PinterestPostInput
-                setDataForm={setPostFormData}
-                platform={targetPlatform} 
-                errors={pinterestPostErrors}
-                resetErrors={setPinterestPostErrors}
+                 setDataForm={setPostFormData}
+                 platform={targetPlatform} 
+                 nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
+                 nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
+                 noTargetingErrs={isTargetingErr}
               />
             <Targeting 
                 nichesAndTags={niches}
                 errors={targetingErrors}
                 chosenNicheAndTags={setNicheAndTags}
                 resetErrors={setTargetingErrors}
+                platform={targetPlatform} 
               />
             <button id='publish-btn' onClick={handlePostSubmit}>PUBLISH</button>
           </div>

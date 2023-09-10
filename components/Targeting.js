@@ -8,7 +8,7 @@ const capitalize = (string) => {
   return string.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 };
 
-const Targeting = ({ nichesAndTags, errors, chosenNicheAndTags, resetErrors }) => {
+const Targeting = ({ nichesAndTags, errors, chosenNicheAndTags, resetErrors, platform }) => {
 
   const options = nichesAndTags.map(el => {
     return {
@@ -87,62 +87,105 @@ const Targeting = ({ nichesAndTags, errors, chosenNicheAndTags, resetErrors }) =
     </>);
   };
 
-  return (<div className='requirementsDiv'>
-      <div className='reqsTitle' onClick={toggleAccordion}>
-          <div>
-              <h1>4/ Audience Targeting</h1>
-          </div>
-          <div>
-              <img src='/arrow.svg' style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)' }} />
-          </div>
-      </div>
-      {isOpen && <div className='targetingBodyContainer'>
-          <ul>
-              <li>After selecting the field, you can refine your audience selection based on specific interests. A range of tags or subfields will appear, enabling you to target more precisely.</li>
-              <li>Each post permits targeting of one specific audience segment.</li>
-              <li>Select an audience that closely aligns with both your account theme and the content of the post.</li>
-          </ul>
-          <div className='target-audience-wrapper'>
-            {errors.niche ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.niche}</p> : '' }
-            <Select
-              value={targetField}
-              onChange={handleFieldChange}
-              options={options}
-              theme={(theme) => ({
-                ...theme,
-                colors: {
-                  ...theme.colors,
-                  primary25: '#e8e8ee',  // color of the option when hovering
-                  primary: '#a4a4bb',  // color of the selected option
-                },
-              })}
-              styles={{
-                option: (provided, state) => ({
-                    ...provided,
-                    color: state.isSelected ? 'white' : '#1c1c57',
-                }),
-                singleValue: (provided) => {
-                    const color = '#1c1c57';
-                    return { ...provided, color };
-                },
-                control: (provided) => ({
-                  ...provided,
-                  borderColor: errors.niche ? 'red' : provided.borderColor, // If there's an error, set border color to red
-                  boxShadow: errors.niche ? '0 0 0 1px red' : provided.boxShadow, // If there's an error, set boxShadow to red
-                })
-              }}
-            />
+  // for the tooltip
+  const [style, setStyle] = useState({
+    visibility: 'hidden'
+  })
+  function handleWarning() {
+    setStyle({
+        visibility: 'visible'
+    })
+    setTimeout(() => {
+        setStyle({
+            visibility: 'hidden'
+        })
+    }, 1000)
+  }
 
-          </div>
-              { targetField ?
-                <div className='sub-fields-wrapper'>
-                  {errors.audience ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.audience}</p> : '' }
+  if (platform) {
+    return (<div className='requirementsDiv'>
+    <div className='reqsTitle' onClick={toggleAccordion}>
+        <div>
+            <h1>4/ Audience Targeting</h1>
+        </div>
+        <div>
+            <img src='/arrow.svg' style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)' }} />
+        </div>
+    </div>
+    {isOpen && <div className='targetingBodyContainer'>
+        <ul>
+            <li>After selecting the field, you can refine your audience selection based on specific interests. A range of tags or subfields will appear, enabling you to target more precisely.</li>
+            <li>Each post permits targeting of one specific audience segment.</li>
+            <li>Select an audience that closely aligns with both your account theme and the content of the post.</li>
+        </ul>
+        <div className='target-audience-wrapper'>
+          {errors.niche ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.niche}</p> : '' }
+          <Select
+            value={targetField}
+            onChange={handleFieldChange}
+            options={options}
+            theme={(theme) => ({
+              ...theme,
+              colors: {
+                ...theme.colors,
+                primary25: '#e8e8ee',  // color of the option when hovering
+                primary: '#a4a4bb',  // color of the selected option
+              },
+            })}
+            styles={{
+              option: (provided, state) => ({
+                  ...provided,
+                  color: state.isSelected ? 'white' : '#1c1c57',
+              }),
+              singleValue: (provided) => {
+                  const color = '#1c1c57';
+                  return { ...provided, color };
+              },
+              control: (provided) => ({
+                ...provided,
+                borderColor: errors.niche ? 'red' : provided.borderColor, // If there's an error, set border color to red
+                boxShadow: errors.niche ? '0 0 0 1px red' : provided.boxShadow, // If there's an error, set boxShadow to red
+              })
+            }}
+          />
+
+        </div>
+          {
+            targetField ? (
+              <>
+                {errors.audience ? (
+                  <p
+                    style={{
+                      fontSize: '.7em',
+                      marginBottom: '10px',
+                      marginTop: '0px',
+                      color: 'red',
+                    }}
+                  >
+                    {errors.audience}
+                  </p>
+                ) : null}
+                <div className="sub-fields-wrapper">
                   {renderTags()}
                 </div>
-               : ""
-              }
-      </div>}
-  </div>)
+              </>
+            ) : null
+          }
+        </div>}
+      </div>)
+  } else {
+    return (<div className='requirementsDiv'>
+      <div className='reqsTitle' onClick={handleWarning}>
+          <div>
+              <h1>4/ Audience Targeting</h1>
+              <div className='reqsTooltip' style={style}>Please select a platform first!</div>
+          </div>
+          <div>
+              <img src='/arrow.svg' style={{ transform: 'rotate(180deg)' }} />
+          </div>
+      </div>
+    </div>)
+  }
 
 };
 

@@ -7,7 +7,10 @@ import axios from 'axios';
 import validator from 'validator';
 
 
-export default function PinterestPostInput({ setDataForm, platform, nicheAndTags, nicheAndTagsErrors }) {
+export default function PinterestPostInput({ setDataForm, 
+  noTargetingErrs,
+  platform, nicheAndTags, 
+  nicheAndTagsErrors }) {
 
   const [titleChars, setTitleChars] = useState(0)  
   const [descChars, setDescChars] = useState(0)
@@ -30,6 +33,24 @@ export default function PinterestPostInput({ setDataForm, platform, nicheAndTags
     pinLink: null
   })
 
+  async function getBlobStream(blobUrl) {
+    try {
+      // Step 1: Fetch the blob from the URL
+      const response = await fetch(blobUrl);
+      
+      // Step 2: Get the blob object
+      const blob = await response.blob();
+      
+      // Step 3: Create a file stream using the Blob object
+      const stream = blob.stream();
+      
+      return stream;
+    } catch (error) {
+      console.error('Error fetching the blob:', error);
+      throw error;
+    }
+  }
+
   async function handlePublishRequest() {
 
     const apiUrl = 'http://localhost:4050/api/handle-post-submit/pinterest'
@@ -42,8 +63,8 @@ export default function PinterestPostInput({ setDataForm, platform, nicheAndTags
         pinTitle: pinTitle,
         text: text,
         pinLink: pinLink,
-        image: imgUrl,
-        video: videoUrl,
+        image: await getBlobStream(imgUrl),
+        video: await getBlobStream(videoUrl),
         targeting: nicheAndTags
       }, {
         withCredentials: true
@@ -62,6 +83,7 @@ export default function PinterestPostInput({ setDataForm, platform, nicheAndTags
 
   useEffect(() => {
 
+    console.log('THE NICHEAND TAGSES', nicheAndTags)
     if (nicheAndTags) {
 
       const errors = {
@@ -100,7 +122,7 @@ export default function PinterestPostInput({ setDataForm, platform, nicheAndTags
       // Update pinterestPostErrors state
       setPinterestPostErrors(errors);
 
-      if (!Object.values(errors).some(error => error)) {
+      if (!Object.values(errors).some(error => error) && noTargetingErrs) {
         // here we will send the request to the backend
         handlePublishRequest()
       }
