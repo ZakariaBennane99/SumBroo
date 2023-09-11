@@ -391,7 +391,7 @@ export default function PinterestPostInput({ setDataForm,
                   }
                 }) }}
                 style={{ outline: pinterestPostErrors.pinTitle ? '2px solid red' : '' }} />
-              { titleChars > 0 ? 
+              { titleChars > 0 && !pinterestPostErrors.pinTitle ? 
               <span className="charsCounter" style={{ 
                 position: 'absolute',
                 fontFamily: 'Arial, Helvetica, sans-serif',
@@ -426,11 +426,11 @@ export default function PinterestPostInput({ setDataForm,
                 }) }}
                 style={{ outline: pinterestPostErrors.text ? '2px solid red' : '' }}
               />
-              { descChars > 0 ?
+              { descChars > 0 && !pinterestPostErrors.text ?
               <span className="charsCounter" style={{ 
                 position: 'absolute',
                 fontFamily: 'Arial, Helvetica, sans-serif',
-                bottom: pinterestPostErrors.text ? '33px' : '10px',
+                bottom: '10px',
                 right: '10px',
                 width: '26px',
                 height: '26px',
