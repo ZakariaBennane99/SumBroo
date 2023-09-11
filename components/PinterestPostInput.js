@@ -10,34 +10,41 @@ import validator from 'validator';
 export default function PinterestPostInput({ setDataForm, 
   noTargetingErrs,
   platform, nicheAndTags, 
-  nicheAndTagsErrors }) {
+  nicheAndTagsErrors,
+  publishPost,
+  setPublishPost,
+  targetErrors,
+  dataForm }) {
 
   const [titleChars, setTitleChars] = useState(0)  
   const [descChars, setDescChars] = useState(0)
   const [isServerError, setIsServerError] = useState(false)
 
-  const [isProcessing, setIsProcessing] = useState(false)
+  const [postTitle, setPostTitle] = useState(dataForm.postTitle)
+  const [pinTitle, setPinTitle] = useState(dataForm.pinTitle)
+  const [text, setText] = useState(dataForm.text)
+  const [pinLink, setPinLink] = useState(dataForm.pinLink)
+  const [imgUrl, setImgUrl] = useState(dataForm.imgUrl);
+  const [videoUrl, setVideoUrl] = useState(dataForm.videoUrl);
 
-  const [postTitle, setPostTitle] = useState("")
-  const [pinTitle, setPinTitle] = useState("")
-  const [text, setText] = useState("")
-  const [pinLink, setPinLink] = useState("")
-  const [imgUrl, setImgUrl] = useState("");
-  const [videoUrl, setVideoUrl] = useState("");
+  console.log(dataForm)
 
   // for the inputs errors
   const [pinterestPostErrors, setPinterestPostErrors] = useState({
     postTitle: null,
     pinTitle: null, 
     text: null,
-    pinLink: null
+    pinLink: null,
+    mediaLink: null
   })
 
   useEffect(() => {
-    if (Object.values(pinterestPostErrors).some(value => Boolean(value))) {
+    console.log('CHANGED')
+    if (Object.values(pinterestPostErrors).some(value => Boolean(value)) || 
+    Object.values(pinterestPostErrors).every(value => value === null)) {
       setIsOpen(true)
     }
-  }, [pinterestPostErrors])
+  }, [targetErrors, pinterestPostErrors])
 
   async function getBlob(blobUrl) {
     try {
@@ -70,10 +77,15 @@ export default function PinterestPostInput({ setDataForm,
         },
         withCredentials: true,
       });
+
+      if (res) {
+        setPublishPost(false);
+        console.log('The results', res);
+      }
   
-      console.log('The results', res);
 
     } catch (error) {
+      setPublishPost(false);
       console.error('Server error', error);
     }
 
@@ -88,7 +100,8 @@ export default function PinterestPostInput({ setDataForm,
         postTitle: null,
         pinTitle: null, 
         text: null,
-        pinLink: null
+        pinLink: null,
+        mediaLink: null
       };
   
       // Validate postTitle
@@ -116,11 +129,14 @@ export default function PinterestPostInput({ setDataForm,
       } else if (!validator.isURL(pinLink, { require_protocol: false })) {
         errors.pinLink = "Please provide a valid link.";
       }
+
+      if (imgUrl.length === 0 && videoUrl.length === 0) {
+        errors.mediaLink === "Please upload an image or a video."
+      }
   
       // Update pinterestPostErrors state
       setPinterestPostErrors(errors);
 
-      console.log('')
       if (!Object.values(errors).some(error => error) && noTargetingErrs) {
         // here we will send the request to the backend
         handlePublishRequest()
@@ -349,7 +365,7 @@ export default function PinterestPostInput({ setDataForm,
             <div className="inputElements">
               <label>Post Title</label>
               <p><em>This helps you to easily identify and locate your post within Sumbroo, but it will not be published.</em></p>
-              <input type="text" placeholder="Enter post title" 
+              <input type="text" placeholder="Enter post title" value={postTitle}
                 onChange={(e) => { setPostTitle(e.target.value); setPinterestPostErrors(prev => {
                   return {
                     ...prev,
@@ -362,7 +378,7 @@ export default function PinterestPostInput({ setDataForm,
             <div className="inputElements" style={{ position: 'relative' }}>
               <label>Pin Title</label>
               <p>Title should be <b>40-100 characters</b>. Keep it concise and clear, ensuring it's relevant to your content.</p>
-              <input type="text" maxLength='100' placeholder="Add your pin title" 
+              <input type="text" maxLength='100' placeholder="Add your pin title" value={pinTitle}
                 onChange={(e) => { setPinTitle(e.target.value); setTitleChars(e.target.value.length); setPinterestPostErrors(prev => {
                   return {
                     ...prev,
@@ -396,6 +412,7 @@ export default function PinterestPostInput({ setDataForm,
                 name="text"
                 maxLength="500"
                 placeholder="What your Pin is about"
+                value={text}
                 onChange={(e) => { setText(e.target.value); setDescChars(e.target.value.length); setPinterestPostErrors(prev => {
                   return {
                     ...prev,
@@ -425,7 +442,7 @@ export default function PinterestPostInput({ setDataForm,
             </div>
             <div className="inputElements">
               <label>Destination Link</label>
-              <input type="text" placeholder="Your link here" 
+              <input type="text" placeholder="Your link here" value={pinLink}
                 onChange={(e) => { setPinLink(e.target.value); setPinterestPostErrors(prev => {
                   return {
                     ...prev,
@@ -437,6 +454,7 @@ export default function PinterestPostInput({ setDataForm,
             </div>
             <div className="file-input-wrapper inputElements">
               <label>Media File</label>
+              {pinterestPostErrors.mediaLink ? <p style={{ fontSize: '.8em', marginBottom: '0px', marginTop: '10px', color: 'red' }}>{pinterestPostErrors.mediaLink}</p> : '' }
               <button type="button" className={`btn-file-input`} onClick={handleFileClick}>
               <><img src="/upload.svg" alt="upload-icon" /> Upload File </>
               </button>
@@ -447,7 +465,6 @@ export default function PinterestPostInput({ setDataForm,
                 style={{display: 'none'}}
                 accept="image/*,video/*"
                 onChange={handleFileChange}
-                disabled={isProcessing}
               />
               {fileInfo.fileName.length > 0 ? (
                 <>

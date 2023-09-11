@@ -8,6 +8,7 @@ import PinterestPostPreview from "../../../../components/PinterestPostPreview";
 import Modal from 'react-modal';
 import Link from 'next/link';
 import PinterestPostInput from "../../../../components/PinterestPostInput";
+import { Tadpole } from "react-svg-spinners";
 
 
 
@@ -23,7 +24,16 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
   const [selectedPlatform, setSelectedPlatform] = useState(null);
 
   // for the form data
-  const [postFormData, setPostFormData] = useState(null)
+  const [postFormData, setPostFormData] = useState({
+    postTitle: '',
+    pinTitle: '',
+    text: '',
+    pinLink: '',
+    imgUrl: '',
+    videoUrl: ''
+  })
+
+  const [publishPostClicked, setPublishPostClicked] = useState(false)
   // for the target platforms
   const [targetPlatform, setTargetPlatform] = useState(null)
   // this is for the selected niche and tags
@@ -48,15 +58,22 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
 
     const { niche, tags: audience } = nicheAndTags;
 
-    if (!niches.some(n => n.niche === niche.value)) {
-      errors.niche = "Invalid niche selected";
+    if (!niche && audience.length === 0) {
+      errors.niche = 'Sub-field is required.'
+      errors.audience = 'At least 4 tags should be selected.'
+      setTargetingErrors(errors);
+      return !Object.values(errors).some(error => error);
+    }
+
+    if (niches && niche && !niches.some(n => n.niche === niche.value)) {
+      errors.niche = "Invalid niche selected.";
     }
   
     if (audience.length < 4) {
       errors.audience = "At least 4 tags should be selected.";
     } else {
       const selectedNiche = niches.find(n => n.niche === niche);
-      if (!audience.every(tag => selectedNiche.audience.includes(tag))) {
+      if (!audience.every(tag => audience.includes(tag))) {
         errors.audience = "Some selected tags are invalid.";
       }
     }
@@ -76,6 +93,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
 
       const isNicheAndTagsValid = validateNicheAndTags();
 
+      setPublishPostClicked(true)
       setIsTargetingErr(isNicheAndTagsValid)
       setValidatedNicheAndTags(nicheAndTags)
 
@@ -146,16 +164,16 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
           windowWidth < 620 ?
           <>
           <div className='farRightSectionHome'>
-          <div className='postPreview' >
-            <h2>Preview</h2>
-              {selectedPlatform && selectedPlatform === 'pinterest' && postFormData && (postFormData.imgUrl || postFormData.videoUrl || 
-              (postFormData.pinLink && postFormData.pinLink.length > 0) > 0 ||
-              (postFormData.text && postFormData.text.length > 0) || (postFormData.pinTitle && postFormData.pinTitle.length > 0)) &&
-              <PinterestPostPreview pinLink={postFormData.pinLink}
-              pinTitle={postFormData.pinTitle} text={postFormData.text} 
-              imgUrl={postFormData.imgUrl} videoUrl={postFormData.videoUrl} />}
+            <div className='postPreview' >
+              <h2>Preview</h2>
+                {selectedPlatform && selectedPlatform === 'pinterest' && postFormData && (postFormData.imgUrl || postFormData.videoUrl || 
+                (postFormData.pinLink && postFormData.pinLink.length > 0) > 0 ||
+                (postFormData.text && postFormData.text.length > 0) || (postFormData.pinTitle && postFormData.pinTitle.length > 0)) &&
+                <PinterestPostPreview pinLink={postFormData.pinLink}
+                pinTitle={postFormData.pinTitle} text={postFormData.text} 
+                imgUrl={postFormData.imgUrl} videoUrl={postFormData.videoUrl} />}
+            </div>
           </div>
-        </div>
               <div className="rightSectionHome" >
               <ActiveAccounts
                   setPlatform={setTargetPlatform}
@@ -166,10 +184,14 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
                 />
               <PinterestPostInput
                   setDataForm={setPostFormData}
+                  dataForm={postFormData}
                   platform={targetPlatform} 
                   nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
                   nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
                   noTargetingErrs={isTargetingErr}
+                  publishPost={publishPostClicked}
+                  setPublishPost={setPublishPostClicked}
+                  targetErrors={targetingErrors} // this is just to open the accordion when there are errors
                 /> 
               <Targeting 
                   nichesAndTags={niches}
@@ -178,7 +200,11 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
                   resetErrors={setTargetingErrors}
                   platform={targetPlatform} 
                 />
-              <button id='publish-btn' onClick={handlePostSubmit}>PUBLISH</button>
+              <button id='publish-btn' onClick={handlePostSubmit} disabled={publishPostClicked}>
+                {
+                  publishPostClicked ? <Tadpole height={40} color='white' /> : 'PUBLISH'
+                }
+              </button>
             </div>
           </>
           :
@@ -192,12 +218,15 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
                 platform={targetPlatform}
               />
             <PinterestPostInput
-                 setDataForm={setPostFormData}
-                 platform={targetPlatform} 
-                 nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
-                 nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
-                 noTargetingErrs={isTargetingErr}
-                 
+                setDataForm={setPostFormData}
+                platform={targetPlatform} 
+                dataForm={postFormData}
+                nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
+                nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
+                noTargetingErrs={isTargetingErr}
+                publishPost={publishPostClicked}
+                setPublishPost={setPublishPostClicked}
+                targetErrors={targetingErrors} // this is just to open the accordion when there are errors
               />
             <Targeting 
                 nichesAndTags={niches}

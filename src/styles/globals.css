@@ -1745,7 +1745,7 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 50px;
+    height: 60px;
     border: none;
     border-radius: 6px;
     background: rgb(20,101,224);
@@ -1754,6 +1754,10 @@ a {
     font-size: 2em;
     font-weight: 500;
     transition: all 0.2s;
+}
+
+.rightSectionHome #publish-btn:hover {
+    background-color: #1c1c57;
 }
 
 

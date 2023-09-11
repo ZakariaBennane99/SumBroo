@@ -108,6 +108,7 @@ const Targeting = ({ nichesAndTags, errors, chosenNicheAndTags, resetErrors, pla
     }, 1000)
   }
 
+
   if (platform) {
     return (<div className='requirementsDiv'>
     <div className='reqsTitle' onClick={toggleAccordion}>
@@ -125,7 +126,7 @@ const Targeting = ({ nichesAndTags, errors, chosenNicheAndTags, resetErrors, pla
           <li>Select an audience that closely aligns with both your account theme and the content of the post.</li>
         </ul>
         <div className='target-audience-wrapper'>
-          {errors.niche ? <p style={{ fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.niche}</p> : '' }
+          {errors.niche ? <p style={{ fontSize: '.8em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.niche}</p> : '' }
           <Select
             value={targetField}
             onChange={handleFieldChange}
