@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
 
-const Home = ({ windowWidth }) => {
+const Home = ({ windowWidth, profileNames }) => {
 
+  localStorage.setItem('userProfileNames', JSON.stringify(profileNames))
 
   return (<div style={{ width: windowWidth > 1215 ? '80%' : '100%', height: windowWidth > 1215 ? 'fit-content' : '100vh' }} className="rightSectionZenContainer">
           <img src="./zenMode.svg" alt="editing"/>
@@ -15,6 +16,9 @@ export default Home;
 export async function getServerSideProps(context) {
 
   const jwt = require('jsonwebtoken');
+  const connectDB = require('../../../utils/connectUserDB');
+  const User = require('../../../utils/User').default;
+  const mongoSanitize = require('express-mongo-sanitize');
 
   try {
 
@@ -40,11 +44,30 @@ export async function getServerSideProps(context) {
       };
     }
 
+    const userId = decoded.userId;
+
+    // connect DB
+    await connectDB()
+
+    const sanitizedUserId = mongoSanitize.sanitize(userId);
+    let user = await User.findOne({ _id: sanitizedUserId });
+
+    const profileUserNames = user.socialMediaLinks.map(link => {
+      return {
+        platform: link.platformName,
+        link: link.profileLink,
+        userName: link.profileUserName
+      }
+    })
+
+    console.log('PROFILENAME', profileUserNames)
+
     // continue rendering
     return {
       props: {
         signedIn: true,
-        dash: true
+        dash: true,
+        profileNames: profileUserNames
       }
     };
 
