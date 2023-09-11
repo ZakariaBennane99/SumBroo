@@ -197,6 +197,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
                  nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
                  nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
                  noTargetingErrs={isTargetingErr}
+                 
               />
             <Targeting 
                 nichesAndTags={niches}

@@ -16,7 +16,7 @@ export default function PinterestPostInput({ setDataForm,
   const [descChars, setDescChars] = useState(0)
   const [isServerError, setIsServerError] = useState(false)
 
-  const [uploadIsProcessing, setUploadIsProcessing] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const [postTitle, setPostTitle] = useState("")
   const [pinTitle, setPinTitle] = useState("")
@@ -33,6 +33,12 @@ export default function PinterestPostInput({ setDataForm,
     pinLink: null
   })
 
+  useEffect(() => {
+    if (Object.values(pinterestPostErrors).some(value => Boolean(value))) {
+      setIsOpen(true)
+    }
+  }, [pinterestPostErrors])
+
   async function getBlob(blobUrl) {
     try {
       const response = await fetch(blobUrl);
@@ -45,7 +51,7 @@ export default function PinterestPostInput({ setDataForm,
   }
   
   async function handlePublishRequest() {
-    
+
     const apiUrl = 'http://localhost:4050/api/handle-post-submit/pinterest';
   
     try {
@@ -65,7 +71,8 @@ export default function PinterestPostInput({ setDataForm,
         withCredentials: true,
       });
   
-      console.log(res);
+      console.log('The results', res);
+
     } catch (error) {
       console.error('Server error', error);
     }
@@ -157,85 +164,6 @@ export default function PinterestPostInput({ setDataForm,
 
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
-  };
-
-  const handleFileUploadInServer = async (file, platform) => {
-    try {
-      setUploadIsProcessing(true)
-      // Get the presigned URL
-      const fileType = file.type;
-      const generateId = uuidv4();
-      const requestData = {
-        platform: platform, 
-        contentType: fileType,
-        requestId: generateId
-      };
-
-      const response = await axios.post('http://localhost:4050/api/get-aws-preSignedUrl', requestData , {
-        withCredentials: true
-      });
-  
-      if (response.status !== 201) {
-        setIsServerError(true);
-        setUploadIsProcessing(false);
-        return
-      }
-  
-      const presignedUrl = response.data.url;
-  
-      // Define a function that first uploads to S3, and then sends the second request.
-      const sequentialRequests = async (file, platform, requestId) => {
- 
-        // First, upload the file
-        await axios.put(presignedUrl, file, {
-          headers: {
-            'Content-Type': fileType,
-            Metadata: {
-              'x-amz-meta-request-id': requestId,
-              'x-amz-meta-platform': platform
-            }
-          }
-        });
-    
-        // Now, set up the SSE
-        return new Promise((resolve, reject) => {
-
-            const sse = new EventSource(`http://localhost:4050/api/lambda-notification/${requestId}`);
-    
-            sse.onmessage = function(event) {
-              const result = JSON.parse(event.data);
-              if (result.requestId !== requestId) {
-                console.error("Mismatched requestId:", result.requestId, "expected:", requestId);
-                sse.close();
-                return reject(new Error('Mismatched requestId'));
-              }
-              setUploadIsProcessing(false);
-              sse.close();
-              resolve(result); // Resolve the promise with the result
-            };
-    
-            sse.onerror = function(error) {
-              console.error("SSE failed:", error);
-              setUploadIsProcessing(false);
-              setIsServerError(true);
-              sse.close();
-              reject(error); // Reject the promise in case of an error
-            };
-        });
-      };
-  
-      // Use Promise.all to wait for the sequential requests to complete
-      const results = await Promise.all([sequentialRequests(file, platform, requestData.requestId)]);
-      setUploadIsProcessing(false);
-  
-      // Log and return success if everything is good
-      console.log('The results of the request', results);
-      return results[0]
-  
-    } catch (error) {
-      console.error('Error during requests:', error.response ? error.response.data : error);
-      setIsServerError(true);
-    }
   };
 
   const handleFileChange = async (e) => {
@@ -509,13 +437,8 @@ export default function PinterestPostInput({ setDataForm,
             </div>
             <div className="file-input-wrapper inputElements">
               <label>Media File</label>
-              <button type="button" className={`btn-file-input ${uploadIsProcessing ? 'loadingMediaBtn' : ''}`} onClick={handleFileClick}>
-                {
-                  uploadIsProcessing ? 
-                  <Tadpole width={14} color='white' />
-                  :
-                  <><img src="/upload.svg" alt="upload-icon" /> Upload File </>
-                }
+              <button type="button" className={`btn-file-input`} onClick={handleFileClick}>
+              <><img src="/upload.svg" alt="upload-icon" /> Upload File </>
               </button>
               <input
                 type="file"
@@ -524,9 +447,9 @@ export default function PinterestPostInput({ setDataForm,
                 style={{display: 'none'}}
                 accept="image/*,video/*"
                 onChange={handleFileChange}
-                disabled={uploadIsProcessing}
+                disabled={isProcessing}
               />
-              {fileInfo.fileName.length > 0 && !uploadIsProcessing ? (
+              {fileInfo.fileName.length > 0 ? (
                 <>
                   {
                     // Check if there's any error to display from fileInfo.errors
@@ -549,9 +472,7 @@ export default function PinterestPostInput({ setDataForm,
                     />
                   </div>
                 </>
-              ) : !uploadIsProcessing ? (
-                <span>No file chosen</span>
-              ) : '' } 
+              ) : 'No file chosen' } 
             </div>
           </form>
         </div>}

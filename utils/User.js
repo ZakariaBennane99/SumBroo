@@ -73,6 +73,9 @@ const SocialMediaLinkSchema = new Schema({
         type: String,
         required: true
     }, 
+    profileUserName: {
+        type: String
+    },
     profileStatus: {
         type: String,
         enum: ["inReview", "pendingPay", "pendingAuth", "active", "canceled", "authExpired"],

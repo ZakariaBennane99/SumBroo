@@ -185,8 +185,8 @@ const PinterestPostPreview = ({ pinTitle, pinLink, text, imgUrl, videoUrl }) => 
                     <div>
                         <img src='/sm/pinterest.svg' />
                         <div>
-                            <p>Nayla's List</p>
-                            <p>23.2K followers</p>
+                            <p>Pinterest</p>
+                            <p>23M followers</p>
                         </div>
                     </div>
                     <div>

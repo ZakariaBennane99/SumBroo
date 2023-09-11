@@ -35,6 +35,7 @@ export const PinterestAuth = () => {
         const data = await response.json();
         
         return data;
+        
     };
 
     return { initiateAuth, handleAuthCallback };

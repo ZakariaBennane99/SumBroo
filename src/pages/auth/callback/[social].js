@@ -71,8 +71,6 @@ export async function getServerSideProps(context) {
 
             let authData;
 
-            console.log('THIS IS THE CONTEXT', context.params.social)
-
             if (context.params.social === 'pinterest') {
 
                 authData = await PinterestAuth().handleAuthCallback(code);

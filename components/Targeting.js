@@ -21,6 +21,12 @@ const Targeting = ({ nichesAndTags, errors, chosenNicheAndTags, resetErrors, pla
   const [tags, setTags] = useState([])
 
   useEffect(() => {
+    if (Object.values(errors).some(value => Boolean(value))) {
+      setIsOpen(true)
+    }
+  }, [errors])
+
+  useEffect(() => {
     chosenNicheAndTags({
       niche: targetField, 
       tags: tags
