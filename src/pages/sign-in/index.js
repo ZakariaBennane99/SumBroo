@@ -378,6 +378,9 @@ export default SignIn;
 export async function getServerSideProps(context) {
 
   const jwt = require('jsonwebtoken');
+  const connectDB = require('../../../utils/connectUserDB');
+  const User = require('../../../utils/User').default;
+  const mongoSanitize = require('express-mongo-sanitize');
 
   try {
 
@@ -401,6 +404,22 @@ export async function getServerSideProps(context) {
         }
       };
     }
+
+    const userId = decoded.userId;
+
+    // connect DB
+    await connectDB()
+
+    const sanitizedUserId = mongoSanitize.sanitize(userId);
+    let user = await User.findOne({ _id: sanitizedUserId });
+
+    const profileUserNames = user.socialMediaLinks.map(link => {
+      return {
+        platform: link.platformName,
+        link: link.profileLink,
+        userName: link.profileUserName
+      }
+    })
 
     // continue rendering
     return {

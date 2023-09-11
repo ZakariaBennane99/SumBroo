@@ -78,8 +78,8 @@ const AccountSettingsComponent = () => {
         console.log(res)
         if (res.status === 200) {
           setEmailClicked(false)
-          // alert user
           setEmail('')
+          // alert user
           alert('Your email has been changed.')
           // update the user email
           updateUserData({ email: res.data.email }, userData);
