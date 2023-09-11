@@ -27,8 +27,6 @@ export default function PinterestPostInput({ setDataForm,
   const [imgUrl, setImgUrl] = useState(dataForm.imgUrl);
   const [videoUrl, setVideoUrl] = useState(dataForm.videoUrl);
 
-  console.log(dataForm)
-
   // for the inputs errors
   const [pinterestPostErrors, setPinterestPostErrors] = useState({
     postTitle: null,
@@ -39,7 +37,6 @@ export default function PinterestPostInput({ setDataForm,
   })
 
   useEffect(() => {
-    console.log('CHANGED')
     if (Object.values(pinterestPostErrors).some(value => Boolean(value)) || 
     Object.values(pinterestPostErrors).every(value => value === null)) {
       setIsOpen(true)
@@ -69,8 +66,9 @@ export default function PinterestPostInput({ setDataForm,
       formData.append('pinLink', pinLink);
       if (imgUrl) formData.append('image', await getBlob(imgUrl));
       if (videoUrl) formData.append('video', await getBlob(videoUrl));
-      formData.append('targeting', JSON.stringify(nicheAndTags));
-  
+      formData.append('niche', nicheAndTags.niche);
+      formData.append('tags', JSON.stringify(nicheAndTags.tags));
+      
       const res = await axios.post(apiUrl, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -131,8 +129,9 @@ export default function PinterestPostInput({ setDataForm,
       }
 
       if (imgUrl.length === 0 && videoUrl.length === 0) {
-        errors.mediaLink === "Please upload an image or a video."
+        errors.mediaLink = "Please upload an image or a video."
       }
+
   
       // Update pinterestPostErrors state
       setPinterestPostErrors(errors);
@@ -183,6 +182,13 @@ export default function PinterestPostInput({ setDataForm,
   };
 
   const handleFileChange = async (e) => {
+
+    setPinterestPostErrors(prev => {
+      return {
+        ...prev,
+        mediaLink: null
+      }
+    })
     
     const files = Array.from(e.target.files);
 
@@ -342,7 +348,6 @@ export default function PinterestPostInput({ setDataForm,
     },
   };
 
-
   if (platform) {
     return (
       <div className='requirementsDiv'>
@@ -425,7 +430,7 @@ export default function PinterestPostInput({ setDataForm,
               <span className="charsCounter" style={{ 
                 position: 'absolute',
                 fontFamily: 'Arial, Helvetica, sans-serif',
-                bottom: '10px',
+                bottom: pinterestPostErrors.text ? '33px' : '10px',
                 right: '10px',
                 width: '26px',
                 height: '26px',
@@ -454,7 +459,7 @@ export default function PinterestPostInput({ setDataForm,
             </div>
             <div className="file-input-wrapper inputElements">
               <label>Media File</label>
-              {pinterestPostErrors.mediaLink ? <p style={{ fontSize: '.8em', marginBottom: '0px', marginTop: '10px', color: 'red' }}>{pinterestPostErrors.mediaLink}</p> : '' }
+              {pinterestPostErrors.mediaLink ? <p style={{ fontSize: '.8em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{pinterestPostErrors.mediaLink}</p> : '' }
               <button type="button" className={`btn-file-input`} onClick={handleFileClick}>
               <><img src="/upload.svg" alt="upload-icon" /> Upload File </>
               </button>

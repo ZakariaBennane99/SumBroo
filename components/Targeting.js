@@ -51,7 +51,7 @@ const Targeting = ({ nichesAndTags, errors, chosenNicheAndTags, resetErrors, pla
       }
     })
     setTags([])
-    setTargetField(selectedOption)
+    setTargetField(selectedOption.value)
   }
 
   function handleTags(e) {
@@ -78,7 +78,7 @@ const Targeting = ({ nichesAndTags, errors, chosenNicheAndTags, resetErrors, pla
 
   const renderTags = () => {
 
-    const target = nichesAndTags.find(el => el.niche === targetField.label);
+    const target = nichesAndTags.find(el => el.niche === targetField);
 
     return ( <>
       { target.tags.map(el => {
@@ -128,7 +128,7 @@ const Targeting = ({ nichesAndTags, errors, chosenNicheAndTags, resetErrors, pla
         <div className='target-audience-wrapper'>
           {errors.niche ? <p style={{ fontSize: '.8em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{errors.niche}</p> : '' }
           <Select
-            value={targetField}
+            value={{ value: targetField, label: targetField }}
             onChange={handleFieldChange}
             options={options}
             theme={(theme) => ({

@@ -65,7 +65,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
       return !Object.values(errors).some(error => error);
     }
 
-    if (niches && niche && !niches.some(n => n.niche === niche.value)) {
+    if (niches && niche && !niches.some(n => n.niche === niche)) {
       errors.niche = "Invalid niche selected.";
     }
   
@@ -412,8 +412,7 @@ export async function getServerSideProps(context) {
 
     // get the user plan PRICE ID not the plan id
     const activePriceId = await getCusPriceId(stripeId)
-    
-    console.log('after the activePriveID')
+
 
     if (activePriceId === 'Server error') {
       return {
@@ -481,9 +480,6 @@ export async function getServerSideProps(context) {
     
     // Remove duplicates in tags
     nichesAndTags = nichesAndTags.map(({ niche, tags }) => ({ niche, tags: [...new Set(tags)] }));
-
-
-    console.log('THE NICHES & TAGS', nichesAndTags)
 
     return {
       props: {
