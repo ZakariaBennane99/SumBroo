@@ -29,6 +29,23 @@ export async function getServerSideProps(context) {
         return UTCExpiryDate;
     }
 
+    async function getUserName(token) {
+
+        const headers = new Headers();
+        headers.append("Authorization", `Bearer ${token}`);
+        headers.append("Content-Type", "application/json");
+
+        const response = await fetch("https://api.pinterest.com/v5/user_account", {
+            method: "GET",
+            headers: headers
+        });
+
+        const data = await response.json();
+        
+        return data.username;
+
+    }
+
     let userId;
 
     try {
@@ -82,6 +99,7 @@ export async function getServerSideProps(context) {
                 // get UTC date
                 const tokenExpiryUTCDate = getUTCDate(authData.expires_in)
                 const refreshTokenExpiryUTCDate = getUTCDate(authData.refresh_token_expires_in)
+                const userName = await getUserName(authData.access_token);
 
                 const mediaElem = user.socialMediaLinks.find(media => media.platformName === 'pinterest');
                 mediaElem.accessToken = authData.access_token;
@@ -89,6 +107,7 @@ export async function getServerSideProps(context) {
                 mediaElem.accesstokenExpirationDate = tokenExpiryUTCDate;
                 mediaElem.refreshTokenExpirationDate = refreshTokenExpiryUTCDate;
                 mediaElem.profileStatus = 'active';
+                mediaElem.profileUserName = userName;
 
                 await user.save();
 

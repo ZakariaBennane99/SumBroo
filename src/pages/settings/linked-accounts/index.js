@@ -243,6 +243,7 @@ export async function getServerSideProps(context) {
     const sanitizedUserId = mongoSanitize.sanitize(userId);
     let user = await User.findOne({ _id: sanitizedUserId });
     const activeProfilesPromises = user.socialMediaLinks
+    
         .map(link => {
 
           const now = new Date();

@@ -3,7 +3,7 @@
 
 const PINTEREST_OAUTH_URL = "https://www.pinterest.com/oauth/";
 const REDIRECT_URI = 'http://localhost:3000/auth/callback/pinterest';
-const SCOPE = "boards:read,pins:read,pins:write"; 
+const SCOPE = "boards:read,pins:read,pins:write,user_accounts:read"; 
 const STATE = "vXpd@aSf1nGdgfXTf"; 
 
 
@@ -35,7 +35,7 @@ export const PinterestAuth = () => {
         const data = await response.json();
         
         return data;
-        
+
     };
 
     return { initiateAuth, handleAuthCallback };
