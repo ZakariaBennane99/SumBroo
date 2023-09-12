@@ -35,7 +35,6 @@ const Targeting = ({ nichesAndTags, errors, chosenNicheAndTags, resetErrors, pla
 
   const selectedStyle = {
     backgroundColor: '#8383a4',
-    outlin: errors.audience ? 'red' : 'none',
     color: 'white'
   }
 

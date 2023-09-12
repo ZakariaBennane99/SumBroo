@@ -501,8 +501,7 @@ export default function PinterestPostInput({ setDataForm,
         <Modal
             isOpen={isServerError}
             style={customStyles}
-            contentLabel="Example Modal"
-              >
+            contentLabel="Example Modal">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
               <span onClick={() => location.reload()}
