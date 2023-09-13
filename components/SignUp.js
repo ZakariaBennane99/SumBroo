@@ -13,7 +13,7 @@ function getCurrentUTCDate() {
   const now = new Date();
 
   const utcFullYear = now.getUTCFullYear();
-  const utcMonth = String(now.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so add 1
+  const utcMonth = String(now.getUTCMonth() + 1).padStart(2, '0'); 
   const utcDate = String(now.getUTCDate()).padStart(2, '0');
   const utcHours = String(now.getUTCHours()).padStart(2, '0');
   const utcMinutes = String(now.getUTCMinutes()).padStart(2, '0');
