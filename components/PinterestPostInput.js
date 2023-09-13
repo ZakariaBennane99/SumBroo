@@ -128,7 +128,7 @@ export default function PinterestPostInput({ setDataForm,
         errors.pinLink = "Please provide a valid link.";
       }
 
-      if (imgUrl.length === 0 && videoUrl.length === 0) {
+      if (!imgUrl && !videoUrl) {
         errors.mediaLink = "Please upload an image or a video."
       }
 
@@ -212,13 +212,15 @@ export default function PinterestPostInput({ setDataForm,
       const err = await imageValidation(file);
       errors = err;
       if (err.length === 0) {
+        setVideoUrl(null)
         setImgUrl(url)
       }
     } else if (file.type.startsWith('video/')) {
       const err = await videoValidation(file);
       errors = err;
       if (err.length === 0) {
-        setVideoUrl(file)
+        setImgUrl(null)
+        setVideoUrl(url)
       }
     }
 
@@ -270,7 +272,8 @@ export default function PinterestPostInput({ setDataForm,
 
       img.onerror = function(errorEvent) {
         console.error("Image loading error: ", errorEvent); // Log the error event
-        reject(new Error('An error occurred while loading the image.'));
+        reject('An error occurred while loading the image.');
+        alert('An error occurred while loading the image.')
       };
 
       img.src = URL.createObjectURL(file);
@@ -326,7 +329,8 @@ export default function PinterestPostInput({ setDataForm,
       };
 
       video.onerror = function() {
-        reject(new Error('An error occurred while loading the image.'))
+        reject('An error occurred while loading the image.')
+        alert('An error occurred while loading the video.')
       };
 
       video.src = URL.createObjectURL(file);

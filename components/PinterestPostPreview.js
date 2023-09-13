@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import ReactPlayer from "react-player";
 import _ from 'lodash';
 
+
 const PinterestPostPreview = ({ pinTitle, pinLink, text, imgUrl, videoUrl }) => {
 
     const profileUserNames = JSON.parse(localStorage.getItem('userProfileNames'))
@@ -40,8 +41,6 @@ const PinterestPostPreview = ({ pinTitle, pinLink, text, imgUrl, videoUrl }) => 
             console.error("Error seeking: Invalid time or player not available");
         }
     };
-    
-    
     
     const handleProgress = (progress) => {
         const playedSeconds = progress.playedSeconds;
@@ -94,7 +93,6 @@ const PinterestPostPreview = ({ pinTitle, pinLink, text, imgUrl, videoUrl }) => 
         return match ? match[1] : null;
     }
 
-
     function parseText(text) {
         const words = text.split(' ');
         const processedWords = words.flatMap((word, k) => {
@@ -110,10 +108,6 @@ const PinterestPostPreview = ({ pinTitle, pinLink, text, imgUrl, videoUrl }) => 
         
         return processedWords;
     }    
-
-
-    const userName = 'zakariabennane99'
-
 
     return (
         <div className="pinterestPostPreview">

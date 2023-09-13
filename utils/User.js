@@ -24,10 +24,6 @@ const PinterestTextualDataSchema = new Schema({
     destinationLink: {
         type: String,
         required: true
-    },
-    board: {
-        type: String,
-        required: true
     }
 });
 
