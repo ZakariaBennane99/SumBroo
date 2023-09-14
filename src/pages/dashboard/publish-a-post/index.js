@@ -431,6 +431,8 @@ export async function getServerSideProps(context) {
     // get the subscription status
     const subStatus = await getSubscriptionStatus(stripeId, activePriceId);
 
+
+
     if (subStatus === 'Server error') {
       return {
         props: {
@@ -469,6 +471,9 @@ export async function getServerSideProps(context) {
     });
 
     // get all the available niches
+    // here you have to also find if 
+    // the user has published anything in the last
+    // 24H
     let nichesAndTags = await User.aggregate([
       { $unwind: "$socialMediaLinks" },
       { $group: { _id: "$socialMediaLinks.niche", tags: { $addToSet: "$socialMediaLinks.audience" } } },
