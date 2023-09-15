@@ -792,6 +792,12 @@ a {
     transition: all 0.3s;
 }
 
+
+.publish-btn-loading {
+    background: #73739a !important;
+    cursor: auto !important;
+}
+
 .signUpForm .button.loading,
 .payment-container .button.loading,
 .password-container .button.loading,

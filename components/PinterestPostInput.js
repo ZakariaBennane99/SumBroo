@@ -56,6 +56,14 @@ export default function PinterestPostInput({ setDataForm,
   
   async function handlePublishRequest() {
 
+
+    setTimeout(() => {
+      setPublishPost(false);
+    }, 5000)
+
+
+    /*
+
     const apiUrl = 'http://localhost:4050/api/handle-post-submit/pinterest';
   
     try {
@@ -86,6 +94,8 @@ export default function PinterestPostInput({ setDataForm,
       setPublishPost(false);
       console.error('Server error', error);
     }
+
+    */
 
   }
   

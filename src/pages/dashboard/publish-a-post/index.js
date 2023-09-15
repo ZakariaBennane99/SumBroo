@@ -39,8 +39,6 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
 
   const lessThan24 = below24Hours || false;
 
-  console.log('NICHES', niches)
-
   const [selectedPlatform, setSelectedPlatform] = useState(null);
 
   // for the form data
@@ -280,7 +278,8 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
                 resetErrors={setTargetingErrors}
                 platform={targetPlatform} 
               />
-            <button id='publish-btn' onClick={handlePostSubmit} disabled={publishPostClicked}>
+            <button id='publish-btn' className={`${publishPostClicked ? 'publish-btn-loading' : ''}`}
+             onClick={handlePostSubmit} disabled={publishPostClicked}>
               {
                 publishPostClicked ? <Tadpole height={40} color='white' /> : 'PUBLISH'
               }
@@ -315,7 +314,12 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
               resetErrors={setTargetingErrors}
               platform={targetPlatform} 
             />
-          <button id='publish-btn' onClick={handlePostSubmit}>PUBLISH</button>
+          <button id='publish-btn' className={`${publishPostClicked ? 'publish-btn-loading' : ''}`}
+           onClick={handlePostSubmit} disabled={publishPostClicked}>
+            {
+              publishPostClicked ? <Tadpole height={50} color='white' /> : 'PUBLISH'
+            }
+          </button>
         </div>
         <div className='farRightSectionHome'>
         <div className='postPreview' >
