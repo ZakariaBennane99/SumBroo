@@ -11,6 +11,22 @@ import PinterestPostInput from "../../../../components/PinterestPostInput";
 import { Tadpole } from "react-svg-spinners";
 
 
+function getCurrentUTCDate() {
+
+  const now = new Date();
+
+  const utcFullYear = now.getUTCFullYear();
+  const utcMonth = String(now.getUTCMonth() + 1).padStart(2, '0'); 
+  const utcDate = String(now.getUTCDate()).padStart(2, '0');
+  const utcHours = String(now.getUTCHours()).padStart(2, '0');
+  const utcMinutes = String(now.getUTCMinutes()).padStart(2, '0');
+  const utcSeconds = String(now.getUTCSeconds()).padStart(2, '0');
+
+  const fullUTCDate = `${utcFullYear}-${utcMonth}-${utcDate} ${utcHours}:${utcMinutes}:${utcSeconds} UTC`;
+
+  return fullUTCDate
+
+}
 
 function allObjectsHaveSameValueForKey(arr, key) {
   if (arr.length === 0) return true; // or handle empty array as you see fit
@@ -19,7 +35,11 @@ function allObjectsHaveSameValueForKey(arr, key) {
 }
 
 
-const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
+const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Hours }) => {
+
+  const lessThan24 = below24Hours || false;
+
+  console.log('THE PLATFORMS', platforms)
 
   const [selectedPlatform, setSelectedPlatform] = useState(null);
 
@@ -72,7 +92,6 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
     if (audience.length < 4) {
       errors.audience = "At least 4 tags should be selected.";
     } else {
-      const selectedNiche = niches.find(n => n.niche === niche);
       if (!audience.every(tag => audience.includes(tag))) {
         errors.audience = "Some selected tags are invalid.";
       }
@@ -124,92 +143,118 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
   };
 
 
-  // Show this section if all the social Media 
+  // Show this section if all the social Media are not active
   if (allObjectsHaveSameValueForKey(platforms, 'status') && platforms[0].status !== 'active') {
     return (<>
-              <div className="notification">
-                <img src='/infotip.svg' alt="Info Tip" />
-                <p>Your subscription has been canceled.</p>
-                <Link href="/settings/billing">
-                  <button className="link-button">Restart Subscription</button>
-                </Link>
-              </div>
-        <Modal
-            isOpen={isServerError}
-            style={customStyles}
-            contentLabel="Example Modal"
-              >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
-              <span onClick={() => location.reload()}
-                style={{ backgroundColor: '#1465e7', 
-                color: "white",
-                padding: '10px', 
-                cursor: 'pointer',
-                fontFamily: 'Ubuntu',
-                borderRadius: '3px',
-                fontSize: '1.1em',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                 }}>Try again</span>
-            </div>
-        </Modal>
-    </>)
-  } else if (platforms.length === 1 && platforms[0].status === '') {
-    return 'BIG FUCK'
-  } else {
-    return (<>
-        {
-          windowWidth < 620 ?
-          <>
-          <div className='farRightSectionHome'>
-            <div className='postPreview' >
-              <h2>Preview</h2>
-                {selectedPlatform && selectedPlatform === 'pinterest' && postFormData && (postFormData.imgUrl || postFormData.videoUrl || 
-                (postFormData.pinLink && postFormData.pinLink.length > 0) > 0 ||
-                (postFormData.text && postFormData.text.length > 0) || (postFormData.pinTitle && postFormData.pinTitle.length > 0)) &&
-                <PinterestPostPreview pinLink={postFormData.pinLink}
-                pinTitle={postFormData.pinTitle} text={postFormData.text} 
-                imgUrl={postFormData.imgUrl} videoUrl={postFormData.videoUrl} />}
-            </div>
+      <div className="notification">
+        <img src='/infotip.svg' alt="Info Tip" />
+        <p>Subscription canceled. Miss us? Hit 'Restart Subscription' below! 🌟</p>
+        <Link href="/settings/billing">
+          <button className="link-button">Restart Subscription</button>
+        </Link>
+      </div>
+      <Modal
+          isOpen={isServerError}
+          style={customStyles}
+          contentLabel="Example Modal"
+            >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+            <span onClick={() => location.reload()}
+              style={{ backgroundColor: '#1465e7', 
+              color: "white",
+              padding: '10px', 
+              cursor: 'pointer',
+              fontFamily: 'Ubuntu',
+              borderRadius: '3px',
+              fontSize: '1.1em',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+               }}>Try again</span>
           </div>
-              <div className="rightSectionHome" >
-              <ActiveAccounts
-                  setPlatform={setTargetPlatform}
-                  platforms={platforms}
-                />
-              <Requirements
-                  platform={targetPlatform}
-                />
-              <PinterestPostInput
-                  setDataForm={setPostFormData}
-                  dataForm={postFormData}
-                  platform={targetPlatform} 
-                  nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
-                  nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
-                  noTargetingErrs={isTargetingErr}
-                  publishPost={publishPostClicked}
-                  setPublishPost={setPublishPostClicked}
-                  targetErrors={targetingErrors} // this is just to open the accordion when there are errors
-                /> 
-              <Targeting 
-                  nichesAndTags={niches}
-                  chosenNicheAndTags={setNicheAndTags}
-                  errors={targetingErrors}
-                  resetErrors={setTargetingErrors}
-                  platform={targetPlatform} 
-                />
-              <button id='publish-btn' onClick={handlePostSubmit} disabled={publishPostClicked}>
-                {
-                  publishPostClicked ? <Tadpole height={40} color='white' /> : 'PUBLISH'
-                }
-              </button>
-            </div>
-          </>
-          :
+      </Modal>
+    </>)
+  } 
+
+  // render the following in case the user hasn't reached the grace period
+  // in this case, make a responsive div with a friendly message
+  if (lessThan24) {
+    return (<>
+      <div className="notification">
+        <img src='/infotip.svg' alt="Info Tip" />
+        <p>Patience is a virtue! You'll be able to publish again after the 24-hour window. 🌟</p>
+      </div>
+      <Modal
+        isOpen={isServerError}
+        style={customStyles}
+        contentLabel="Example Modal"
+          >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+          <span onClick={() => location.reload()}
+            style={{ backgroundColor: '#1465e7', 
+            color: "white",
+            padding: '10px', 
+            cursor: 'pointer',
+            fontFamily: 'Ubuntu',
+            borderRadius: '3px',
+            fontSize: '1.1em',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+             }}>Try again</span>
+        </div>
+      </Modal>
+    </>)
+  }
+  
+  // render the following in case of a server error
+  // you know the Modal directly
+  if (platforms.length === 1 && platforms[0].status === '') {
+    console.log('GETTING READY')
+    return (<>
+      <Modal
+        isOpen={isServerError}
+        style={customStyles}
+        contentLabel="Example Modal"
+          >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+          <span onClick={() => location.reload()}
+            style={{ backgroundColor: '#1465e7', 
+            color: "white",
+            padding: '10px', 
+            cursor: 'pointer',
+            fontFamily: 'Ubuntu',
+            borderRadius: '3px',
+            fontSize: '1.1em',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+             }}>Try again</span>
+        </div>
+      </Modal>
+    </>)
+  } 
+
+  // render the following if there is no issue
+  return (<>
+      {
+        windowWidth < 620 ?
         <>
-          <div className="rightSectionHome" >
+        <div className='farRightSectionHome'>
+          <div className='postPreview' >
+            <h2>Preview</h2>
+              {selectedPlatform && selectedPlatform === 'pinterest' && postFormData && (postFormData.imgUrl || postFormData.videoUrl || 
+              (postFormData.pinLink && postFormData.pinLink.length > 0) > 0 ||
+              (postFormData.text && postFormData.text.length > 0) || (postFormData.pinTitle && postFormData.pinTitle.length > 0)) &&
+              <PinterestPostPreview pinLink={postFormData.pinLink}
+              pinTitle={postFormData.pinTitle} text={postFormData.text} 
+              imgUrl={postFormData.imgUrl} videoUrl={postFormData.videoUrl} />}
+          </div>
+        </div>
+            <div className="rightSectionHome" >
             <ActiveAccounts
                 setPlatform={setTargetPlatform}
                 platforms={platforms}
@@ -219,59 +264,95 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches }) => {
               />
             <PinterestPostInput
                 setDataForm={setPostFormData}
-                platform={targetPlatform} 
                 dataForm={postFormData}
+                platform={targetPlatform} 
                 nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
                 nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
                 noTargetingErrs={isTargetingErr}
                 publishPost={publishPostClicked}
                 setPublishPost={setPublishPostClicked}
                 targetErrors={targetingErrors} // this is just to open the accordion when there are errors
-              />
+              /> 
             <Targeting 
                 nichesAndTags={niches}
-                errors={targetingErrors}
                 chosenNicheAndTags={setNicheAndTags}
+                errors={targetingErrors}
                 resetErrors={setTargetingErrors}
                 platform={targetPlatform} 
               />
-            <button id='publish-btn' onClick={handlePostSubmit}>PUBLISH</button>
+            <button id='publish-btn' onClick={handlePostSubmit} disabled={publishPostClicked}>
+              {
+                publishPostClicked ? <Tadpole height={40} color='white' /> : 'PUBLISH'
+              }
+            </button>
           </div>
-          <div className='farRightSectionHome'>
-          <div className='postPreview' >
-            <h2>Preview</h2>
-              {selectedPlatform && selectedPlatform === 'pinterest' && postFormData && (postFormData.imgUrl || postFormData.videoUrl || (postFormData.pinLink && postFormData.pinLink.length > 0) ||
-              (postFormData.text && postFormData.text.length) > 0 || (postFormData.pinTitle && postFormData.pinTitle.length > 0) ) &&
-              <PinterestPostPreview pinLink={postFormData.pinLink}
-              pinTitle={postFormData.pinTitle} text={postFormData.text} 
-              imgUrl={postFormData.imgUrl} videoUrl={postFormData.videoUrl} />}
-          </div>
-        </div>
         </>
-        }
-        <Modal
-            isOpen={isServerError}
-            style={customStyles}
-            contentLabel="Example Modal"
-              >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
-              <span onClick={() => location.reload()}
-                style={{ backgroundColor: '#1465e7', 
-                color: "white",
-                padding: '10px', 
-                cursor: 'pointer',
-                fontFamily: 'Ubuntu',
-                borderRadius: '3px',
-                fontSize: '1.1em',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                 }}>Try again</span>
-            </div>
-        </Modal>
-    </>)
-  }
+        :
+      <>
+        <div className="rightSectionHome" >
+          <ActiveAccounts
+              setPlatform={setTargetPlatform}
+              platforms={platforms}
+            />
+          <Requirements
+              platform={targetPlatform}
+            />
+          <PinterestPostInput
+              setDataForm={setPostFormData}
+              platform={targetPlatform} 
+              dataForm={postFormData}
+              nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
+              nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
+              noTargetingErrs={isTargetingErr}
+              publishPost={publishPostClicked}
+              setPublishPost={setPublishPostClicked}
+              targetErrors={targetingErrors} // this is just to open the accordion when there are errors
+            />
+          <Targeting 
+              nichesAndTags={niches}
+              errors={targetingErrors}
+              chosenNicheAndTags={setNicheAndTags}
+              resetErrors={setTargetingErrors}
+              platform={targetPlatform} 
+            />
+          <button id='publish-btn' onClick={handlePostSubmit}>PUBLISH</button>
+        </div>
+        <div className='farRightSectionHome'>
+        <div className='postPreview' >
+          <h2>Preview</h2>
+            {selectedPlatform && selectedPlatform === 'pinterest' && postFormData && (postFormData.imgUrl || postFormData.videoUrl || (postFormData.pinLink && postFormData.pinLink.length > 0) ||
+            (postFormData.text && postFormData.text.length) > 0 || (postFormData.pinTitle && postFormData.pinTitle.length > 0) ) &&
+            <PinterestPostPreview pinLink={postFormData.pinLink}
+            pinTitle={postFormData.pinTitle} text={postFormData.text} 
+            imgUrl={postFormData.imgUrl} videoUrl={postFormData.videoUrl} />}
+        </div>
+      </div>
+      </>
+      }
+      <Modal
+          isOpen={isServerError}
+          style={customStyles}
+          contentLabel="Example Modal"
+            >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+            <span onClick={() => location.reload()}
+              style={{ backgroundColor: '#1465e7', 
+              color: "white",
+              padding: '10px', 
+              cursor: 'pointer',
+              fontFamily: 'Ubuntu',
+              borderRadius: '3px',
+              fontSize: '1.1em',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+               }}>Try again</span>
+          </div>
+      </Modal>
+  </>)
+
+
 };
 
 export default PublishAPost;
@@ -362,8 +443,9 @@ export async function getServerSideProps(context) {
       };
     }
 
+
     // Parse the cookies to retrieve the otpTOKEN
-    const tokenCookie = cookies.split(';').find(c => c.trim().startsWith('token='));
+    const tokenCookie = cookies.trim().split('token=')[1]
 
     if (!tokenCookie) {
       return {
@@ -373,11 +455,10 @@ export async function getServerSideProps(context) {
         },
       };
     }
-    
-    let tokenValue = tokenCookie.split('=')[1];
+
     let decoded
     try {
-      decoded = jwt.verify(tokenValue, process.env.USER_JWT_SECRET);
+      decoded = jwt.verify(tokenCookie, process.env.USER_JWT_SECRET);
     } catch (err) {
       return {
         redirect: {
@@ -431,8 +512,6 @@ export async function getServerSideProps(context) {
     // get the subscription status
     const subStatus = await getSubscriptionStatus(stripeId, activePriceId);
 
-
-
     if (subStatus === 'Server error') {
       return {
         props: {
@@ -469,32 +548,71 @@ export async function getServerSideProps(context) {
         }
       });
     });
-
-    // get all the available niches
+    
     // here you have to also find if 
     // the user has published anything in the last
-    // 24H
-    let nichesAndTags = await User.aggregate([
-      { $unwind: "$socialMediaLinks" },
-      { $group: { _id: "$socialMediaLinks.niche", tags: { $addToSet: "$socialMediaLinks.audience" } } },
-      { $project: { _id: 0, niche: "$_id", tags: 1 } }
-    ]);
-  
-    // Flatten the tags arrays
-    nichesAndTags = nichesAndTags.map(({ niche, tags }) => ({ niche, tags: [].concat(...tags) }));
+    // 24H + DON'T FORGET TO MAKE IT MORE EFFICIENT 
+    // WITH DIRECT MONGODB QUERIES
+    const userMaxPublishingDatePipeline = [
+      { $match: { _id: userId } },
+      { $unwind: '$socialMediaLinks' },
+      { $unwind: '$socialMediaLinks.posts' },
+      { $group: { _id: null, maxPublishingDate: { $max: '$socialMediaLinks.posts.publishingDate' } } },
+    ];
     
-    // Remove duplicates in tags
-    nichesAndTags = nichesAndTags.map(({ niche, tags }) => ({ niche, tags: [...new Set(tags)] }));
+    const [result] = await User.aggregate(userMaxPublishingDatePipeline);
 
+    if (result && result.maxPublishingDate >= getCurrentUTCDate()) {
+      
+      // get all the available niches
+      const pipeline = [
+        { $unwind: "$socialMediaLinks" },
+        { $unwind: "$socialMediaLinks.audience" },
+        {
+          $group: {
+            _id: null,
+            niches: { $addToSet: "$socialMediaLinks.niche" },
+            tags: { $addToSet: "$socialMediaLinks.audience" },
+          },
+        },
+      ];
+      
+      const result = await User.aggregate(pipeline);
+      
+      const { niches, tags } = result[0];
+
+
+      // here where you return all of the data
+      return {
+        props: {
+          isServerError: false,
+          signedIn: true,
+          dash: true,
+          platforms: platformNames,
+          nichesAndTags: {
+            niches: niches,
+            tags: tags
+          }
+        }
+      };
+  
+      
+    } 
+
+
+    // if we return this, then it still hasn't passed 24H
+    // change of status in the platforms. This is only when 
+    // have multiple platforms
     return {
       props: {
         isServerError: false,
         signedIn: true,
         dash: true,
-        platforms: platformNames,
-        niches: nichesAndTags
+        below24Hours: true,
+        platforms: platformNames  // to be amended when you have multiple platforms
       }
     };
+
 
   } catch (error) {
     return {

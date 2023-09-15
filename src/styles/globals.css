@@ -4188,3 +4188,20 @@ a {
 .onboarding-container .password-container button:hover {
     background-color:#12123b;
 }
+
+.notification {
+    width: 68%;
+    height: fit-content;
+    background-color: #f5f6f7;
+    border-radius: 8px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #12123b;
+    font-size: 1.2em;
+}
+
+.notification img {
+    width: 40px;
+}

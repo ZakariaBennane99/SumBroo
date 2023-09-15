@@ -77,6 +77,8 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
                             </div>
                             )  
                     } else {
+                        // don't forget to add another if-else for accounts that can't be chosen due to
+                        // the time window set for them which will already be set in the publish a post
                         return (
                             <div>
                                 <div className="cell-content notApplied">
