@@ -39,7 +39,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
 
   const lessThan24 = below24Hours || false;
 
-  console.log('THE PLATFORMS', platforms)
+  console.log('NICHES', niches)
 
   const [selectedPlatform, setSelectedPlatform] = useState(null);
 
@@ -536,18 +536,18 @@ export async function getServerSideProps(context) {
       )
     });
 
-    [user].forEach(user => {
-      user.socialMediaLinks.forEach(link => {
-        if (link.pricePlans.includes(activePriceId)) {
-          link.profileStatus = 'active';
-          updateStatusByName(link.platformName, 'active', platformNames);
-        } else {
-          const st = getStatus(subStatus)
-          link.profileStatus = st
-          updateStatusByName(link.platformName, st, platformNames);
-        }
-      });
+
+    user.socialMediaLinks.forEach(link => {
+      if (link.pricePlans.includes(activePriceId)) {
+        link.profileStatus = 'active';
+        updateStatusByName(link.platformName, 'active', platformNames);
+      } else {
+        const st = getStatus(subStatus)
+        link.profileStatus = st
+        updateStatusByName(link.platformName, st, platformNames);
+      }
     });
+    
     
     // here you have to also find if 
     // the user has published anything in the last
@@ -562,26 +562,35 @@ export async function getServerSideProps(context) {
     
     const [result] = await User.aggregate(userMaxPublishingDatePipeline);
 
-    if (result && result.maxPublishingDate >= getCurrentUTCDate()) {
-      
-      // get all the available niches
-      const pipeline = [
-        { $unwind: "$socialMediaLinks" },
-        { $unwind: "$socialMediaLinks.audience" },
-        {
-          $group: {
-            _id: null,
-            niches: { $addToSet: "$socialMediaLinks.niche" },
-            tags: { $addToSet: "$socialMediaLinks.audience" },
-          },
+    // get all the available niches
+    const pipeline = [
+      { $unwind: "$socialMediaLinks" },
+      { $unwind: "$socialMediaLinks.audience" },
+      {
+        $group: {
+          _id: { niche: "$socialMediaLinks.niche", tag: "$socialMediaLinks.audience" },
         },
-      ];
-      
-      const result = await User.aggregate(pipeline);
-      
-      const { niches, tags } = result[0];
+      },
+      {
+        $group: {
+          _id: "$_id.niche",
+          tags: { $addToSet: "$_id.tag" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          niche: "$_id",
+          tags: 1,
+        },
+      },
+    ]
+    
+    
+    const nicheRes = await User.aggregate(pipeline);
+  
 
-
+    if (!result) {
       // here where you return all of the data
       return {
         props: {
@@ -589,32 +598,42 @@ export async function getServerSideProps(context) {
           signedIn: true,
           dash: true,
           platforms: platformNames,
-          nichesAndTags: {
-            niches: niches,
-            tags: tags
-          }
+          niches: nicheRes
+        }
+      };
+    }
+
+
+    if (result.maxPublishingDate <= getCurrentUTCDate()) {
+      // if we return this, then it still hasn't passed 24H
+      // change of status in the platforms. This is only when 
+      // have multiple platforms
+      return {
+        props: {
+          isServerError: false,
+          signedIn: true,
+          dash: true,
+          below24Hours: true,
+          platforms: platformNames  // to be amended when you have multiple platforms
         }
       };
   
-      
     } 
 
-
-    // if we return this, then it still hasn't passed 24H
-    // change of status in the platforms. This is only when 
-    // have multiple platforms
+    // here where you return all of the data
     return {
       props: {
         isServerError: false,
         signedIn: true,
         dash: true,
-        below24Hours: true,
-        platforms: platformNames  // to be amended when you have multiple platforms
+        platforms: platformNames,
+        niches: nicheRes
       }
     };
 
 
   } catch (error) {
+    console.log('THE ERROR', error)
     return {
       props: {
         isServerError: true,
