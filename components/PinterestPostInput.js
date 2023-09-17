@@ -1,8 +1,6 @@
 import React from "react";
 import Modal from 'react-modal';
 import { useState, useRef, useEffect } from "react";
-import { v4 as uuidv4 } from 'uuid';
-import { Tadpole } from "react-svg-spinners";
 import axios from 'axios';
 import validator from 'validator';
 
@@ -14,7 +12,8 @@ export default function PinterestPostInput({ setDataForm,
   publishPost,
   setPublishPost,
   targetErrors,
-  dataForm }) {
+  dataForm,
+  setSuccess }) {
 
   const [titleChars, setTitleChars] = useState(0)  
   const [descChars, setDescChars] = useState(0)
@@ -56,14 +55,6 @@ export default function PinterestPostInput({ setDataForm,
   
   async function handlePublishRequest() {
 
-
-    setTimeout(() => {
-      setPublishPost(false);
-    }, 5000)
-
-
-    /*
-
     const apiUrl = 'http://localhost:4050/api/handle-post-submit/pinterest';
   
     try {
@@ -86,6 +77,7 @@ export default function PinterestPostInput({ setDataForm,
 
       if (res) {
         setPublishPost(false);
+        setSuccess(true)
         console.log('The results', res);
       }
   
@@ -95,7 +87,6 @@ export default function PinterestPostInput({ setDataForm,
       console.error('Server error', error);
     }
 
-    */
 
   }
   

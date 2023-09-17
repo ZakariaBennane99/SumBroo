@@ -57,6 +57,8 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
   // this is for the selected niche and tags
   const [nicheAndTags, setNicheAndTags] = useState(null)
 
+  const [isSuccess, setIsSuccess] = useState(false)
+
   const [validatedNicheAndTags, setValidatedNicheAndTags] = useState(null) 
 
   const [isTargetingErr, setIsTargetingErr] = useState(false)
@@ -240,98 +242,111 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
   return (<>
       {
         windowWidth < 620 ?
-        <>
-        <div className='farRightSectionHome'>
-          <div className='postPreview' >
-            <h2>Preview</h2>
-              {selectedPlatform && selectedPlatform === 'pinterest' && postFormData && (postFormData.imgUrl || postFormData.videoUrl || 
-              (postFormData.pinLink && postFormData.pinLink.length > 0) > 0 ||
-              (postFormData.text && postFormData.text.length > 0) || (postFormData.pinTitle && postFormData.pinTitle.length > 0)) &&
-              <PinterestPostPreview pinLink={postFormData.pinLink}
-              pinTitle={postFormData.pinTitle} text={postFormData.text} 
-              imgUrl={postFormData.imgUrl} videoUrl={postFormData.videoUrl} />}
-          </div>
-        </div>
+          isSuccess ?
+          <div className="postSentSuccess">
+            <img src="/green-check.svg" />
+            <p>Thank you for your submission! 🌟 We are now reviewing your content and will update you as soon as possible.</p>
+          </div> 
+          :
+          <>
+            <div className='farRightSectionHome'>
+              <div className='postPreview' >
+                <h2>Preview</h2>
+                  {selectedPlatform && selectedPlatform === 'pinterest' && postFormData && (postFormData.imgUrl || postFormData.videoUrl || 
+                  (postFormData.pinLink && postFormData.pinLink.length > 0) > 0 ||
+                  (postFormData.text && postFormData.text.length > 0) || (postFormData.pinTitle && postFormData.pinTitle.length > 0)) &&
+                  <PinterestPostPreview pinLink={postFormData.pinLink}
+                  pinTitle={postFormData.pinTitle} text={postFormData.text} 
+                  imgUrl={postFormData.imgUrl} videoUrl={postFormData.videoUrl} />}
+              </div>
+            </div>
             <div className="rightSectionHome" >
-            <ActiveAccounts
-                setPlatform={setTargetPlatform}
-                platforms={platforms}
-              />
-            <Requirements
-                platform={targetPlatform}
-              />
-            <PinterestPostInput
-                setDataForm={setPostFormData}
-                dataForm={postFormData}
-                platform={targetPlatform} 
-                nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
-                nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
-                noTargetingErrs={isTargetingErr}
-                publishPost={publishPostClicked}
-                setPublishPost={setPublishPostClicked}
-                targetErrors={targetingErrors} // this is just to open the accordion when there are errors
-              /> 
-            <Targeting 
-                nichesAndTags={niches}
-                chosenNicheAndTags={setNicheAndTags}
-                errors={targetingErrors}
-                resetErrors={setTargetingErrors}
-                platform={targetPlatform} 
-              />
-            <button id='publish-btn' className={`${publishPostClicked ? 'publish-btn-loading' : ''}`}
-             onClick={handlePostSubmit} disabled={publishPostClicked}>
-              {
-                publishPostClicked ? <Tadpole height={40} color='white' /> : 'PUBLISH'
-              }
-            </button>
-          </div>
-        </>
-        :
-      <>
-        <div className="rightSectionHome" >
-          <ActiveAccounts
-              setPlatform={setTargetPlatform}
-              platforms={platforms}
-            />
-          <Requirements
-              platform={targetPlatform}
-            />
-          <PinterestPostInput
-              setDataForm={setPostFormData}
-              platform={targetPlatform} 
-              dataForm={postFormData}
-              nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
-              nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
-              noTargetingErrs={isTargetingErr}
-              publishPost={publishPostClicked}
-              setPublishPost={setPublishPostClicked}
-              targetErrors={targetingErrors} // this is just to open the accordion when there are errors
-            />
-          <Targeting 
-              nichesAndTags={niches}
-              errors={targetingErrors}
-              chosenNicheAndTags={setNicheAndTags}
-              resetErrors={setTargetingErrors}
-              platform={targetPlatform} 
-            />
-          <button id='publish-btn' className={`${publishPostClicked ? 'publish-btn-loading' : ''}`}
-           onClick={handlePostSubmit} disabled={publishPostClicked}>
-            {
-              publishPostClicked ? <Tadpole height={50} color='white' /> : 'PUBLISH'
-            }
-          </button>
-        </div>
-        <div className='farRightSectionHome'>
-        <div className='postPreview' >
-          <h2>Preview</h2>
-            {selectedPlatform && selectedPlatform === 'pinterest' && postFormData && (postFormData.imgUrl || postFormData.videoUrl || (postFormData.pinLink && postFormData.pinLink.length > 0) ||
-            (postFormData.text && postFormData.text.length) > 0 || (postFormData.pinTitle && postFormData.pinTitle.length > 0) ) &&
-            <PinterestPostPreview pinLink={postFormData.pinLink}
-            pinTitle={postFormData.pinTitle} text={postFormData.text} 
-            imgUrl={postFormData.imgUrl} videoUrl={postFormData.videoUrl} />}
-        </div>
-      </div>
-      </>
+              <ActiveAccounts
+                  setPlatform={setTargetPlatform}
+                  platforms={platforms}
+                />
+              <Requirements
+                  platform={targetPlatform}
+                />
+              <PinterestPostInput
+                  setDataForm={setPostFormData}
+                  dataForm={postFormData}
+                  platform={targetPlatform} 
+                  nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
+                  nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
+                  noTargetingErrs={isTargetingErr}
+                  publishPost={publishPostClicked}
+                  setPublishPost={setPublishPostClicked}
+                  targetErrors={targetingErrors} // this is just to open the accordion when there are errors
+                  setSuccess={setIsSuccess} // this is only when the user has successfully sent the request
+                /> 
+              <Targeting 
+                  nichesAndTags={niches}
+                  chosenNicheAndTags={setNicheAndTags}
+                  errors={targetingErrors}
+                  resetErrors={setTargetingErrors}
+                  platform={targetPlatform} 
+                />
+              <button id='publish-btn' className={`${publishPostClicked ? 'publish-btn-loading' : ''}`}
+               onClick={handlePostSubmit} disabled={publishPostClicked}>
+                {
+                  publishPostClicked ? <Tadpole height={40} color='white' /> : 'PUBLISH'
+                }
+              </button>
+            </div>
+          </>
+        : isSuccess ? 
+          <div className="postSentSuccess">
+            <img src="/green-check.svg" />
+            <p>Thank you for your submission! 🌟 We are now reviewing your content and will update you as soon as possible.</p>
+          </div> 
+          :
+          <>
+            <div className="rightSectionHome" >
+              <ActiveAccounts
+                  setPlatform={setTargetPlatform}
+                  platforms={platforms}
+                />
+              <Requirements
+                  platform={targetPlatform}
+                />
+              <PinterestPostInput
+                  setDataForm={setPostFormData}
+                  platform={targetPlatform} 
+                  dataForm={postFormData}
+                  nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
+                  nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
+                  noTargetingErrs={isTargetingErr}
+                  publishPost={publishPostClicked}
+                  setPublishPost={setPublishPostClicked}
+                  targetErrors={targetingErrors} // this is just to open the accordion when there are errors
+                  setSuccess={setIsSuccess} // this is only when the user has successfully sent the request
+                />
+              <Targeting 
+                  nichesAndTags={niches}
+                  errors={targetingErrors}
+                  chosenNicheAndTags={setNicheAndTags}
+                  resetErrors={setTargetingErrors}
+                  platform={targetPlatform} 
+                />
+              <button id='publish-btn' className={`${publishPostClicked ? 'publish-btn-loading' : ''}`}
+               onClick={handlePostSubmit} disabled={publishPostClicked}>
+                {
+                  publishPostClicked ? <Tadpole height={50} color='white' /> : 'PUBLISH'
+                }
+              </button>
+            </div>
+            <div className='farRightSectionHome'>
+              <div className='postPreview' >
+                <h2>Preview</h2>
+                  {selectedPlatform && selectedPlatform === 'pinterest' && postFormData && (postFormData.imgUrl || postFormData.videoUrl || (postFormData.pinLink && postFormData.pinLink.length > 0) ||
+                  (postFormData.text && postFormData.text.length) > 0 || (postFormData.pinTitle && postFormData.pinTitle.length > 0) ) &&
+                  <PinterestPostPreview pinLink={postFormData.pinLink}
+                  pinTitle={postFormData.pinTitle} text={postFormData.text} 
+                  imgUrl={postFormData.imgUrl} videoUrl={postFormData.videoUrl} />}
+              </div>
+            </div>
+          </>
       }
       <Modal
           isOpen={isServerError}

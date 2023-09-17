@@ -4061,6 +4061,57 @@ a {
     .postStatusContainer div:nth-last-of-type(2) {
         margin-bottom: 20px;
     }
+
+    .postSentSuccess {
+        background-color: #f5f6f7;
+        width: 80%;
+        margin-right: auto;
+        margin-left: auto;
+        border-radius: 7px;
+        padding: 4%;
+        height: fit-content;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .postSentSuccess img {
+        width: 10%;
+        height: fit-content;
+    }
+    
+    .postSentSuccess p {
+        width: 85%;
+        font-size: 1.2em;
+        line-height: 1.5;
+    }
+
+}
+
+.postSentSuccess {
+    background-color: #f5f6f7;
+    width: 60%;
+    margin-right: auto;
+    margin-left: auto;
+    border-radius: 7px;
+    padding: 2%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.postSentSuccess img {
+    width: 8%;
+    height: fit-content;
+}
+
+.postSentSuccess p {
+    width: 90%;
+    font-size: 1.2em;
+    line-height: 1.5;
 }
 
 .applicationSentMessageContainer {
