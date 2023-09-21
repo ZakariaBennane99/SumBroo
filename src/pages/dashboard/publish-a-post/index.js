@@ -626,7 +626,7 @@ export async function getServerSideProps(context) {
     if (result.maxPublishingDate <= getCurrentUTCDate()) {
       // if we return this, then it still hasn't passed 24H
       // change of status in the platforms. This is only when 
-      // have multiple platforms
+      // we have multiple platforms
       return {
         props: {
           isServerError: false,
