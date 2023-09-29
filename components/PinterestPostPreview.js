@@ -8,8 +8,9 @@ const PinterestPostPreview = ({ pinTitle, pinLink, text, imgUrl, videoUrl }) => 
 
     const profileUserNames = JSON.parse(localStorage.getItem('userProfileNames'))
 
+    
     const userDtPin = profileUserNames.find(elem => elem.platform === 'pinterest')
-
+    
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [playing, setPlaying] = useState(false);
     const [muted, setMuted] = useState(false);

@@ -39,8 +39,6 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
 
   const lessThan24 = below24Hours || false;
 
-  console.log('The server Error', isServerError)
-
   const [selectedPlatform, setSelectedPlatform] = useState(null);
 
   // for the form data
@@ -114,7 +112,8 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
 
       const isNicheAndTagsValid = validateNicheAndTags();
 
-      setPublishPostClicked(true)
+      console.log('Is valid niches and tags', isNicheAndTagsValid)
+
       setIsTargetingErr(isNicheAndTagsValid)
       setValidatedNicheAndTags(nicheAndTags)
 
@@ -214,7 +213,6 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
   // render the following in case of a server error
   // you know the Modal directly
   if (platforms.length === 1 && platforms[0].status === '') {
-    console.log('GETTING READY')
     return (<>
       <Modal
         isOpen={isServerError}
@@ -275,7 +273,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
                   dataForm={postFormData}
                   platform={targetPlatform} 
                   nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
-                  nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
+                  nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for the Targeting component
                   noTargetingErrs={isTargetingErr}
                   publishPost={publishPostClicked}
                   setPublishPost={setPublishPostClicked}
@@ -317,7 +315,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
                   platform={targetPlatform} 
                   dataForm={postFormData}
                   nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
-                  nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for for the Targeting component
+                  nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for the Targeting component
                   noTargetingErrs={isTargetingErr}
                   publishPost={publishPostClicked}
                   setPublishPost={setPublishPostClicked}

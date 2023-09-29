@@ -15,6 +15,9 @@ export default function PinterestPostInput({ setDataForm,
   dataForm,
   setSuccess }) {
 
+    console.log('Just RUN')
+    console.log('the niche and tags and tags status', nicheAndTags)
+
   const [titleChars, setTitleChars] = useState(0)  
   const [descChars, setDescChars] = useState(0)
   const [isServerError, setIsServerError] = useState(false)
@@ -55,6 +58,8 @@ export default function PinterestPostInput({ setDataForm,
   
   async function handlePublishRequest() {
 
+    setPublishPost(true)
+
     const apiUrl = 'http://localhost:4050/api/handle-post-submit/pinterest';
   
     try {
@@ -87,13 +92,17 @@ export default function PinterestPostInput({ setDataForm,
       console.error('Server error', error);
     }
 
-
   }
   
 
   useEffect(() => {
 
+    console.log(nicheAndTags)
+
     if (nicheAndTags) {
+
+      console.log(nicheAndTags)
+      console.log('The data form', dataForm)
 
       const errors = {
         postTitle: null,
@@ -130,12 +139,13 @@ export default function PinterestPostInput({ setDataForm,
       }
 
       if (!imgUrl && !videoUrl) {
-        errors.mediaLink = "Please upload an image or a video."
+        errors.mediaLink = "Please upload a valid image or a video."
       }
-
   
       // Update pinterestPostErrors state
       setPinterestPostErrors(errors);
+      
+      console.log('The backedn request')
 
       if (!Object.values(errors).some(error => error) && noTargetingErrs) {
         // here we will send the request to the backend
@@ -145,6 +155,7 @@ export default function PinterestPostInput({ setDataForm,
     }
 
   }, [nicheAndTags])
+
 
   useEffect(() => {
     setDataForm({
@@ -227,6 +238,10 @@ export default function PinterestPostInput({ setDataForm,
 
     const fileInfo = { fileName: file.name, errors: errors };
 
+    if (fileInfo.errors.length > 0) {
+      setPublishPost(false);
+    }
+    
     setFileInfo(fileInfo);
 
   }
@@ -381,7 +396,7 @@ export default function PinterestPostInput({ setDataForm,
                     ...prev,
                     postTitle: null
                   }
-                }); }}
+                }); setPublishPost(false); }}
                 style={{ outline: pinterestPostErrors.postTitle ? '2px solid red' : '' }} />
               {pinterestPostErrors.postTitle ? <p style={{ fontSize: '.8em', marginBottom: '0px', marginTop: '10px', color: 'red' }}>{pinterestPostErrors.postTitle}</p> : '' }  
             </div>
@@ -394,7 +409,7 @@ export default function PinterestPostInput({ setDataForm,
                     ...prev,
                     pinTitle: null
                   }
-                }) }}
+                }); setPublishPost(false); }}
                 style={{ outline: pinterestPostErrors.pinTitle ? '2px solid red' : '' }} />
               { titleChars > 0 && !pinterestPostErrors.pinTitle ? 
               <span className="charsCounter" style={{ 
@@ -428,7 +443,7 @@ export default function PinterestPostInput({ setDataForm,
                     ...prev,
                     text: null
                   }
-                }) }}
+                }); setPublishPost(false); }}
                 style={{ outline: pinterestPostErrors.text ? '2px solid red' : '' }}
               />
               { descChars > 0 && !pinterestPostErrors.text ?
@@ -458,7 +473,7 @@ export default function PinterestPostInput({ setDataForm,
                     ...prev,
                     pinLink: null
                   }
-                }) }} 
+                }); setPublishPost(false); }} 
                 style={{ outline: pinterestPostErrors.pinLink ? '2px solid red' : '' }} />
               {pinterestPostErrors.pinLink ? <p style={{ fontSize: '.8em', marginBottom: '0px', marginTop: '10px', color: 'red' }}>{pinterestPostErrors.pinLink}</p> : '' }
             </div>

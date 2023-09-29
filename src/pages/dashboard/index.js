@@ -6,7 +6,7 @@ const Home = ({ windowWidth, profileNames }) => {
   localStorage.setItem('userProfileNames', JSON.stringify(profileNames))
 
   return (<div style={{ width: windowWidth > 1215 ? '80%' : '100%', height: windowWidth > 1215 ? 'fit-content' : '100vh' }} className="rightSectionZenContainer">
-          <img src="./zenMode.svg" alt="editing"/>
+        <img src="./zenMode.svg" alt="editing"/>
     </div>)
 };
 
@@ -56,11 +56,9 @@ export async function getServerSideProps(context) {
       return {
         platform: link.platformName,
         link: link.profileLink,
-        userName: link.profileUserName
+        userName: link.profileLink.match(/\.com\/([^\/]+)/)[1]
       }
     })
-
-    console.log('PROFILENAME', profileUserNames)
 
     // continue rendering
     return {
