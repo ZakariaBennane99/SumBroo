@@ -59,7 +59,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
 
   const [isSuccess, setIsSuccess] = useState(false)
 
-  const [validatedNicheAndTags, setValidatedNicheAndTags] = useState(null) 
+  const [publishButtonClicked, setIsPublishButtonClicked] = useState(null) 
 
   const [isTargetingErr, setIsTargetingErr] = useState(false)
 
@@ -85,7 +85,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
       return !Object.values(errors).some(error => error);
     }
 
-    if (niches && niche && !niches.some(n => n.niche === niche)) {
+    if (niches && niche && !niches.some(n => n.niche === niche.value)) {
       errors.niche = "Invalid niche selected.";
     }
   
@@ -112,10 +112,9 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
 
       const isNicheAndTagsValid = validateNicheAndTags();
 
-      console.log('Is valid niches and tags', isNicheAndTagsValid)
+      setPublishPostClicked(true)
 
       setIsTargetingErr(isNicheAndTagsValid)
-      setValidatedNicheAndTags(nicheAndTags)
 
     } 
     // you can continue the if-else statement or use switch when adding more
@@ -271,9 +270,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
               <PinterestPostInput
                   setDataForm={setPostFormData}
                   dataForm={postFormData}
-                  platform={targetPlatform} 
-                  nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
-                  nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for the Targeting component
+                  platform={targetPlatform}
                   noTargetingErrs={isTargetingErr}
                   publishPost={publishPostClicked}
                   setPublishPost={setPublishPostClicked}
@@ -314,8 +311,6 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
                   setDataForm={setPostFormData}
                   platform={targetPlatform} 
                   dataForm={postFormData}
-                  nicheAndTags={validatedNicheAndTags} // from here we know if publish is clicked
-                  nicheAndTagsErrors={setTargetingErrors} // nicheAndTagsErrors needed for the Targeting component
                   noTargetingErrs={isTargetingErr}
                   publishPost={publishPostClicked}
                   setPublishPost={setPublishPostClicked}

@@ -15,9 +15,6 @@ export default function PinterestPostInput({ setDataForm,
   dataForm,
   setSuccess }) {
 
-    console.log('Just RUN')
-    console.log('the niche and tags and tags status', nicheAndTags)
-
   const [titleChars, setTitleChars] = useState(0)  
   const [descChars, setDescChars] = useState(0)
   const [isServerError, setIsServerError] = useState(false)
@@ -97,12 +94,7 @@ export default function PinterestPostInput({ setDataForm,
 
   useEffect(() => {
 
-    console.log(nicheAndTags)
-
-    if (nicheAndTags) {
-
-      console.log(nicheAndTags)
-      console.log('The data form', dataForm)
+    if (publishPost) {
 
       const errors = {
         postTitle: null,
@@ -144,8 +136,11 @@ export default function PinterestPostInput({ setDataForm,
   
       // Update pinterestPostErrors state
       setPinterestPostErrors(errors);
-      
-      console.log('The backedn request')
+
+      // if there are any errors, set the pusblishPost value to false
+      if (Object.values(errors).some(error => error)) {
+        setPublishPost(false)
+      }
 
       if (!Object.values(errors).some(error => error) && noTargetingErrs) {
         // here we will send the request to the backend
@@ -154,7 +149,7 @@ export default function PinterestPostInput({ setDataForm,
 
     }
 
-  }, [nicheAndTags])
+  }, [publishPost])
 
 
   useEffect(() => {
