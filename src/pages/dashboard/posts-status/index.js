@@ -1,10 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
 import _ from 'lodash';
+import { useRouter } from 'next/router'
 
 
 const PostsStatus = () => {
-
+ 
+  const router = useRouter()
 
   const data = [
     {
