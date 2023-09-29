@@ -39,6 +39,8 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
 
   const lessThan24 = below24Hours || false;
 
+  console.log('The server Error', isServerError)
+
   const [selectedPlatform, setSelectedPlatform] = useState(null);
 
   // for the form data
@@ -390,12 +392,13 @@ export async function getServerSideProps(context) {
 
     // now hit the Stripe API to get the user status
     const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-
     try {
       const subscriptions = await stripe.subscriptions.list({
         customer: id,
       });
+      console.log('Chosen sub', subscriptions)
       const subscription = subscriptions.data[0];
+      console.log('SUB', subscription)
       const activePriceId = subscription.items.data[0].price.id;
       return activePriceId;
 
@@ -513,7 +516,6 @@ export async function getServerSideProps(context) {
     // get the user plan PRICE ID not the plan id
     const activePriceId = await getCusPriceId(stripeId)
 
-
     if (activePriceId === 'Server error') {
       return {
         props: {
@@ -527,9 +529,10 @@ export async function getServerSideProps(context) {
       };
     }
 
-
     // get the subscription status
     const subStatus = await getSubscriptionStatus(stripeId, activePriceId);
+
+    console.log('The substatus', subStatus)
 
     if (subStatus === 'Server error') {
       return {

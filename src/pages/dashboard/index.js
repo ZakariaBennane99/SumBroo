@@ -67,7 +67,7 @@ export async function getServerSideProps(context) {
       props: {
         signedIn: true,
         dash: true,
-        profileNames: profileUserNames
+        profileNames: JSON.parse(JSON.stringify(profileUserNames))
       }
     };
 
