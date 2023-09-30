@@ -57,6 +57,8 @@ export default function PinterestPostInput({ setDataForm,
 
     setPublishPost(true)
 
+    console.log(nicheAndTags)
+
     const apiUrl = 'http://localhost:4050/api/handle-post-submit/pinterest';
   
     try {

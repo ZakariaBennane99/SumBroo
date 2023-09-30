@@ -12,20 +12,18 @@ import { Tadpole } from "react-svg-spinners";
 
 
 function getCurrentUTCDate() {
-
   const now = new Date();
 
-  const utcFullYear = now.getUTCFullYear();
-  const utcMonth = String(now.getUTCMonth() + 1).padStart(2, '0'); 
-  const utcDate = String(now.getUTCDate()).padStart(2, '0');
-  const utcHours = String(now.getUTCHours()).padStart(2, '0');
-  const utcMinutes = String(now.getUTCMinutes()).padStart(2, '0');
-  const utcSeconds = String(now.getUTCSeconds()).padStart(2, '0');
+  const utcDate = new Date(Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate(),
+    now.getUTCHours(),
+    now.getUTCMinutes(),
+    now.getUTCSeconds()
+  ));
 
-  const fullUTCDate = `${utcFullYear}-${utcMonth}-${utcDate} ${utcHours}:${utcMinutes}:${utcSeconds} UTC`;
-
-  return fullUTCDate
-
+  return utcDate;
 }
 
 function allObjectsHaveSameValueForKey(arr, key) {
@@ -113,7 +111,6 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
       const isNicheAndTagsValid = validateNicheAndTags();
 
       setPublishPostClicked(true)
-
       setIsTargetingErr(isNicheAndTagsValid)
 
     } 
@@ -272,6 +269,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
                   dataForm={postFormData}
                   platform={targetPlatform}
                   noTargetingErrs={isTargetingErr}
+                  nicheAndTags={nicheAndTags}
                   publishPost={publishPostClicked}
                   setPublishPost={setPublishPostClicked}
                   targetErrors={targetingErrors} // this is just to open the accordion when there are errors
@@ -312,6 +310,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
                   platform={targetPlatform} 
                   dataForm={postFormData}
                   noTargetingErrs={isTargetingErr}
+                  nicheAndTags={nicheAndTags}
                   publishPost={publishPostClicked}
                   setPublishPost={setPublishPostClicked}
                   targetErrors={targetingErrors} // this is just to open the accordion when there are errors
@@ -380,6 +379,7 @@ export async function getServerSideProps(context) {
   const User = require('../../../../utils/User').default;
   const AvAc = require('../../../../utils/AvailableAccounts').default;
   const mongoSanitize = require('express-mongo-sanitize');
+  const mongoose = require('mongoose')
 
   async function getCusPriceId(id) {
 
@@ -389,9 +389,7 @@ export async function getServerSideProps(context) {
       const subscriptions = await stripe.subscriptions.list({
         customer: id,
       });
-      console.log('Chosen sub', subscriptions)
       const subscription = subscriptions.data[0];
-      console.log('SUB', subscription)
       const activePriceId = subscription.items.data[0].price.id;
       return activePriceId;
 
@@ -525,8 +523,6 @@ export async function getServerSideProps(context) {
     // get the subscription status
     const subStatus = await getSubscriptionStatus(stripeId, activePriceId);
 
-    console.log('The substatus', subStatus)
-
     if (subStatus === 'Server error') {
       return {
         props: {
@@ -563,20 +559,19 @@ export async function getServerSideProps(context) {
       }
     });
     
-    
     // here you have to also find if 
     // the user has published anything in the last
     // 24H + DON'T FORGET TO MAKE IT MORE EFFICIENT 
     // WITH DIRECT MONGODB QUERIES
     const userMaxPublishingDatePipeline = [
-      { $match: { _id: userId } },
+      { $match: { _id: new mongoose.Types.ObjectId(sanitizedUserId) } },
       { $unwind: '$socialMediaLinks' },
       { $unwind: '$socialMediaLinks.posts' },
       { $group: { _id: null, maxPublishingDate: { $max: '$socialMediaLinks.posts.publishingDate' } } },
     ];
     
     const [result] = await User.aggregate(userMaxPublishingDatePipeline);
-
+    console.log(result)
     // get all the available niches
     const pipeline = [
       { $unwind: "$socialMediaLinks" },
@@ -603,7 +598,7 @@ export async function getServerSideProps(context) {
     
     
     const nicheRes = await User.aggregate(pipeline);
-  
+
 
     if (!result) {
       // here where you return all of the data
@@ -618,11 +613,13 @@ export async function getServerSideProps(context) {
       };
     }
 
+    console.log('The current UTC', getCurrentUTCDate())
 
     if (result.maxPublishingDate <= getCurrentUTCDate()) {
       // if we return this, then it still hasn't passed 24H
       // change of status in the platforms. This is only when 
       // we have multiple platforms
+      console.log('Hey ther')
       return {
         props: {
           isServerError: false,
