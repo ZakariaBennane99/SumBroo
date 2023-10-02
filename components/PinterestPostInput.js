@@ -57,10 +57,8 @@ export default function PinterestPostInput({ setDataForm,
 
     setPublishPost(true)
 
-    console.log(nicheAndTags)
-
     const apiUrl = 'http://localhost:4050/api/handle-post-submit/pinterest';
-  
+
     try {
       const formData = new FormData();
       formData.append('postTitle', postTitle);
@@ -69,7 +67,7 @@ export default function PinterestPostInput({ setDataForm,
       formData.append('pinLink', pinLink);
       if (imgUrl) formData.append('image', await getBlob(imgUrl));
       if (videoUrl) formData.append('video', await getBlob(videoUrl));
-      formData.append('niche', nicheAndTags.niche);
+      formData.append('niche', nicheAndTags.niche.value);
       formData.append('tags', JSON.stringify(nicheAndTags.tags));
       
       const res = await axios.post(apiUrl, formData, {
