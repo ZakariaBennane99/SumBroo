@@ -571,7 +571,7 @@ export async function getServerSideProps(context) {
     ];
     
     const [result] = await User.aggregate(userMaxPublishingDatePipeline);
-    console.log(result)
+
     // get all the available niches
     const pipeline = [
       { $unwind: "$socialMediaLinks" },
@@ -613,13 +613,10 @@ export async function getServerSideProps(context) {
       };
     }
 
-    console.log('The current UTC', getCurrentUTCDate())
-
     if (result.maxPublishingDate <= getCurrentUTCDate()) {
       // if we return this, then it still hasn't passed 24H
       // change of status in the platforms. This is only when 
       // we have multiple platforms
-      console.log('Hey ther')
       return {
         props: {
           isServerError: false,
