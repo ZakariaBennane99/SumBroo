@@ -546,19 +546,20 @@ export async function getServerSideProps(context) {
     });
 
 
-    // this is if the user has multiple social media platforms 
-    // connected.
+    const st = getStatus(subStatus)
+    // This is to update the user's profile status
+    // REMEMBER THAT THERE IS ONE SUB PER USER REGARDLESS OF
+    // THE NUMBER OF PLATFORMS LINKED
     user.socialMediaLinks.forEach(link => {
-
-      if (link.pricePlans.includes(activePriceId)) {
-        link.profileStatus = 'active';
-        updateStatusByName(link.platformName, 'active', platformNames);
-      } else {
-        const st = getStatus(subStatus)
+      if (link.profileStatus !== 'pendingAuth') {
         link.profileStatus = st
         updateStatusByName(link.platformName, st, platformNames);
+      } else {
+        updateStatusByName(link.platformName, 'pendingAuth', platformNames);
       }
     });
+
+    await user.save();
     
     // here you have to also find if 
     // the user has published anything in the last
