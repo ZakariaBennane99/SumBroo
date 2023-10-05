@@ -57,8 +57,6 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
 
   const [isSuccess, setIsSuccess] = useState(false)
 
-  const [publishButtonClicked, setIsPublishButtonClicked] = useState(null) 
-
   const [isTargetingErr, setIsTargetingErr] = useState(false)
 
   const [targetingErrors, setTargetingErrors] = useState({
@@ -574,26 +572,37 @@ export async function getServerSideProps(context) {
 
     // get all the available niches
     const pipeline = [
+      // Filter the main User documents with "active" accountStatus
+      {
+        $match: {
+          "accountStatus": "active"
+        }
+      },
+      // Unwind the socialMediaLinks array
       { $unwind: "$socialMediaLinks" },
+      // Unwind the audience array
       { $unwind: "$socialMediaLinks.audience" },
+      // Group by niche and audience
       {
         $group: {
           _id: { niche: "$socialMediaLinks.niche", tag: "$socialMediaLinks.audience" },
-        },
+        }
       },
+      // Group by niche and collect tags
       {
         $group: {
           _id: "$_id.niche",
           tags: { $addToSet: "$_id.tag" },
-        },
+        }
       },
+      // Final projection
       {
         $project: {
           _id: 0,
           niche: "$_id",
           tags: 1,
-        },
-      },
+        }
+      }
     ]
     
     

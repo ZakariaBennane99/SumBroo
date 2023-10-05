@@ -10,7 +10,6 @@ const capitalize = (string) => {
 
 const Targeting = ({ nichesAndTags, errors, chosenNicheAndTags, resetErrors, platform }) => {
 
-
   const options = nichesAndTags.map(el => {
     return {
       value: el.niche, label: capitalize(el.niche)
