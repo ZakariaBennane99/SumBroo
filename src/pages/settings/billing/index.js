@@ -3,15 +3,12 @@ import Modal from 'react-modal';
 import { Tadpole } from "react-svg-spinners";
 
 
-const Billing = () => {
+const Billing = ({ stripeCustomer }) => {
 
     const [isLoading, setIsLoading] = useState(false)
     const [isError, setIsError] = useState(false)
 
     async function handleBilling() {
-      // this is manual you should store the userId 
-      // in the HttpOnly cookie
-      const customerId = 'cus_OTkFQCz14xEjQx'
       setIsLoading(true)
       try {
         const response = await fetch('http://localhost:4050/api/create-customer-portal-session', {
@@ -19,7 +16,7 @@ const Billing = () => {
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ customerId })
+            body: JSON.stringify({ stripeCustomer })
         });
   
         const data = await response.json();

@@ -53,7 +53,7 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
                             <div>
                                 <div className="cell-content" onClick={() => handleClick('pinterest')} style={{ 
                                     backgroundColor: selectedPlatform === 'pinterest' ? '#b9b9c6' : '' }}>
-                                    <img src='/sm/pinterest.svg' alt='pinterest-logo' style={{ borderRadius: '50%' }} /><span>Pinterest</span>
+                                    <img id="smicons" src='/sm/pinterest.svg' alt='pinterest-logo' style={{ borderRadius: '50%' }} /><span>Pinterest</span>
                                     {selectedPlatform === platform.name ? <img src='/check.svg' alt='checkmark' id='checkmark' /> : '' }
                                 </div>
                             </div>
@@ -62,7 +62,7 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
                         return (
                         <div>
                             <div className="cell-content notAvailable">
-                                <img src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAvailableImg' /><span>{capitalize(platform.name)}</span>
+                                <img id="smicons" src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAvailableImg' /><span>{capitalize(platform.name)}</span>
                                 <span className='tooltip'>Coming soon!</span>
                             </div>
                         </div>
@@ -71,7 +71,7 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
                         return (
                             <div>
                                 <div className="cell-content notApplied">
-                                    <img src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAppliedImg' /><span>{capitalize(platform.name)}</span>
+                                    <img id="smicons" src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAppliedImg' /><span>{capitalize(platform.name)}</span>
                                     <span className='tooltip'><span onClick={toLinkedAccounts} className='linkAccount'>Apply</span> to connect your account</span>
                                 </div>
                             </div>
@@ -82,7 +82,7 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
                         return (
                             <div>
                                 <div className="cell-content notApplied">
-                                    <img src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAppliedImg' /><span>{capitalize(platform.name)}</span>
+                                    <img id="smicons" src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAppliedImg' /><span>{capitalize(platform.name)}</span>
                                     {
                                         platform.status === 'canceled' ?
                                         <span className='tooltip'>

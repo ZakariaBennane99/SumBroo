@@ -1228,6 +1228,10 @@ a {
     width: 40%;
 }
 
+.cell-content #smicons {
+    width: 65px;
+}
+
 
 .ItemsOfModal {
     margin-bottom: 20px;
