@@ -37,7 +37,6 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
     }
 
 
-
     return (<div className='activeAccountsDiv'>
         <div className='targetPlatformsTitle' onClick={toggleAccordion}>
             <div>
@@ -78,12 +77,12 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
                                 </div>
                             </div>
                             )  
-                    } else if (platform.status === 'available') {
+                    } else if (platform.status === 'pendingAuth') {
                         return (
                             <div>
                                 <div className="cell-content notApplied">
                                     <img id="smicons" src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAppliedImg' /><span>{capitalize(platform.name)}</span>
-                                    <span className='tooltip'><span onClick={toLinkedAccounts} className='linkAccount'>Apply</span> to connect your account</span>
+                                    <span className='tooltip'><span onClick={toLinkedAccounts} className='linkAccount'>Link</span> your account</span>
                                 </div>
                             </div>
                             )  
