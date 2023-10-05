@@ -93,6 +93,10 @@ export default Billing;
 export async function getServerSideProps(context) {
 
   const jwt = require('jsonwebtoken');
+  const User = require('../../../../utils/User').default;
+  const connectDB = require('../../../../utils/connectUserDB');
+  const mongoSanitize = require('express-mongo-sanitize');
+
 
   try {
 
@@ -118,11 +122,19 @@ export async function getServerSideProps(context) {
       };
     }
 
+    const userId = decoded.userId;
+      
+    const sanitizedUserId = mongoSanitize.sanitize(userId);
+    
+    await connectDB();
+    let user = await User.findOne({ _id: sanitizedUserId });
+
     // continue rendering
     return {
       props: {
         signedIn: true,
-        isSettings: true
+        isSettings: true,
+        stripeCustomer: user.stripeId
       }
     };
 
