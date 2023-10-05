@@ -75,7 +75,7 @@ export async function getServerSideProps(context) {
     console.log('THE ERROR', error)
     return {
       redirect: {
-        destination: '/sign-inj',
+        destination: '/sign-in',
         permanent: false,
       },
     };
