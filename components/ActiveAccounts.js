@@ -36,7 +36,7 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
         router.push('/settings/billing');
     }
 
-    
+
 
     return (<div className='activeAccountsDiv'>
         <div className='targetPlatformsTitle' onClick={toggleAccordion}>
@@ -69,6 +69,15 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
                             </div>
                         </div>
                         )
+                    } else if (platform.status === 'available') {
+                        return (
+                            <div>
+                                <div className="cell-content notApplied">
+                                    <img id="smicons" src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAppliedImg' /><span>{capitalize(platform.name)}</span>
+                                    <span className='tooltip'><span onClick={toLinkedAccounts} className='linkAccount'>Apply</span> to connect your account</span>
+                                </div>
+                            </div>
+                            )  
                     } else if (platform.status === 'available') {
                         return (
                             <div>
