@@ -19,6 +19,7 @@ export async function getServerSideProps(context) {
   const connectDB = require('../../../utils/connectUserDB');
   const User = require('../../../utils/User').default;
   const mongoSanitize = require('express-mongo-sanitize');
+  const he = require('he');
 
   try {
 
@@ -56,7 +57,7 @@ export async function getServerSideProps(context) {
       return {
         platform: link.platformName,
         link: link.profileLink,
-        userName: link.profileLink.match(/\.com\/([^\/]+)/)[1]
+        userName: he.decode(link.profileLink).match(/\.com\/([^\/]+)/)[1]
       }
     })
 
@@ -71,9 +72,10 @@ export async function getServerSideProps(context) {
 
 
   } catch (error) {
+    console.log('THE ERROR', error)
     return {
       redirect: {
-        destination: '/sign-in',
+        destination: '/sign-inj',
         permanent: false,
       },
     };

@@ -166,7 +166,7 @@ export default Onboarding;
 export async function getServerSideProps(context) {
 
   const connectDB = require('../../../utils/connectUserDB');
-  const User = require('../../../utils/User')
+  const User = require('../../../utils/User').default;
   const jwt = require('jsonwebtoken');
   const mongoSanitize = require('express-mongo-sanitize');
 
@@ -182,11 +182,9 @@ export async function getServerSideProps(context) {
 
     const userId = decoded.userId
     await connectDB()
-    console.log('The connected ID', userId)
     // assuming onboardingStep is 0
     const sanitizedUserId = mongoSanitize.sanitize(userId);
     let user = await User.findOne({ _id: sanitizedUserId });
-    console.log('The user', user)
 
     if (!user || user.onboardingStep !== 0) throw new Error('User not found');
     return {
