@@ -546,7 +546,10 @@ export async function getServerSideProps(context) {
     });
 
 
+    // this is if the user has multiple social media platforms 
+    // connected.
     user.socialMediaLinks.forEach(link => {
+
       if (link.pricePlans.includes(activePriceId)) {
         link.profileStatus = 'active';
         updateStatusByName(link.platformName, 'active', platformNames);
@@ -559,8 +562,7 @@ export async function getServerSideProps(context) {
     
     // here you have to also find if 
     // the user has published anything in the last
-    // 24H + DON'T FORGET TO MAKE IT MORE EFFICIENT 
-    // WITH DIRECT MONGODB QUERIES
+    // 24H
     const userMaxPublishingDatePipeline = [
       { $match: { _id: new mongoose.Types.ObjectId(sanitizedUserId) } },
       { $unwind: '$socialMediaLinks' },
@@ -604,7 +606,8 @@ export async function getServerSideProps(context) {
         }
       }
     ]
-    
+    console.log('The PlatformNames')
+    console.log(platformNames)
     
     const nicheRes = await User.aggregate(pipeline);
 
@@ -621,7 +624,7 @@ export async function getServerSideProps(context) {
         }
       };
     }
-
+    
     if (result.maxPublishingDate <= getCurrentUTCDate()) {
       // if we return this, then it still hasn't passed 24H
       // change of status in the platforms. This is only when 
@@ -637,6 +640,7 @@ export async function getServerSideProps(context) {
       };
   
     } 
+
 
     // here where you return all of the data
     return {

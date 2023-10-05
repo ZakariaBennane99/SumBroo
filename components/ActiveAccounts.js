@@ -36,6 +36,8 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
         router.push('/settings/billing');
     }
 
+    
+
     return (<div className='activeAccountsDiv'>
         <div className='targetPlatformsTitle' onClick={toggleAccordion}>
             <div>
