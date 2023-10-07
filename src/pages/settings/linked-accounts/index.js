@@ -44,6 +44,7 @@ const LinkedAccounts = ({ AllAccounts, isServerErr }) => {
       // here you connect to a route that will add a new application 
       // to the Admin DB and update this account to inReview, 
       // then show an alert 
+      // @TODO after adding a new platform
       
     } 
 
