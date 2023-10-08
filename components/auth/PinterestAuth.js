@@ -3,7 +3,7 @@
 
 const PINTEREST_OAUTH_URL = "https://www.pinterest.com/oauth/";
 const REDIRECT_URI = 'http://localhost:3000/auth/callback/pinterest';
-const SCOPE = "boards:read,pins:read,pins:write,user_accounts:read"; 
+const SCOPE = "boards:read,boards:write,pins:read,pins:write,user_accounts:read"; 
 const STATE = "vXpd@aSf1nGdgfXTf"; 
 
 
