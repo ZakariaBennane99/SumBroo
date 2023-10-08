@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Select from 'react-select';
 import GroupedBarChart from '../../../../components/viz/GroupedBarChart';
 import StackedBarChart from '../../../../components/viz/StackedBarChart';
@@ -14,7 +14,7 @@ const Analytics = ({ windowWidth }) => {
 
 
   const DATA3 = [
-      { day: 'Jun 6', 
+      { day: 'Oct 2', 
         'pin enlargement clicks': 20,
         'destination link clicks': 30,
         'video start clicks': 5,
@@ -23,7 +23,7 @@ const Analytics = ({ windowWidth }) => {
         comments: 1,
         'unengaged impressions': 40,
         impressions: 129 },
-      { day: 'Jun 7', 
+      { day: 'Oct 3', 
         'pin enlargement clicks': 30,
         'destination link clicks': 20,
         'video start clicks': 3,
@@ -32,7 +32,7 @@ const Analytics = ({ windowWidth }) => {
         comments: 10,
         'unengaged impressions': 35,
         impressions: 114 },
-      { day: 'Jun 8', 
+      { day: 'Oct 4', 
         'pin enlargement clicks': 8,
         'destination link clicks': 10,
         'video start clicks': 30,
@@ -41,7 +41,7 @@ const Analytics = ({ windowWidth }) => {
         comments: 10,
         'unengaged impressions': 23,
         impressions: 109 },
-      { day: 'Jun 9', 
+      { day: 'Oct 5', 
         'pin enlargement clicks': 8,
         'destination link clicks': 15,
         'video start clicks': 2,
@@ -50,7 +50,7 @@ const Analytics = ({ windowWidth }) => {
         comments: 0,
         'unengaged impressions': 19,
         impressions: 60 },
-      { day: 'Jun 10', 
+      { day: 'Oct 6', 
         'pin enlargement clicks': 40,
         'destination link clicks': 10,
         'video start clicks': 20,
@@ -59,7 +59,7 @@ const Analytics = ({ windowWidth }) => {
         comments: 4,
         'unengaged impression': 21,
         impressions: 110 },
-      { day: 'Jun 11', 
+      { day: 'Oct 7', 
         'pin enlargement clicks': 20,
         'destination link clicks': 12,
         'video start clicks': 3,
@@ -67,24 +67,17 @@ const Analytics = ({ windowWidth }) => {
         likes: 4, 
         comments: 18,
         'unengaged impressions': 38,
-        impressions: 100 },
-      { day: 'Jun 12', 
-        'pin enlargement clicks': 30,
-        'destination link clicks': 20,
-        'video start clicks': 3,
-        saves: 10,
-        likes: 21,
-        comments: 6,
-        'unengaged impressions': 6,
-        impressions: 96 }
+        impressions: 100 }
   ];
+
+  const [data3New, setData3New] = useState(DATA3)
   
-  const [data3, setData3] = useState(DATA3)
+  const [data3, setData3] = useState(data3New)
   
   function handleMetricsData(selectedMetrics) {
     if (selectedMetrics && selectedMetrics.length > 0) {
       const selectedMetricsValues = selectedMetrics.map(metric => metric.value);
-      const updatedData = DATA3.map(dayData => {
+      const updatedData = data3New.map(dayData => {
         let updatedDayData = { ...dayData };
         let totalSelectedMetrics = 0;
         for (let key in updatedDayData) {
@@ -99,7 +92,7 @@ const Analytics = ({ windowWidth }) => {
       });
       setData3(updatedData);
     } else {
-      setData3(DATA3);
+      setData3(data3New);
     }
   }
   
@@ -114,7 +107,7 @@ const Analytics = ({ windowWidth }) => {
 
   const DATA4 = [
     {
-      date: new Date(2023, 5, 6),
+      day: new Date(2023, 9, 2),
       Pinterest: {
         'Impressions (# of times your pin was on-screen)': 220,
         'Pin saves': 72,
@@ -122,7 +115,7 @@ const Analytics = ({ windowWidth }) => {
       }
     },
     {
-      date: new Date(2023, 5, 7),
+      day: new Date(2023, 9, 3),
       Pinterest: {
         'Impressions (# of times your pin was on-screen)': 320,
         'Pin saves': 110,
@@ -130,7 +123,7 @@ const Analytics = ({ windowWidth }) => {
       }
     },
     {
-      date: new Date(2023, 5, 8),
+      day: new Date(2023, 9, 4),
       Pinterest: {
         'Impressions (# of times your pin was on-screen)': 96,
         'Pin saves': 50,
@@ -138,7 +131,7 @@ const Analytics = ({ windowWidth }) => {
       }
     },
     {
-      date: new Date(2023, 5, 9),
+      day: new Date(2023, 9, 5),
       Pinterest: {
         'Impressions (# of times your pin was on-screen)': 250,
         'Pin saves': 82,
@@ -146,7 +139,7 @@ const Analytics = ({ windowWidth }) => {
       }
     },
     {
-      date: new Date(2023, 5, 10),
+      day: new Date(2023, 9, 6),
       Pinterest: {
         'Impressions (# of times your pin was on-screen)': 420,
         'Pin saves': 172,
@@ -154,30 +147,24 @@ const Analytics = ({ windowWidth }) => {
       }
     },
     {
-      date: new Date(2023, 5, 11),
+      day: new Date(2023, 9, 7),
       Pinterest: {
         'Impressions (# of times your pin was on-screen)': 80,
         'Pin saves': 20,
         'Destination link clicks': 25,
       }
-    },
-    {
-      date: new Date(2023, 5, 12),
-      Pinterest: {
-        'Impressions (# of times your pin was on-screen)': 220,
-        'Pin saves': 72,
-        'Destination link clicks': 96,
-      }
-    },
+    }
   ];
+
+  const [data4New, setData4New] = useState(DATA4)
 
   const [data4, setData4] = useState(DATA4)
   
   function handleMetricsData1(selectedMetrics) {
     if (selectedMetrics && selectedMetrics.length > 0) {
       const selectedMetricsValues = selectedMetrics.map(metric => metric.value);
-      const updatedData = DATA4.map(dayData => {
-        let updatedDayData = { date: dayData.date, Pinterest: {} };
+      const updatedData = data4New.map(dayData => {
+        let updatedDayData = { day: dayData.day, Pinterest: {} };
         for (let key in dayData.Pinterest) {
           if (selectedMetricsValues.includes(key)) {
             updatedDayData.Pinterest[key] = dayData.Pinterest[key];
@@ -187,7 +174,7 @@ const Analytics = ({ windowWidth }) => {
       });
       setData4(updatedData);
     } else {
-      setData4(DATA4);
+      setData4(data4New);
     }
   }
   
@@ -202,7 +189,7 @@ const Analytics = ({ windowWidth }) => {
 
   const DATA5 = [
     {
-      day: 'Jun 5',
+      day: 'Oct 2',
       metrics: [
         { name: '# of people who viewed 95% of the video', value: 120 },
         { name: '# of video starts', value: 530 },
@@ -211,7 +198,7 @@ const Analytics = ({ windowWidth }) => {
       ],
     },
     {
-      day: 'Jun 6',
+      day: 'Oct 3',
       metrics: [
         { name: '# of people who viewed 95% of the video', value: 130 },
         { name: '# of video starts', value: 250 },
@@ -220,7 +207,7 @@ const Analytics = ({ windowWidth }) => {
       ],
     },
     {
-      day: 'Jun 7',
+      day: 'Oct 4',
       metrics: [
         { name: '# of people who viewed 95% of the video', value: 140 },
         { name: '# of video starts', value: 250 },
@@ -229,7 +216,7 @@ const Analytics = ({ windowWidth }) => {
       ],
     },
     {
-      day: 'Jun 8',
+      day: 'Oct 5',
       metrics: [
         { name: '# of people who viewed 95% of the video', value: 150 },
         { name: '# of video starts', value: 250 },
@@ -238,7 +225,7 @@ const Analytics = ({ windowWidth }) => {
       ],
     },
     {
-      day: 'Jun 9',
+      day: 'Oct 6',
       metrics: [
         { name: '# of people who viewed 95% of the video', value: 160 },
         { name: '# of video starts', value: 250 },
@@ -247,31 +234,24 @@ const Analytics = ({ windowWidth }) => {
       ],
     },
     {
-      day: 'Jun 10',
+      day: 'Oct 7',
       metrics: [
         { name: '# of people who viewed 95% of the video', value: 170 },
         { name: '# of video starts', value: 250 },
         { name: '# of people who viewed at least 10% of the video', value: 200 },
         { name: 'Total play time (in minutes)', value: 140 },
       ],
-    },
-    {
-      day: 'Jun 11',
-      metrics: [
-        { name: '# of people who viewed 95% of the video', value: 180 },
-        { name: '# of video starts', value: 250 },
-        { name: '# of people who viewed at least 10% of the video', value: 210 },
-        { name: 'Total play time (in minutes)', value: 150 },
-      ],
-    },
+    }
   ];
     
   const [data5, setData5] = useState(DATA5)
+
+  const [data5New, setData5New] = useState(DATA5)
   
   function handleMetricsData2(selectedMetrics) {
     if (selectedMetrics && selectedMetrics.length > 0) {
       const selectedMetricsValues = selectedMetrics.map(metric => metric.value);
-      const updatedData = DATA5.map(dayData => {
+      const updatedData = data5New.map(dayData => {
         let updatedDayData = { day: dayData.day, metrics: [] };
         dayData.metrics.forEach(el => {
           if (selectedMetricsValues.includes(el.name)) {
@@ -282,7 +262,7 @@ const Analytics = ({ windowWidth }) => {
       });
       setData5(updatedData);
     } else {
-      setData5(DATA5);
+      setData5(data5New);
     }
   }  
 
@@ -292,49 +272,42 @@ const Analytics = ({ windowWidth }) => {
 
   const DATA6 = [
     {
-      day1: 'Jun 1',
+      day: 'Oct 2',
       'Impressions': 320,
       'Destination Link Clicks': 130,
       'User Follows (After Viewing The Pin)': 75,
       'Saves': 210 
     },
     {
-      day2: 'Jun 2',
+      day: 'Oct 3',
       'Impressions': 520,
       'Destination Link Clicks': 230,
       'User Follows (After Viewing The Pin)': 94,
       'Saves': 410 
     },
     {
-      day3: 'Jun 3',
+      day: 'Oct 4',
       'Impressions': 150,
       'Destination Link Clicks': 130,
       'User Follows (After Viewing The Pin)': 35,
       'Saves': 87 
     },
     {
-      day4: 'Jun 4',
+      day: 'Oct 5',
       'Impressions': 1020,
       'Destination Link Clicks': 98,
       'User Follows (After Viewing The Pin)': 42,
       'Saves': 320
     },
     {
-      day5: 'Jun 5',
+      day: 'Oct 6',
       'Impressions': 120,
       'Destination Link Clicks': 28,
       'User Follows (After Viewing The Pin)': 5,
       'Saves': 32
     },
     {
-      day6: 'Jun 6',
-      'Impressions': 320,
-      'Destination Link Clicks': 130,
-      'User Follows (After Viewing The Pin)': 75,
-      'Saves': 210 
-    },
-    {
-      day7: 'Jun 7',
+      day: 'Oct 7',
       'Impressions': 70,
       'Destination Link Clicks': 30,
       'User Follows (After Viewing The Pin)': 5,
@@ -344,10 +317,12 @@ const Analytics = ({ windowWidth }) => {
 
   const [data6, setData6] = useState(DATA6)
 
+  const [data6New, setData6New] = useState(DATA6)
+
   function handleSummaryDays(options) {
     if (options && options.length > 0) {
       const selectedDays = options.map(metric => metric.value);
-      const updatedData = DATA6.filter(dayData => {
+      const updatedData = data6New.filter(dayData => {
         let [[firstKey, firstValue]] = Object.entries(dayData);
         if (selectedDays.includes(firstKey)) {
           return dayData;
@@ -355,7 +330,7 @@ const Analytics = ({ windowWidth }) => {
       });
       setData6(updatedData);
     } else {
-      setData6(DATA6);
+      setData6(data6New);
     }
   }
 
@@ -366,13 +341,30 @@ const Analytics = ({ windowWidth }) => {
   }
 
   const options = [
-    { value: 'post1', label: 'Post 1 Title' },
-    { value: 'post2', label: 'Post 2 Title' },
-    { value: 'post3', label: 'Post 3 Title' },
-    { value: 'post4', label: 'Post 4 Title' },
-    { value: 'post5', label: 'Post 5 Title' },
-    { value: 'post6', label: 'Post 6 Title' },
-    { value: 'post7', label: 'Post 7 Title' }
+    { 
+      value: 'Oct 2', 
+      label: `Food Inspiration to Spark Your Culinary Creativity - Oct 2` 
+    },
+    { 
+      value: 'Oct 3', 
+      label: 'Embracing the Bounty of Locally Sourced Ingredients - Oct 3'
+    },
+    { 
+      value: 'Oct 4', 
+      label: 'A Culinary Adventure from Every Corner of the World - Oct 4'
+    },
+    { 
+      value: 'Oct 5',
+      label: 'A Collection of Breads, Pastries, and Pies to Bake at Home - Oct 5'
+    },
+    { 
+      value: 'Oct 6',
+      label: 'Quick and Delicious Recipes for Busy Lives - Oct 6'
+    },
+    { 
+      value: 'Oct 7',
+      label: 'Feeling Great: Nutritious Choices for a Healthier You - Oct 7'
+    }
   ];
 
   const customStyles = {
@@ -385,6 +377,63 @@ const Analytics = ({ windowWidth }) => {
       color: state.isSelected ? 'white' : '#1c1c57',
     })
   };
+
+  
+  useEffect(() => {
+    console.log('The targetPost', targetPosts)
+    if (targetPosts) {
+      const selectedDates = targetPosts.map(post => post.value);
+      setData3New(DATA3.filter(dt => selectedDates.includes(dt.day)));
+      setData4New(DATA4.filter(dt => selectedDates.includes(dt.day.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }))));
+      setData6New(DATA6.filter(dt => selectedDates.includes(dt.day)));
+      setData5New(DATA5.filter(dt => selectedDates.includes(dt.day)))
+    }
+  }, [targetPosts])
+  
+  
+  // for DATA6: Stats summary
+  useEffect(() => {
+    if (targetPosts) {
+      setData6(data6New);
+    }
+    if (data6New && data6New.length === 0) {
+      setData6(DATA6)
+    }
+  }, [data6New])
+
+  // for DATA3: Engagement graph
+  useEffect(() => {
+    if (targetPosts) {
+      setData3(data3New);
+    }
+    if (data3New && data3New.length === 0) {
+      setData3(DATA3)
+    }
+  }, [data3New])
+
+
+  // for DATA4: Conversion Graph
+  useEffect(() => {
+    console.log('The data4 info', data4New)
+    if (targetPosts) {
+      setData4(data4New);
+    }
+    if (data4New && data4New.length === 0) {
+      setData4(DATA4)
+    }
+  }, [data4New])
+
+
+  // for DATA5: Video Statistics
+  useEffect(() => {
+    if (targetPosts) {
+      setData5(data5New);
+    }
+    if (data5New && data5New.length === 0) {
+      setData5(DATA5)
+    }
+  }, [data5New])
+
 
   return (
     <div className="rightSectionAnalytics">

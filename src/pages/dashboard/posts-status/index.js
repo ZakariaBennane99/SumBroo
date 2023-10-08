@@ -10,43 +10,61 @@ const PostsStatus = () => {
 
   const data = [
     {
-      title: 'the best 3 destinations to visit this Summer - Summer Board',
+      title: 'Family-Friendly Foodie Fun: Recipes and Ideas for All Ages',
       platform: 'pinterest',
       status: 'in-review'
     },
     {
-      title: 'navigatin my youth blog post',
+      title: 'Seasonal Sensations: Celebrate Each Season with Flavorful Fare',
       platform: 'pinterest',
       status: 'rejected',
-      explanation: '🖊️ Consider adding more detailed descriptions for each destination.\n💡 Please ensure all images have proper attributions.\n📝 Check for typos in the third paragraph.'
+      explanation: "🖼️ Opt for a more captivating title to grab attention.\n🔍 Ensure your image adheres to the recommended specifications.\n✏️ Double-check the description for clarity and accuracy."
     },
     {
-      title: 'navigating my 20s by a 45 years old person',
+      title: 'Exploring the World of Vegetarian Cuisine',
       platform: 'pinterest',
       status: 'in-review'
     },
     {
-      title: 'how to change your lifestyle',
+      title: 'Wholesome Meals and Culinary Delights Awaits',
       platform: 'pinterest',
       status: 'rejected',
-      explanation: '🖊️ Consider adding more detailed descriptions for each destination.\n💡 Please ensure all images have proper attributions.\n📝 Check for typos in the third paragraph.'
+      explanation: '🎯 Ensure your content is relevant to the target audience.\n🔄 Consider optimizing your Pin for better rotation in the feed.\n🔗 Double-check any linked content for accessibility and relevance.'
     },
     {
-      title: 'the best thing to do is to make happen',
+      title: 'Food Inspiration to Spark Your Culinary Creativity',
       platform: 'pinterest',
-      date: 'July 17, 2023',
+      date: 'October 2, 2023',
       status: 'published'
     },
     {
-      title: 'great things happen to those who seek them',
+      title: 'Embracing the Bounty of Locally Sourced Ingredients',
       platform: 'pinterest',
-      date: 'July 16, 2023',
+      date: 'October 3, 2023',
       status: 'published'
     },
     {
-      title: 'No is ready to face their fears, I do not know how',
-      platform: 'Pinterest',
-      date: 'July 15, 2023',
+      title: 'A Culinary Adventure from Every Corner of the World',
+      platform: 'pinterest',
+      date: 'October 4, 2023',
+      status: 'published'
+    },
+    {
+      title: 'A Collection of Breads, Pastries, and Pies to Bake at Home',
+      platform: 'pinterest',
+      date: 'October 5, 2023',
+      status: 'published'
+    },
+    {
+      title: 'Quick and Delicious Recipes for Busy Lives',
+      platform: 'pinterest',
+      date: 'October 6, 2023',
+      status: 'published'
+    },
+    {
+      title: 'Feeling Great: Nutritious Choices for a Healthier You',
+      platform: 'pinterest',
+      date: 'October 7, 2023',
       status: 'published'
     },
   ]
@@ -66,7 +84,7 @@ const PostsStatus = () => {
                   <div className='body'>
                     <p>{_.startCase(el.title)}</p>
                     <div>
-                      <span className='platform'><img id='smlg' src='/sm/pin.svg' /> <span>{_.startCase(el.platform)}</span> <img id='link' src='/linkToPost.svg' /></span>
+                      <span className='platform'><img id='smlg' src={`/sm/${el.platform}.svg`} /> <span>{_.startCase(el.platform)}</span> <img id='link' src='/linkToPost.svg' /></span>
                       <span className='date'>{el.date}</span>
                     </div>
                   </div>
@@ -80,7 +98,7 @@ const PostsStatus = () => {
                   <div className='body'>
                     <p>{_.startCase(el.title)}</p>
                     <div>
-                      <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src='/sm/pin.svg' /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
+                      <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src={`/sm/${el.platform}.svg`} /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
                     </div>
                   </div>
                 )
@@ -95,7 +113,7 @@ const PostsStatus = () => {
                   <div className='body'>
                     <p className='postTitle'>{_.startCase(el.title)}</p>
                     <div>
-                        <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src='/sm/pin.svg' /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
+                        <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src={`/sm/${el.platform}.svg`} /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
                     </div>
                     <div id="feedback-box">
                       {

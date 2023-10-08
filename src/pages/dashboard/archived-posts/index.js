@@ -9,38 +9,38 @@ const Archive = () => {
 
   const data = [
     {
-      title: 'the best thing to do is to make happen',
+      title: 'Satisfy Your Cravings with These Delectable Weeknight Dinner Recipes',
       platform: 'pinterest',
       date: 'July 17, 2023'
     },
     {
-      title: 'the best thing to do is to make happen for those who know it well man how',
+      title: 'Deliciously Easy Weeknight Dinners',
       platform: 'pinterest',
       date: 'July 9, 2023'
     },
     {
-      title: 'great things happen to those who seek them',
+      title: 'From Farm to Your Fork: Embrace Freshness in Every Bite',
       platform: 'pinterest',
       date: 'July 16, 2023'
     },
     {
-      title: 'No is ready to face their fears, I do not know how',
-      platform: 'Pinterest',
+      title: 'Embark on a Flavorful Journey: International Cuisines at Home',
+      platform: 'pinterest',
       date: 'July 15, 2023'
     },
     {
-      title: 'the best thing to do is to make happen',
+      title: 'Foodie Adventures & Culinary Creations',
       platform: 'pinterest',
       date: 'July 12, 2023'
     },
     {
-      title: 'great things happen to those who seek them',
+      title: 'Mouthwatering Dessert Delights',
       platform: 'pinterest',
       date: 'July 18, 2023'
     },
     {
-      title: 'No is ready to face their fears, I do not know how',
-      platform: 'Pinterest',
+      title: 'Nourish Your Body and Soul: Wholesome Healthy Eating Ideas',
+      platform: 'pinterest',
       date: 'July 8, 2023'
     }
   ]
@@ -52,7 +52,7 @@ const Archive = () => {
               <div className='body'>
                 <p>{_.startCase(el.title)}</p>
                 <div>
-                  <span className='platform'><img id='smlg' src='/sm/pin.svg' /> <span>{_.startCase(el.platform)}</span> <img id='link' src='/linkToPost.svg' /></span>
+                  <span className='platform'><img id='smlg' src={`/sm/${el.platform}.svg`} /> <span>{_.startCase(el.platform)}</span> <img id='link' src='/linkToPost.svg' /></span>
                   <span className='date'>{el.date}</span>
                 </div>
               </div>

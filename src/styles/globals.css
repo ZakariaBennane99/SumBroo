@@ -435,6 +435,7 @@ a {
     grid-gap: 80px;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     padding: 10px;
+    margin-top: 20px;
 }
 
 .howToSection button {
@@ -467,13 +468,13 @@ a {
 }
 
 #featuresContainer p {
-    width: 80%;
+    width: 73%;
     margin: 0px;
     color: #73739a;
     font-family: 'IBM Plex Sans';
     font-weight: 400;
-    line-height: 1.5;
-    font-size: 1.11em;
+    line-height: 1.6;
+    font-size: 1.2em;
 }
 
 #featuresContainer img:not(#browsersGroup):not(#audioWaves) {
@@ -496,12 +497,12 @@ a {
     font-family: 'Ubuntu';
     font-weight: 500;
     font-size: 22pt;
-}#parentWrapper
+}
 
-.howToSection {
+#parentWrapper .howToSection {
     width: 93%;
     margin: 40px;
-    margin-top: 0px;
+    margin-top: 20px;
     margin-bottom: 0px;
 }
 
@@ -678,6 +679,7 @@ a {
 
 .sectionContent p {
     line-height: 2;
+    margin-top: 0px;
 }
 
 .sectionContent ul, .sectionContent ol {

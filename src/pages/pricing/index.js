@@ -163,8 +163,8 @@ const Pricing = ({ AllAccounts }) => {
             <>
             <div className="pricingParent">
                 <div className="pricingTitle">
-                    <h1>Select a Platform(s) and a Plan To Get Started</h1>
-                    <p>Before proceeding, please review the minimum requirements for the selected social media network/networks so your application can be considered. <br/> We won't collect any payment information from you at this moment. We'll register the plan you've selected, and once your account receives approval, we'll email you a link for payment.</p>
+                    <h1>Select Your Preferred Platform(s) & Choose Your Plan</h1>
+                    <p>Before moving forward, kindly review the minimum requirements for your chosen social media network(s) to ensure a successful application. Rest assured, we won't collect any payment details now. Upon approval, we'll send you a payment link via email.</p>
                 </div>
                 <div className="planTypeContainer">
                     <Select
@@ -236,7 +236,7 @@ const Pricing = ({ AllAccounts }) => {
                             valueTag="Unlimited value"
                         />
                         </p>
-                        <p>Grow <b>faster and cheaper</b> than ever 
+                        <p>Grow <b>faster</b> with Sumbroo
                         <Tooltip 
                             content="We handle everything, from profile vetting to content review, allowing you to concentrate solely on expanding your follower base."
                             valueTag=""
@@ -281,7 +281,7 @@ const Pricing = ({ AllAccounts }) => {
                             valueTag="Unlimited value"
                         />
                         </p>
-                        <p>Grow <b>faster and cheaper</b> than ever 
+                        <p>Grow <b>faster</b> with Sumbroo
                         <Tooltip 
                             content="We handle everything, from profile vetting to content review, allowing you to concentrate solely on expanding your follower base."
                             valueTag=""

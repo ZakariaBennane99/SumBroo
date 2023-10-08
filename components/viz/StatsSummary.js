@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 
-const StatsSummary = ({ data, setSummaryDays }) => {
-
-    const [targetDays, setTargetDays] = useState(null);
+const StatsSummary = ({ data }) => {
 
     const [showTooltip0, setShowTooltip0] = useState(false);
 
@@ -45,43 +43,6 @@ const StatsSummary = ({ data, setSummaryDays }) => {
       setShowTooltip3(false);
     };
 
-    const [showTooltip4, setShowTooltip4] = useState(false);
-
-    const handleMouseEnter4 = () => {
-      setShowTooltip4(true);
-    };
-  
-    const handleMouseLeave4 = () => {
-      setShowTooltip4(false);
-    };
-
-
-
-    function handleDays(selectedOptions) {
-        setTargetDays(selectedOptions)
-    }
-
-    const options = [
-        { value: 'day1', label: 'June 1' },
-        { value: 'day2', label: 'June 2' },
-        { value: 'day3', label: 'June 3' },
-        { value: 'day4', label: 'June 4' },
-        { value: 'day5', label: 'June 5' },
-        { value: 'day6', label: 'June 6' },
-        { value: 'day7', label: 'June 7' }
-    ];
-
-    const customStyles = {
-        container: (provided) => ({
-          ...provided,
-          width: '100%',
-        }),
-        option: (provided, state) => ({
-          ...provided,
-          color: state.isSelected ? 'white' : '#1c1c57',
-        })
-    };
-
     let totalImpressions = data.reduce((total, elem) => {
         return total + elem['Impressions']
     }, 0)
@@ -91,36 +52,11 @@ const StatsSummary = ({ data, setSummaryDays }) => {
     let totalSaves = data.reduce((total, elem) => {
         return total + elem['Saves']
     }, 0)
-    let totalUserFollow = data.reduce((total, elem) => {
-        return total + elem['User Follows (After Viewing The Pin)']
-    }, 0)
-
-    useEffect(() => {
-        setSummaryDays(targetDays)
-    }, [targetDays]);
 
     return (
       <div className='statsSummary'>
         <div className='topArea'>
             <div className='title'>Analytics Summary</div>
-            <Select
-                value={targetDays}
-                onChange={handleDays}
-                options={options}
-                isMulti
-                getOptionLabel={(option) => option.label}
-                getOptionValue={(option) => option.value}
-                styles={ customStyles }
-                theme={(theme) => ({
-                    ...theme,
-                    colors: {
-                    ...theme.colors,
-                      primary25: '#e8e8ee',  // color of the option when hovering
-                      primary: '#1c1c57',  // color of the selected option
-                    },
-                })}
-                placeholder='Select Day/Days'
-            /> 
         </div>
         <div class="grid-container">
             <div className='box one'>

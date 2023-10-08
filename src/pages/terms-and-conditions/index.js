@@ -14,7 +14,7 @@ const TermConditions = () => {
                 <li>Access is temporary; changes possible without notice.</li>
                 <li>Registration needs a valid email; accounts are personal.</li>
                 <li>Users manage their password and account actions.</li>
-                <li>Payments via Stripe after account approval.</li>
+                <li>Payments via <b>Stripe, inc.</b> after account approval.</li>
                 <li>Users must obey laws and are responsible for posted content.</li>
                 <li>Adhere to the platform's Privacy Policy and data laws.</li>
                 <li>Accounts can be terminated for term breaches.</li>
@@ -25,11 +25,11 @@ const TermConditions = () => {
                 <li>Third-party links present but not responsible for them.</li>
                 <li>Subscription fees are recurring till cancellation.</li>
                 <li>Email communications on account and services agreement.</li>
-                <li>Questions? Contact <a href="mailto:hey@sumbroo.com">hey@sumbroo.com</a>.</li>
+                <li>Questions? Contact <a href="mailto:hey@sumbroo.com"><b>hey@sumbroo.com</b></a>.</li>
               </ul>  
             </div> 
 
-            <p><strong><em>Last updated: August 13, 2023</em></strong></p>
+            <p><strong><em>Last updated: October 3, 2023</em></strong></p>
   <p>These Terms and Conditions (&quot;Terms&quot;, &quot;Terms and Conditions&quot;) govern your relationship with SumBroo (the &quot;Service&quot;) operated by Driven Dynamics Limited (&quot;us&quot;, &quot;we&quot;, or &quot;our&quot;). SumBroo and its parent company are not associated with, nor are endorsed by, the social media platforms. The inclusion of social media links and logos is solely for reference and does not imply any association or endorsement by the respective platforms.</p>
   <p>Please read these Terms and Conditions carefully before using our Service.</p>
   <p>Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all users who access or use the Service. By accessing or using the Service, you agree to be bound by these Terms. If you disagree with any part of the terms, then you may not access the Service.</p>
@@ -40,7 +40,7 @@ const TermConditions = () => {
   <p>You are responsible for safeguarding the password that you use to access the Service and for any activities or actions under your password, whether your password is with our Service or a third-party service.</p>
   <p>You agree not to disclose your password to any third party. You must notify us immediately upon becoming aware of any breach of security or unauthorized use of your account.</p>
   <h2>&#73;&#73;&#73;. Payment & Fees</h2>
-  <p>Upon approval of your account, a payment link will be sent to complete your registration. You must agree to pay the fees at the rates notified to you at the time you purchase one of our Services. Payment for all Services must be made online via our payment partners, Stripe.</p>
+  <p>Upon approval of your account, a payment link will be sent to complete your registration. You must agree to pay the fees at the rates notified to you at the time you purchase one of our Services. Payment for all Services must be made online via our payment partners, <b>Stripe, inc.</b></p>
   <h2>&#73;&#86;. User Conduct</h2>
   <p>When using SumBroo, you agree to use the service as intended and not to use it for any purposes that violate any laws or regulations.</p>
   <h2>&#86;. Content Responsibility </h2>
@@ -102,7 +102,7 @@ const TermConditions = () => {
     <li><strong>Approval Email:</strong> We will send you an email once you are approved. The email will include a link via which you will be able to start the onboarding process.</li>
 </ol>
 <h2>&#88;&#86;. Contact Us</h2>
-<p>If you have any questions about these Terms, please contact us at hey@sumbroo.com</p>
+<p>If you have any questions about these Terms, please contact us at <b>hey@sumbroo.com</b></p>
             </div>
         </div>
     )

@@ -69,8 +69,6 @@ const GroupedBarChart = ({ data, setMetrics2 }) => {
 
     useEffect(() => {
 
-      console.log(containerWidth)
-
       const aspectRatioWidth = 2;
       const aspectRatioHeight = 1;
 
