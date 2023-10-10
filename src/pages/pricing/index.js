@@ -197,7 +197,8 @@ const Pricing = ({ AllAccounts }) => {
                 </div>
                 
                 {
-                    targetPlatforms.length > 0 ? <>
+                    targetPlatforms.length > 0 ? 
+                <>
                     <div className="pricingTablesContainer">
                     <div className="table1" style={{
                         outline: tableClicked === 'table1' ? '4px solid #1465e7' : '',
@@ -206,13 +207,13 @@ const Pricing = ({ AllAccounts }) => {
                         <p>Per Month</p>
                         <p>Receive credits to post daily within our <b>highly vetted</b> network for an entire month
                         <Tooltip 
-                            content="Each month you maintain your subscription, you'll receive 30 credits that renew. This value is based on the average cost of a post from micro-influencers, which is typically <a id='value-source' title='Influencer rates from influencermarketinghub.' href='https://influencermarketinghub.com/influencer-rates/' target='_blank' rel='noopener noreferrer'>$119/post</a>."
+                            content="Each month you maintain your subscription, you'll receive 30 credits that renew. This value is based on the average cost of a post from creators, which is typically <a id='value-source' title='Influencer rates from influencermarketinghub.' href='https://influencermarketinghub.com/influencer-rates/' target='_blank' rel='noopener noreferrer'>$119/post</a>."
                             valueTag="Valued at $3570"
                         />
                         </p>
-                        <p>Reach a high-quality audience of <b>300K to 500K</b> each month on the network
+                        <p>Reach an engaged audience between <b>300K-1M</b> each month on the network
                         <Tooltip 
-                            content="You will be able to get 300K-500K views for your posts per month. As for the value, it is based on the average cost per thousand impressions on all platforms which averages <a id='value-source' title='Influencer rates from influencermarketinghub.' href='https://www.adroll.com/blog/ad-cost-breakdown-facebook-instagram-tiktok-and-pinterest' target='_blank' rel='noopener noreferrer'>$9.9.</a>"
+                            content="You will be able to get 300K-1M views for your posts per month. As for the value, it is based on the average cost per thousand impressions on all platforms which averages <a id='value-source' title='Influencer rates from influencermarketinghub.' href='https://www.adroll.com/blog/ad-cost-breakdown-facebook-instagram-tiktok-and-pinterest' target='_blank' rel='noopener noreferrer'>$9.9.</a>"
                             valueTag="Worth $3000"
                         />
                         </p>
@@ -224,14 +225,14 @@ const Pricing = ({ AllAccounts }) => {
                         </p>
                         <p>Receive a <b>high-quality</b> post daily completely for free
                         <Tooltip 
-                            content="Influencers within our network will also have the opportunity to guest-post on your feed. To ensure the highest quality of content, every post undergoes a human review before being published."
+                            content="Creators within our network will also have the opportunity to guest-post on your feed. To ensure the highest quality of content, every post undergoes a human review before being published."
                             valueTag=""
                         />
                         </p>
-                        <p>Connect <b>genuinely</b> with fellow micro-influencers within a community that shares your passion
+                        <p>Connect <b>genuinely</b> with fellow creators within a community that shares your passion
                         <Tooltip 
-                            content="You will be able to join a community where our micro-influencers connect, share insights, and engage with one another."
-                            valueTag="Unlimited value"
+                            content="You will be able to join a community where creators like you connect, share insights, and engage with one another."
+                            valueTag=""
                         />
                         </p>
                         <p>Grow <b>faster</b> with Sumbroo
@@ -251,13 +252,13 @@ const Pricing = ({ AllAccounts }) => {
                         <p>Per Year</p>
                         <p>Receive credits to post daily within our <b>highly vetted</b> network for an entire month
                         <Tooltip 
-                            content="Each month you maintain your subscription, you'll receive 30 credits that renew. This value is based on the average cost of a post from micro-influencers, which is typically <a id='value-source' title='Influencer rates from influencermarketinghub.' href='https://influencermarketinghub.com/influencer-rates/' target='_blank' rel='noopener noreferrer'>$119/post</a>."
+                            content="Each month you maintain your subscription, you'll receive 30 credits that renew. This value is based on the average cost of a post from creators, which is typically <a id='value-source' title='Influencer rates from influencermarketinghub.' href='https://influencermarketinghub.com/influencer-rates/' target='_blank' rel='noopener noreferrer'>$119/post</a>."
                             valueTag="Valued at $42840"
                         />
                         </p>
-                        <p>Reach a high-quality audience of <b>300K to 500K</b> each month on the network
+                        <p>Reach an engaged audience between <b>300K - 1M</b> each month on the network
                         <Tooltip 
-                            content="You will be able to get 300K-500K views for your posts per month. As for the value, it is based on the average cost per thousand impressions on all platforms which averages <a id='value-source' title='Influencer rates from influencermarketinghub.' href='https://www.adroll.com/blog/ad-cost-breakdown-facebook-instagram-tiktok-and-pinterest' target='_blank' rel='noopener noreferrer'>$9.9.</a>"
+                            content="You will be able to get 300K-1M views for your posts per month. As for the value, it is based on the average cost per thousand impressions on all platforms which averages <a id='value-source' title='Influencer rates from influencermarketinghub.' href='https://www.adroll.com/blog/ad-cost-breakdown-facebook-instagram-tiktok-and-pinterest' target='_blank' rel='noopener noreferrer'>$9.9.</a>"
                             valueTag="Worth $36000"
                         />
                         </p>
@@ -273,10 +274,10 @@ const Pricing = ({ AllAccounts }) => {
                             valueTag=""
                         />
                         </p>
-                        <p>Connect <b>genuinely</b> with fellow micro-influencers within a community that shares your passion
+                        <p>Connect <b>genuinely</b> with fellow creators within a community that shares your passion
                         <Tooltip 
-                            content="You will be able to join a community where our micro-influencers connect, share insights, and engage with one another."
-                            valueTag="Unlimited value"
+                            content="You will be able to join a community where creators like you connect, share insights, and engage with one another."
+                            valueTag=""
                         />
                         </p>
                         <p>Grow <b>faster</b> with Sumbroo
@@ -287,10 +288,11 @@ const Pricing = ({ AllAccounts }) => {
                         </p>
                         <button onClick={handleTableClicked} data-lookup-key='price_1NduMpHK22p9cyvXtZr9KbhJ' name="table2">Select</button>
                     </div>
-                </div>
-                <div className="next-page">
-                    <button onClick={handleSignUpPage} onMouseOver={handleHover} onMouseOut={handleHover} style={{ paddingRight: hovered ? "70px" : "" }}>Continue <FontAwesomeIcon icon={faArrowRight} style={{ position: 'absolute', fontSize:'32px', right: hovered ? '30px' : '-45px', transition: '0.5s', bottom:'13px' , color: 'white' }}/></button>
-                </div> </>: ''
+                    </div>
+                    <div className="next-page">
+                        <button onClick={handleSignUpPage} onMouseOver={handleHover} onMouseOut={handleHover} style={{ paddingRight: hovered ? "70px" : "" }}>Continue <FontAwesomeIcon icon={faArrowRight} style={{ position: 'absolute', fontSize:'32px', right: hovered ? '30px' : '-45px', transition: '0.5s', bottom:'13px' , color: 'white' }}/></button>
+                    </div> 
+                </> : ''
                 }
 
 
