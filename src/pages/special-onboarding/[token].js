@@ -2,6 +2,7 @@ import Modal from 'react-modal';
 import { Tadpole } from "react-svg-spinners";
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
 
 
@@ -13,9 +14,22 @@ const SpecialOnboarding = ({ userId, status }) => {
   const [action, setAction] = useState(status)
   const [tk, setTk] = useState('')
 
-  const [pass, setPass] = useState('')
-  const [confirPass, setConfirmPass] = useState('')
-  const [passErrors, setPassErrors] = useState(null)
+  const [leftErrors, setleftErrors] = useState('')
+  const [formValues, setFormValues] = useState({
+    name: '',
+    email: '',
+    password: ''
+  })
+
+  const [validationErrors, setValidationErrors] = useState({
+    name: false,
+    email: false,
+    password: false,
+    confirmPassword: false
+  })
+
+
+  const confirmPassword = ''
 
   // if onboarding step is 2, take the user to the last step which is 
   // to link the accounts in the settings
@@ -24,7 +38,7 @@ const SpecialOnboarding = ({ userId, status }) => {
   const [isLoading, setIsLoading] = useState(false)
 
   // for the pricing tables
-  const [tableClicked, setTableClicked] = useState()
+  const [tableClicked, setTableClicked] = useState(false)
   const [lookupKey, setLookupKey] = useState(null)
 
   const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -63,30 +77,38 @@ const SpecialOnboarding = ({ userId, status }) => {
     }
   }
 
-  async function handlePassword() {
-    if (pass != confirPass) {
-      setPassErrors(['Passwords do not match'])
+  async function handleAccount() {
+
+    if (formValues.password != formValues.confirmPassword) {
+      setValidationErrors((prev) => { 
+        return { ...prev, password: 'Passwords do not match' }
+      })
       return
     }
-    setIsLoading(true)
-    try {
-      const response = await fetch('http://localhost:4050/api/set-up-password', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ userId, pass })
-      });
 
-      const data = await response.json();
-      if (data.errors) {
-        setPassErrors(data.errors.map(er => er.msg))
+    setIsLoading(true)
+
+    try {
+
+      console.log('The formValues', formValues)
+
+      const applicationURL = 'http://localhost:4050/api/complete-account'
+
+      const res = await axios.post(applicationURL, {
+        userId, formValues
+      })
+
+      console.log('The response', res)
+      /*
+      // after registering the User redirect to the checkout page
+      if (res.status === 201) {
         setIsLoading(false)
-      } else if (data.success) {
-        setIsLoading(false)
-        setTk(data.token)
+        setTk(res.token)
         setAction('payment')
+        return
       }
+      */
+
 
     } catch (error) {
       setIsError(true)
@@ -96,6 +118,22 @@ const SpecialOnboarding = ({ userId, status }) => {
   }
 
 
+  function handleChange(e) {
+
+    const { id, value } = e.target;
+
+    setValidationErrors((prev) => {
+      return { ...prev, [id]: false };
+    });
+
+    setleftErrors('');
+
+    // Update other form fields
+    setFormValues((prev) => {
+      return { ...prev, [id]: value };
+    });
+
+  }
 
   function handleTableClicked(e) {
     setTableClicked(e.currentTarget.name)
@@ -125,24 +163,35 @@ const SpecialOnboarding = ({ userId, status }) => {
         {
           action === 'password' ? 
             <div className='password-container'>
-              <h1>Step 1: Set Up a Password</h1>
+              <h1>Step 1: Create An Account</h1>
               <div className='pass-holder'>
-                {
-                  passErrors ? passErrors.map(err => <p style={{ width: '100%', textAlign: 'center', marginBottom: '15px',
-                  marginTop: '0px', color: "red", fontSize: '.85em' }}>{err}</p>)  : ''
-                }
-                <div className='pass'>
-                  <label htmlFor='pass'>Password</label>
-                  <input type='password' id='pass' placeholder='Enter your new password' 
-                  onChange={(e) => { setPassErrors(null); setPass(e.target.value)}} />
+              {leftErrors ? <h4 style={{ color: 'red', fontWeight: '400', margin: '0px' }}>{leftErrors}</h4> : ''}
+              <div className='emailSCont' style={{ marginTop: '10px' }}>
+                <label htmlFor="name">Name</label>
+                <div>
+                  {validationErrors.name ? <p style={{ width: '185px', fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{validationErrors.name}</p> : "" }
+                  <input type="text" id="name" name="name" onChange={handleChange} style={{ outline: validationErrors.name ? '2px solid red' : '' }} placeholder="Add a username"/>
                 </div>
-                <div className='confirm-pass'>
-                  <label htmlFor='confirm-pass'>Confirm Password</label>
-                  <input type='password' id='confirm-pass' placeholder='Confirm your password'
-                  onChange={(e) => { setPassErrors(null); setConfirmPass(e.target.value) }}/>
+              </div>
+              <div className='emailSCont'>
+                <label htmlFor="email">Email</label>
+                <div>
+                  {validationErrors.email ? <p style={{ width: '185px', fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>Please enter a valid email</p> : "" }
+                  <input type="email" id="email" name="email" onChange={handleChange} style={{ outline: validationErrors.email ? '2px solid red' : '' }} placeholder="Enter your email"/>
+                </div>
+              </div>
+                <div className='emailSCont'>
+                  <label htmlFor='pass'>Password</label>
+                  <input type='password' id='password' placeholder='Enter your new password' 
+                  onChange={handleChange} />
+                </div>
+                <div className='emailSCont'>
+                  <label htmlFor='confirm-pass'>Confirm</label>
+                  <input type='password' id='confirmPassword' placeholder='Confirm your password'
+                  onChange={handleChange}/>
                 </div>
 
-                <button disabled={isLoading ? true : false} className={`button ${isLoading ? 'loading' : ''}`} onClick={(handlePassword)}>{isLoading ? <Tadpole height={15} color='white' /> : 'Confirm'}</button>
+                <button disabled={isLoading ? true : false} className={`button ${isLoading ? 'loading' : ''}`} onClick={(handleAccount)}>{isLoading ? <Tadpole height={15} color='white' /> : 'Confirm'}</button>
               </div>
             </div>
           : action === 'payment' ?
