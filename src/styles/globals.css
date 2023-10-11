@@ -3611,10 +3611,16 @@ a {
 
 /* styles.css or your CSS module */
 .slide-menu .mobile-menu {
+    z-index: 1000;
+    display: flex;
+    width: fit-content;
+    flex-direction: column;
+    padding: 50px;
+    justify-content: flex-start;
     position: fixed;
     top: 0;
     left: -300px;  /* start off the screen */
-    width: 300px;
+    height: 100%;
     background: #f5f6f7;
     transition: left 0.8s;  /* animate the left property */
 }
