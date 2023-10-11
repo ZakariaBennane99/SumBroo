@@ -8,10 +8,10 @@ import axios from 'axios';
 
 // This can be in a separate file for reusability across pages
 
-
 const SpecialOnboarding = ({ userId, status }) => {
 
   const [action, setAction] = useState(status)
+  const [confirmPassword, setConifrmPassord] = useState('')
   const [tk, setTk] = useState('')
 
   const [leftErrors, setleftErrors] = useState('')
@@ -24,12 +24,8 @@ const SpecialOnboarding = ({ userId, status }) => {
   const [validationErrors, setValidationErrors] = useState({
     name: false,
     email: false,
-    password: false,
-    confirmPassword: false
+    password: false
   })
-
-
-  const confirmPassword = ''
 
   // if onboarding step is 2, take the user to the last step which is 
   // to link the accounts in the settings
@@ -79,7 +75,9 @@ const SpecialOnboarding = ({ userId, status }) => {
 
   async function handleAccount() {
 
-    if (formValues.password != formValues.confirmPassword) {
+    console.log(formValues.password === confirmPassword)
+
+    if (formValues.password !== confirmPassword) {
       setValidationErrors((prev) => { 
         return { ...prev, password: 'Passwords do not match' }
       })
@@ -90,29 +88,54 @@ const SpecialOnboarding = ({ userId, status }) => {
 
     try {
 
-      console.log('The formValues', formValues)
-
       const applicationURL = 'http://localhost:4050/api/complete-account'
 
       const res = await axios.post(applicationURL, {
         userId, formValues
       })
 
-      console.log('The response', res)
-      /*
-      // after registering the User redirect to the checkout page
       if (res.status === 201) {
         setIsLoading(false)
         setTk(res.token)
         setAction('payment')
         return
       }
-      */
-
 
     } catch (error) {
-      setIsError(true)
-      console.error('Server Error');
+      setIsLoading(false)
+      if (error.response.status === 400) {
+
+        const errorsArray = error.response.data.errors;
+    
+        // Default error state (assuming no errors to start with)
+        let newValidationErrors = {
+          name: false,
+          email: false,
+          password: false
+        };
+    
+        // Process each error and update the state accordingly
+        errorsArray.forEach(err => {
+          if (err.param === 'formValues.name') {
+            newValidationErrors.name = err.msg;
+          }
+          if (err.param === 'formValues.email') {
+            newValidationErrors.email = err.msg;
+          }
+          if (err.param === 'formValues.password') {
+            newValidationErrors.password = err.msg;
+          }
+        });
+    
+        console.log('the new states', newValidationErrors)
+        // Update the states
+        setValidationErrors(newValidationErrors);
+
+      } else {
+        // here means it's error 500
+        // show an alert to refresh the page
+        setleftErrors('Please refresh the page and try again!')
+      }
     }
 
   }
@@ -165,30 +188,32 @@ const SpecialOnboarding = ({ userId, status }) => {
             <div className='password-container'>
               <h1>Step 1: Create An Account</h1>
               <div className='pass-holder'>
-              {leftErrors ? <h4 style={{ color: 'red', fontWeight: '400', margin: '0px' }}>{leftErrors}</h4> : ''}
               <div className='emailSCont' style={{ marginTop: '10px' }}>
                 <label htmlFor="name">Name</label>
-                <div>
+                <div className='inputContainer'>
                   {validationErrors.name ? <p style={{ width: '185px', fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{validationErrors.name}</p> : "" }
-                  <input type="text" id="name" name="name" onChange={handleChange} style={{ outline: validationErrors.name ? '2px solid red' : '' }} placeholder="Add a username"/>
+                  <input type="text" id="name" name="name" onChange={handleChange} value={formValues.name} style={{ outline: validationErrors.name ? '2px solid red' : '' }} placeholder="Add a username"/>
                 </div>
               </div>
               <div className='emailSCont'>
                 <label htmlFor="email">Email</label>
-                <div>
+                <div className='inputContainer'>
                   {validationErrors.email ? <p style={{ width: '185px', fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>Please enter a valid email</p> : "" }
-                  <input type="email" id="email" name="email" onChange={handleChange} style={{ outline: validationErrors.email ? '2px solid red' : '' }} placeholder="Enter your email"/>
+                  <input type="email" id="email" name="email" onChange={handleChange} value={formValues.email} style={{ outline: validationErrors.email ? '2px solid red' : '' }} placeholder="Enter your email"/>
                 </div>
               </div>
                 <div className='emailSCont'>
                   <label htmlFor='pass'>Password</label>
-                  <input type='password' id='password' placeholder='Enter your new password' 
-                  onChange={handleChange} />
+                  <div className='inputContainer'>
+                    {validationErrors.password ? <p style={{ width: '185px', fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>{validationErrors.password}</p> : "" }
+                    <input type='password' id='password' placeholder='Enter your new password' 
+                    onChange={handleChange} value={formValues.password} style={{ outline: validationErrors.password ? '2px solid red' : '' }} />
+                  </div>
                 </div>
                 <div className='emailSCont'>
                   <label htmlFor='confirm-pass'>Confirm</label>
                   <input type='password' id='confirmPassword' placeholder='Confirm your password'
-                  onChange={handleChange}/>
+                  onChange={(e) => setConifrmPassord(e.target.value)} value={confirmPassword} style={{ outline: validationErrors.password ? '2px solid red' : '' }} />
                 </div>
 
                 <button disabled={isLoading ? true : false} className={`button ${isLoading ? 'loading' : ''}`} onClick={(handleAccount)}>{isLoading ? <Tadpole height={15} color='white' /> : 'Confirm'}</button>

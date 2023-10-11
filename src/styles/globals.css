@@ -741,6 +741,7 @@ a {
     font-weight: 500;
 }
 
+
 .signUpForm .userName input,
 .signUpForm .emailSCont input,
 .signUpForm .passwCont input,
@@ -763,6 +764,10 @@ a {
     box-shadow: 0px 0px 2px 1px #1c1c57;
 }
 
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+}
 
 .signUpForm .userName, .emailSCont, .passwCont, .platformCont {
     display: flex;
