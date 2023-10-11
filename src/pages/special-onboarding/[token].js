@@ -1,9 +1,54 @@
 import Modal from 'react-modal';
 import { Tadpole } from "react-svg-spinners";
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 
+
+const Tooltip = ({ content, valueTag }) => {
+
+  const [isVisible, setIsVisible] = useState(false);
+  const tooltipRef = useRef(null); // Ref for the tooltip's container
+
+  const handleTooltipClick = () => {
+      setIsVisible(true);
+  };
+
+  const handleClickOutside = (event) => {
+      // Check if the click happened outside the tooltip and its trigger
+      if (tooltipRef.current && !tooltipRef.current.contains(event.target)) {
+          setIsVisible(false);
+      }
+  };
+
+  useEffect(() => {
+      // Add a global event listener to check for clicks outside the tooltip
+      document.addEventListener("mousedown", handleClickOutside);
+
+      // Cleanup the global event listener when the component is unmounted
+      return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+      };
+  }, []);
+
+  return (
+      <>
+          {
+              valueTag.length > 0 ?
+              <span className="value-tag">{valueTag}</span>
+               : ''
+          }
+          <div className="info-tooltip" ref={tooltipRef}>
+              <span className="question-mark" onClick={handleTooltipClick}>?</span>
+              {isVisible && (
+                  <div className="tooltip-content active">
+                      <div id="tooltipText" dangerouslySetInnerHTML={{__html: content }} />
+                  </div>
+              )}
+          </div>
+      </>
+  );
+};
 
 
 // This can be in a separate file for reusability across pages
@@ -134,7 +179,7 @@ const SpecialOnboarding = ({ userId, status }) => {
       } else {
         // here means it's error 500
         // show an alert to refresh the page
-        setleftErrors('Please refresh the page and try again!')
+        alert('Please refresh the page and try again!')
       }
     }
 
@@ -216,14 +261,13 @@ const SpecialOnboarding = ({ userId, status }) => {
                   onChange={(e) => setConifrmPassord(e.target.value)} value={confirmPassword} style={{ outline: validationErrors.password ? '2px solid red' : '' }} />
                 </div>
 
-                <button disabled={isLoading ? true : false} className={`button ${isLoading ? 'loading' : ''}`} onClick={(handleAccount)}>{isLoading ? <Tadpole height={15} color='white' /> : 'Confirm'}</button>
+                <button disabled={isLoading ? true : false} className={`button ${isLoading ? 'loading' : ''}`} onClick={(handleAccount)}>{isLoading ? <Tadpole height={15} color='white' /> : 'Create & Continue To Payment'}</button>
               </div>
             </div>
           : action === 'payment' ?
-            <div className='payment-container'>
+            <div>
               <h1>Step 2: Let's Take Care of the Payment</h1>
-              <>
-                <div className="pricingTablesContainer">
+                <div className="pricingTablesContainer" style={{ marginTop: "80px" }}>
                 <div className="table1" style={{
                     outline: tableClicked === 'table1' ? '4px solid #1465e7' : '',
                 }} >
@@ -265,61 +309,60 @@ const SpecialOnboarding = ({ userId, status }) => {
                         valueTag=""
                     />
                     </p>
-                    <button onClick={handleTableClicked} data-lookup-key='price_1NduMpHK22p9cyvXL5JiI0mA' name="table1">Select</button>
+                    <button onClick={handleTableClicked} data-lookup-key='price_1NgcqKHK22p9cyvXeCZ7P0al' name="table1" className='selectBtnPriceTable'>Select</button>
                 </div>
-                <div className="table2" style={{
-                    outline: tableClicked === 'table2' ? '4px solid #1465e7' : ''
-                 }}>
-                    <div className="saveRibbon">Save $100.9</div>
-                    <span className="strikethrough">$503.88</span>
-                    <h1 style={{ marginTop: '10px' }}>$402.99</h1>
-                    <p>Per Year</p>
-                    <p>Receive credits to post daily within our <b>highly vetted</b> network for an entire month
-                    <Tooltip 
-                        content="Each month you maintain your subscription, you'll receive 30 credits that renew. This value is based on the average cost of a post from creators, which is typically <a id='value-source' title='Influencer rates from influencermarketinghub.' href='https://influencermarketinghub.com/influencer-rates/' target='_blank' rel='noopener noreferrer'>$119/post</a>."
-                        valueTag="Valued at $42840"
-                    />
-                    </p>
-                    <p>Reach an engaged audience between <b>300K - 1M</b> each month on the network
-                    <Tooltip 
-                        content="You will be able to get 300K-1M views for your posts per month. As for the value, it is based on the average cost per thousand impressions on all platforms which averages <a id='value-source' title='Influencer rates from influencermarketinghub.' href='https://www.adroll.com/blog/ad-cost-breakdown-facebook-instagram-tiktok-and-pinterest' target='_blank' rel='noopener noreferrer'>$9.9.</a>"
-                        valueTag="Worth $36000"
-                    />
-                    </p>
-                    <p>Access <b>detailed analytics</b> for your posts to gain deeper insights into your audience
-                    <Tooltip 
-                        content="You will receive analytics for each of your posts for a duration of 7 days before they are archived. These analytics will be updated every 24 hours."
-                        valueTag=""
-                    />
-                    </p>
-                    <p>Receive a <b>high-quality</b> post daily completely for free
-                    <Tooltip 
-                        content="Influencers within our network will also have the opportunity to guest-post on your feed. To ensure the highest quality of content, every post undergoes a human review before being published."
-                        valueTag=""
-                    />
-                    </p>
-                    <p>Connect <b>genuinely</b> with fellow creators within a community that shares your passion
-                    <Tooltip 
-                        content="You will be able to join a community where creators like you connect, share insights, and engage with one another."
-                        valueTag=""
-                    />
-                    </p>
-                    <p>Grow <b>faster</b> with Sumbroo
-                    <Tooltip 
-                        content="We handle everything, from profile vetting to content review, allowing you to concentrate solely on expanding your follower base."
-                        valueTag=""
-                    />
-                    </p>
-                    <button onClick={handleTableClicked} data-lookup-key='price_1NduMpHK22p9cyvXtZr9KbhJ' name="table2">Select</button>
+                  <div className="table2" style={{
+                      outline: tableClicked === 'table2' ? '4px solid #1465e7' : ''
+                   }}>
+                      <div className="saveRibbon">Save $100.9</div>
+                      <span className="strikethrough">$503.88</span>
+                      <h1 style={{ marginTop: '10px' }}>$402.99</h1>
+                      <p>Per Year</p>
+                      <p>Receive credits to post daily within our <b>highly vetted</b> network for an entire month
+                      <Tooltip 
+                          content="Each month you maintain your subscription, you'll receive 30 credits that renew. This value is based on the average cost of a post from creators, which is typically <a id='value-source' title='Influencer rates from influencermarketinghub.' href='https://influencermarketinghub.com/influencer-rates/' target='_blank' rel='noopener noreferrer'>$119/post</a>."
+                          valueTag="Valued at $42840"
+                      />
+                      </p>
+                      <p>Reach an engaged audience between <b>300K - 1M</b> each month on the network
+                      <Tooltip 
+                          content="You will be able to get 300K-1M views for your posts per month. As for the value, it is based on the average cost per thousand impressions on all platforms which averages <a id='value-source' title='Influencer rates from influencermarketinghub.' href='https://www.adroll.com/blog/ad-cost-breakdown-facebook-instagram-tiktok-and-pinterest' target='_blank' rel='noopener noreferrer'>$9.9.</a>"
+                          valueTag="Worth $36000"
+                      />
+                      </p>
+                      <p>Access <b>detailed analytics</b> for your posts to gain deeper insights into your audience
+                      <Tooltip 
+                          content="You will receive analytics for each of your posts for a duration of 7 days before they are archived. These analytics will be updated every 24 hours."
+                          valueTag=""
+                      />
+                      </p>
+                      <p>Receive a <b>high-quality</b> post daily completely for free
+                      <Tooltip 
+                          content="Influencers within our network will also have the opportunity to guest-post on your feed. To ensure the highest quality of content, every post undergoes a human review before being published."
+                          valueTag=""
+                      />
+                      </p>
+                      <p>Connect <b>genuinely</b> with fellow creators within a community that shares your passion
+                      <Tooltip 
+                          content="You will be able to join a community where creators like you connect, share insights, and engage with one another."
+                          valueTag=""
+                      />
+                      </p>
+                      <p>Grow <b>faster</b> with Sumbroo
+                      <Tooltip 
+                          content="We handle everything, from profile vetting to content review, allowing you to concentrate solely on expanding your follower base."
+                          valueTag=""
+                      />
+                      </p>
+                      <button onClick={handleTableClicked} data-lookup-key='price_1NgcqKHK22p9cyvXDtmXlOEk' name="table2" className='selectBtnPriceTable'>Select</button>
+                  </div>
                 </div>
-                </div>
-                <div style={{ width: '100%', position: 'relative' }}>
+                <div className='next-page payment-container'>
                   <button type='button' className={`button ${isLoading ? 'loading' : ''}`} onClick={handlePayment} disabled={isLoading ? true : false}>
                     {isLoading ? <Tadpole width={20} color='white' /> : <>Pay Via Stripe <img src='/pinterest/external-white.svg' /></>}
                   </button>
                 </div>
-              </>
-            </div> 
+            </div>
           : toError404()
         }
         <Modal
@@ -362,12 +405,14 @@ export async function getServerSideProps(context) {
     // assuming onboardingStep is 0
     const sanitizedUserId = mongoSanitize.sanitize(userId);
     let user = await User.findOne({ _id: sanitizedUserId });
+    
+    console.log('The onboardig step', user.onboardingStep)
 
-    if (!user || user.onboardingStep !== 0) throw new Error('User not found');
+    if (!user || ![0, 1].includes(user.onboardingStep)) throw new Error('User not found');
 
     return {
       props: {
-        userId, status: 'password',
+        userId, status: user.onboardingStep === 1 ? 'payment' : 'password',
         onboarding: true,
         notProtected: true
       }

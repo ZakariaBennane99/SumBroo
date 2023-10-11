@@ -349,7 +349,7 @@ a {
 
 #heroSection button,
 .Error-container button,
-.onboarding-container .payment-container button {
+.onboarding-container .payment-container button:not(.pricingTablesContainer button.selectBtnPriceTable) {
     all: unset;
     width: 300px;
     padding: 13px;
@@ -366,6 +366,10 @@ a {
     font-size: 25pt;
     margin-top: 30px;
     transition: all 0.25s;
+}
+
+.pricingTablesContainer button[class="selectBtnPriceTable"]:hover {
+    background-color: #d3e9ff;
 }
 
 #heroSection button:hover,
@@ -809,7 +813,8 @@ a {
 .payment-container .button.loading,
 .password-container .button.loading,
 .paymentContainer div .button.loading,
-.loginForm .button.loading {
+.loginForm .button.loading,
+.next-page .button.loading {
     background: #73739a;
     cursor: auto;
 }
@@ -1523,7 +1528,8 @@ a {
     display: block;
 } 
 
-.pricingParent .next-page {
+.pricingParent .next-page, 
+.onboarding-container .next-page {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -3424,6 +3430,7 @@ a {
 #Er404-parent-section h4, 
 #Er404-parent-section h5 {
     font-family: 'Ubuntu';
+    color: #1c1c57;
 }
 
 #Er404-parent-section .post-infos-container {
@@ -4163,11 +4170,10 @@ a {
 
 .onboarding-container {
     width: 93%;
-    height: 100vh;
     margin-top: 35px;
 }
 
-.onboarding-container .payment-container {
+.onboarding-container .payment-container:not(.next-page) {
     width: fit-content;
     height: 200px;
     display: flex;
@@ -4181,13 +4187,13 @@ a {
     font-family: 'Ubuntu';
 }
 
-.onboarding-container .payment-container button {
+.onboarding-container .payment-container button:not(.pricingTablesContainer button.selectBtnPriceTable) {
     margin-top: 20px;
     margin-left: 35px;
     font-size: 1.8em;
 }
 
-.onboarding-container .payment-container button:hover {
+.onboarding-container .payment-container button:hover:not(.pricingTablesContainer button.selectBtnPriceTable) {
     background-color: #12123b;
 }
 
