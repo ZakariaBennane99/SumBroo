@@ -28,6 +28,7 @@ const Header = () => {
         windowWidth <= 865 ? 
         <div id='footer'>
           <div>
+            <Link href='/about'><p>About</p></Link>
             <Link href='/contact-us'><p>Contact Us</p></Link>
             <Link href='/privacy-policy'><p>Privacy Policy</p></Link>
             <Link href='/terms-and-conditions'><p>Terms & Conditions</p></Link>
@@ -38,6 +39,7 @@ const Header = () => {
         <div id='footer'>
           <p id='company'>© 2023 <a href='https://thelibertagroup.co.uk' target="_blank" style={{ color: '#003ea1', cursor: 'pointer' }}>Driven Dynamics Limited</a>. All rights reserved.</p>
           <div>
+            <Link href='/about'><p>About</p></Link>
             <Link href='/contact-us'><p>Contact Us</p></Link>
             <Link href='/privacy-policy'><p>Privacy Policy</p></Link>
             <Link href='/terms-and-conditions'><p>Terms & Conditions</p></Link>
