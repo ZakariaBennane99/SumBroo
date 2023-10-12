@@ -56,7 +56,7 @@ function Blog({ posts }) {
                     </h2>
 
                     <a href={`/blog/${post.fields.slug}`} title={post.fields.title} className='featured-image'>
-                        <Image width={100} height={100} src={`/api/contentfulAsset?path=${encodeURIComponent(post.fields.featuredImage.fields.file.url)}`} alt={post.fields.featuredImage.fields.title} />
+                        <Image width={300} height={300} src={`/api/contentfulAsset?path=${encodeURIComponent(post.fields.featuredImage.fields.file.url)}`} alt={post.fields.featuredImage.fields.title} />
                     </a>
 
                     <div className='excerpt'>

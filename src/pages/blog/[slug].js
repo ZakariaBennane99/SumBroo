@@ -134,6 +134,18 @@ function Post({ post, windowWidth }) {
 
   const [hash, setHash] = useState(null)
 
+  function renderHeading(level, node, children) {
+    const value = node.content[0].value;
+    const id = "heading-" + value.toLowerCase().replace(/\W/g, '-');
+
+    const HeadingComponent = `h${level}`; // This will be dynamic: h1, h2, h3, etc.
+    return (
+        <HeadingComponent id={id} style={{ fontSize: `${2.5 - level * 0.2}em`, fontWeight: 'bold' }}>
+            {children}
+        </HeadingComponent>
+    );
+  }
+
     const options = {
         renderNode: {
           [BLOCKS.EMBEDDED_ASSET]: node => {
@@ -185,11 +197,12 @@ function Post({ post, windowWidth }) {
             }
             return null;
           },
-          [BLOCKS.HEADING_2]: (node, children) => {
-            const value = node.content[0].value;
-            const id = "heading-" + value.toLowerCase().replace(/\W/g, '-');
-            return <h2 id={id} style={{ fontSize: '2.3em', fontWeight: 'bold' }}>{children}</h2>;
-          },
+          [BLOCKS.HEADING_1]: (node, children) => renderHeading(1, node, children),
+          [BLOCKS.HEADING_2]: (node, children) => renderHeading(2, node, children),
+          [BLOCKS.HEADING_3]: (node, children) => renderHeading(3, node, children),
+          [BLOCKS.HEADING_4]: (node, children) => renderHeading(4, node, children),
+          [BLOCKS.HEADING_5]: (node, children) => renderHeading(5, node, children),
+          [BLOCKS.HEADING_6]: (node, children) => renderHeading(6, node, children),
           [BLOCKS.PARAGRAPH]: (node, children) => (
             <p style={{ fontSize: '1.2em', lineHeight: '1.5', color: '#101043' }}>
                 {children}

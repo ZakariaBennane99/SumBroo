@@ -12,7 +12,6 @@ const Header = ({ signedIn, width, currentPath }) => {
   const router = useRouter();
   const { asPath } = useRouter();
 
-
   const [localPath, setLocalPath] = useState(currentPath);
 
   useEffect(() => {
@@ -138,7 +137,7 @@ const Header = ({ signedIn, width, currentPath }) => {
     );
   };
 
-  const isMobile = () => width < 750;
+  const isMobile = () => width < 1100;
 
   const shouldRenderMobileLinks = () => {
     return (localPath.includes('dashboard') || localPath.includes('settings')) && width < 1215 || isMobile();
