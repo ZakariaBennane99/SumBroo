@@ -635,6 +635,10 @@ a {
 
 @media screen and (max-width: 865px) {
 
+    #parentWrapper .sectionTitle {
+        margin-bottom: 55px;
+    }
+
     .accordion {
         margin-top: 0px;
     }
@@ -3619,7 +3623,7 @@ a {
     justify-content: flex-start;
     position: fixed;
     top: 0;
-    left: -300px;  /* start off the screen */
+    left: -350px;  /* start off the screen */
     height: 100%;
     background: #f5f6f7;
     transition: left 0.8s;  /* animate the left property */
@@ -3957,6 +3961,36 @@ a {
 
 #mobile-sub-menu-wrapper {
     margin-bottom: 40px;
+    font-family: 'Ubuntu';
+    width: 230px;
+}
+
+#mobile-sub-menu-wrapper .big-menu-items {
+    color:#36366e;
+    font-size: 1.4em;
+    margin-top: 35px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#mobile-sub-menu-wrapper #blog-big-menu {
+    color: #36366e;
+    font-size: 1.4em;
+    cursor: pointer;
+    display: flex;
+}
+
+#mobile-sub-menu-wrapper #mobile-sub-menu #sign-out-user {
+    color: red;
+    font-family: 'Ubuntu';
+    font-size: 1.09em;
+    display: flex;
+    justify-content: baseline;
+    background-color: transparent;
+    margin: 0px;
+    padding: 0px;
 }
 
 #mobile-sub-menu-wrapper #mobile-sub-menu {
@@ -3964,7 +3998,7 @@ a {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin-top: 30px;
+    margin-top: 20px;
     margin-left: 20px;
     color: #73739a;
     font-size: 1.2em;
