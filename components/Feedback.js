@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Rating from '@mui/material/Rating';
+import { Tadpole } from "react-svg-spinners";
+
 
 
 const Feedback = () => {
@@ -7,22 +9,46 @@ const Feedback = () => {
     const [submissionStatus, setSubmissionStatus] = useState(null); // Added state
     const [formVisible, setFormVisible] = useState(false);
 
-    const [rating, setRating] = React.useState(2);
+    const [rating, setRating] = useState(5);
 
-    const handleSubmit = (e) => {
-        // send to the server to be stored in the DB
+    const handleSubmit = async (e) => {
+
         e.preventDefault();
-
         
-        console.log('Rating:', rating);
-        console.log('Feedback:', feedback);
-        // Submit the feedback to a server or handle as necessary
-        
-        setSubmissionStatus('submitted'); // Update submission status
+        try {
+            // Submit the feedback to the server
+            const response = await fetch('http://localhost:4050/api/feedback-handler', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ rating, feedback })
+            });
+    
+            const data = await response.json();
+    
+            if (data.message === 'Feedback successfully stored!') {
+                setSubmissionStatus('submitted');
+            } else {
+                console.error("Error:", data.message);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
     };
+    
+
+    useEffect(() => {
+        if (submissionStatus === 'submitted') {
+            setTimeout(() => {
+                setSubmissionStatus(null)
+                setFormVisible(false)
+            }, 1000);
+        }
+    }, [submissionStatus])
 
     return (
-        <div className={`feedback-container ${formVisible ? 'expanded' : ''}`}>
+        <div className={`feedback-container ${formVisible ? 'expanded' : ''}`} style={{ paddingBottom: submissionStatus === 'submitted' ? '0px' : '37px' }}>
             {submissionStatus === 'submitted' ? (
                 <div className="submission-message">Thanks a ton for sharing! 🌟</div>
             ) : (
@@ -39,7 +65,11 @@ const Feedback = () => {
                                 id="rating-stars"
                                 value={rating}
                                 onChange={(event, newValue) => {
-                                  setRating(newValue);
+                                    if (newValue !== null) { 
+                                        setRating(newValue);
+                                    } else {
+                                        setRating(1); 
+                                    }
                                 }}
                             />
                         </div>
@@ -52,7 +82,11 @@ const Feedback = () => {
                             />
                         </div>
                         <div className="submit-section">
-                            <button type="submit">Submit</button>
+                            {
+                                submissionStatus === 'submitted' ? 
+                                <Tadpole height={5} color='white' /> :
+                                <button type="submit" disabled={submissionStatus==='submitted'} className={submissionStatus==='submitted' ? 'active' : ''} >Submit</button>
+                            }
                         </div>
                     </form>
                 </>
