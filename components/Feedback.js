@@ -6,7 +6,7 @@ import { Tadpole } from "react-svg-spinners";
 
 const Feedback = () => {
     const [feedback, setFeedback] = useState('');
-    const [submissionStatus, setSubmissionStatus] = useState(null); // Added state
+    const [submissionStatus, setSubmissionStatus] = useState(null); 
     const [formVisible, setFormVisible] = useState(false);
 
     const [rating, setRating] = useState(5);
@@ -22,6 +22,8 @@ const Feedback = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                // @TODO: Add The Name & Email of the user sending the feedback
+                // you can get it from localStorage
                 body: JSON.stringify({ rating, feedback })
             });
     

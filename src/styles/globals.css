@@ -351,8 +351,8 @@ a {
 .Error-container button,
 .onboarding-container .payment-container button:not(.pricingTablesContainer button.selectBtnPriceTable) {
     all: unset;
-    width: 300px;
-    padding: 13px;
+    width: fit-content; /* to be changed back to 300px */
+    padding: 18px 28px; /* to be changed back to 13px */
     border-radius: 10px;
     color: white;
     background-color: #1465e7;
@@ -444,8 +444,8 @@ a {
 
 .howToSection button {
     all: unset;
-    width: 300px;
-    padding: 13px;
+    width: 'fit-content'; /* to be changed back to 13px */
+    padding: 15px 25px; /* to be changed back to 13px */
     border-radius: 10px;
     color: white;
     background-color: #1465e7;
@@ -3831,9 +3831,9 @@ a {
 
 .landin-last-section button {
     all: unset;
-    width: 300px;
+    width: fit-content; /* to be changed back to 300px */
     text-align: center;
-    padding: 13px;
+    padding: 15px 25px; /* to be changed back to 13px */
     border-radius: 10px;
     color: white;
     background-color: #1465e7;

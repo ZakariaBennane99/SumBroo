@@ -45,11 +45,19 @@ const Landing = () => {
   const router = useRouter();
 
   // send the token to the backend
+  /*
+
+  top CTA: Join Us Today
+  middle CTA: Apply Now
+  final CTA: Start Today
+
+  */
+
   return (<>
       <div id='heroSection'>
         <h1>Efficiently Maximize Your Impact with SumBroo and Grow Faster</h1>
         <p>Enjoy a surge in your <span>growth rate</span> and <span>audience reach</span>, experience a daily dose of <span>high-quality content</span>, and benefit from the <span>unparalleled value</span> of our carefully curated plans.</p>
-        <button onClick={() => router.push('/pricing')}>Join Us Today</button>
+        <button onClick={() => router.push('/pricing')}>Apply For Early Access</button> 
       </div>
       <img id='divider' src='./divider.svg' />
       <h1 className='sectionTitle'>What's In It For Me?</h1>
@@ -57,12 +65,12 @@ const Landing = () => {
         <div>
           <h1>Precision Guest Posting</h1>
           <img src='/feature_targeting.svg' alt='' />
-          <p>Choose your desired sub-niche and our system will handpick the perfect member in our network to amplify your post. With SumBroo, it's not just about targeting your niche; we extend your reach to adjacent sub-niches for unparalleled impact.</p>
+          <p>Select your preferred sub-niche, and SumBroo's system will select the ideal network member to boost your post. We don't just target niches; we also reach adjacent sub-niches for maximum impact.</p>
         </div>
         <div>
           <h1>High-Quality Content</h1>
           <img src='/feature_content.svg' alt='' />
-          <p>Every post you create or get shared on your feed undergoes rigorous review to maintain the highest standards of content integrity. This dedication ensures that only premier content circulates within our network, benefiting both you and your audience.</p>
+          <p>Every post you make or share is thoroughly reviewed to uphold top content standards. This commitment ensures only the best content circulates in our network, serving both you and your followers.</p>
         </div>
         <div>
           <h1>Reach & Growth</h1>
@@ -72,17 +80,17 @@ const Landing = () => {
         <div>
           <h1>Exceptional Value</h1>
           <img src='/feature_cheap.svg' alt='' />
-          <p id='textBrowsers'>For a monthly commitment, immerse yourself in a vast network of dedicated and members. Engage with a supportive community and harness detailed analytics, all ensuring maximum return on your investment.</p>
+          <p id='textBrowsers'>With a monthly commitment, join a vast community of dedicated members. Engage with supportive peers and access in-depth analytics, guaranteeing optimal return on your investment.</p>
         </div>
         <div>
           <h1>Analytical Reports</h1>
           <img src='/featured_analytics.svg' alt='' />
-          <p>Stay informed and strategize effectively with our in-depth, seven-day post analytics. Get better insights into your audience's behavior and preferences to fine-tune your future content and strategies.</p>
+          <p>Stay updated and plan smartly with our detailed seven-day post analytics. Gain deeper insights into your audience's preferences to refine your upcoming content and approaches.</p>
         </div>
         <div>
           <h1>Quality Assurance</h1>
           <img src='/feature_quality.svg' alt='' />
-          <p>Every member of our network goes through a thorough vetting process before gaining access. This allows us to maintain a high standard of content, ensuring satisfying and performance-boosting interactions for everyone.</p>
+          <p>Each member undergoes a comprehensive vetting before joining. This upholds our content quality, guaranteeing rewarding and effective interactions for all.</p>
         </div>
       </div>
       <img id='divider' src='./divider.svg' />
@@ -92,7 +100,7 @@ const Landing = () => {
           <h1>Step 1: Apply, And Get Approved</h1>
           <img src='./stepsUnderline.svg' />
         </div>
-        <button onClick={() => router.push('/pricing')}>Apply Now</button>
+        <button onClick={() => router.push('/pricing')}>Apply For Early Access</button>
         <div>
           <h1>Step 2: Connect Your Social Media Accounts</h1>
           <img src='./stepsUnderline.svg' />
@@ -114,7 +122,7 @@ const Landing = () => {
       <Accordion />
       <div className='landin-last-section'>
         <h1>Ready to take your influence<br/> to the next level?</h1>
-        <button onClick={() => router.push('/pricing')}>Start Today!</button>
+        <button onClick={() => router.push('/pricing')}>Apply For Early Access</button>
       </div>
   </>
   )
