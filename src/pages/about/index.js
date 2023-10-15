@@ -25,7 +25,7 @@ const About = () => {
                 </p>
 
                 <p>
-                Thank you for taking the time to learn about SumBroo and my journey. I'm glad you're here.
+                Thank you for taking to learn to learn about SumBroo and my journey. I'm glad you're here.
                 </p>
 
                 <p>

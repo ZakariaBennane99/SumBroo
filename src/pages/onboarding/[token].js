@@ -26,7 +26,7 @@ const Onboarding = ({ userId, status }) => {
   async function handlePayment() {
     setIsLoading(true)
     try {
-      const response = await fetch('http://localhost:4050/api/create-checkout-session', {
+      const response = await fetch('https://sumbroo.com/api/create-checkout-session', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ const Onboarding = ({ userId, status }) => {
     }
     setIsLoading(true)
     try {
-      const response = await fetch('http://localhost:4050/api/set-up-password', {
+      const response = await fetch('https://sumbroo.com/api/set-up-password', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'

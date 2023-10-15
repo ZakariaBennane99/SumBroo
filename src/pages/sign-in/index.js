@@ -92,7 +92,7 @@ const SignIn = () => {
 
       setIsClicked(true)
 
-      const apiUrl = 'http://localhost:4050/api/auth'
+      const apiUrl = 'https://sumbroo.com/api/auth'
 
       try {
         const res = await axios.post(apiUrl, formValues,  {
@@ -135,7 +135,7 @@ const SignIn = () => {
 
       setIsVerifyOTPClicked(true)
 
-      const otpCHECKURL = 'http://localhost:4050/api/check-password-otp'
+      const otpCHECKURL = 'https://sumbroo.com/api/check-password-otp'
 
       try {
         const res = await axios.post(otpCHECKURL, OTP, {
@@ -166,7 +166,7 @@ const SignIn = () => {
     async function changePassword() {
 
       setUpdatePasswordClicked(true)
-      const changePasswordEnpoint = 'http://localhost:4050/api/change-password'
+      const changePasswordEnpoint = 'https://sumbroo.com/api/change-password'
 
       try {
         const res = await axios.post(changePasswordEnpoint, passwordChange, {
@@ -198,7 +198,7 @@ const SignIn = () => {
 
       setPassChangeClicked(true)
 
-      const changePassUrl = 'http://localhost:4050/api/initiate-password-change'
+      const changePassUrl = 'https://sumbroo.com/api/initiate-password-change'
 
       try {
         const resp = await axios.post(changePassUrl, passChangeEmail, {

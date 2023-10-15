@@ -17,7 +17,7 @@ const Feedback = () => {
         
         try {
             // Submit the feedback to the server
-            const response = await fetch('http://localhost:4050/api/feedback-handler', {
+            const response = await fetch('https://sumbroo.com/api/feedback-handler', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
