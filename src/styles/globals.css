@@ -4345,3 +4345,132 @@ a {
 .notification img {
     width: 40px;
 }
+
+.feedback-container {
+    width: 220px;
+    background-color: #f7f7f7;
+    transition: max-height 0.4s ease-in-out;
+    overflow: hidden;
+    max-height: 0px; 
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 250px;
+    padding-bottom: 37px;
+    box-shadow: 0px 0px 11px 1px rgba(0, 0, 0, 0.1);
+}
+
+.feedback-container.expanded {
+    transform: translateY(0px);
+    max-height: 350px; 
+}
+
+.feedback-container .rating-section #rating-stars {
+    margin-top: 10px;
+}
+
+.feedback-container .rating-section {
+    margin-left: 10px;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.feedback-container form {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+}
+
+.feedback-container form.visible {
+    font-family: 'IBM Plex Sans';
+    display: block;
+    opacity: 1;
+    padding-top: 50px;
+}
+
+.feedback-container form.visible label[id="feedback-txt"], 
+.feedback-container form.visible span[id="stars-txt"] {
+    font-size: .92em;
+    color: #1c1c57;
+}
+
+.feedback-container .feedback-section {
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.feedback-container textarea {
+    font-family: 'IBM Plex Sans';
+    border: none;
+    color: #1c1c57;
+    outline: 1px solid hsl(0, 0%, 80%);
+    border-radius: 4px;
+    transition: all .1s;
+    width: 90%;
+    font-family: 'IBM Plex Sans';
+    height: 70px;
+    padding: 5px;
+    resize: none;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-height: 100px;
+}
+
+.feedback-container textarea:focus {
+    outline: 2px solid #1c1c57;
+    box-shadow: 0px 0px 2px 1px #1c1c57;
+}
+
+.feedback-container .submit-section {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.feedback-container button[type="submit"] {
+    background-color: #3e3e9f;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s;
+}
+
+.feedback-container button[type="submit"]:hover {
+    background-color: #282879;
+}
+
+.feedback-container .submission-message {
+    text-align: center;
+    padding: 20px;
+    font-family: 'IBM Plex Sans';
+    font-weight: bold;
+    color: #1c1c57;
+}
+
+.feedback-container .toggle-feedback-btn {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 37px;
+    font-family: 'Ubuntu';
+    font-size: 1.1em;
+    padding: 10px 0;
+    text-align: center;
+    background-color: #3e3e9f;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.feedback-container .toggle-feedback-btn:hover {
+    background-color: #282879;
+}

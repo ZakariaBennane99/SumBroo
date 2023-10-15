@@ -9,6 +9,7 @@ import Modal from 'react-modal';
 import Link from 'next/link';
 import PinterestPostInput from "../../../../components/PinterestPostInput";
 import { Tadpole } from "react-svg-spinners";
+import Feedback from "../../../../components/Feedback";
 
 
 function getCurrentUTCDate() {
@@ -340,6 +341,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
             </div>
           </>
       }
+      <Feedback/>
       <Modal
           isOpen={isServerError}
           style={customStyles}
