@@ -60,12 +60,12 @@ const Landing = () => {
         <button onClick={() => router.push('/pricing')}>Apply For Early Access</button> 
       </div>
       <img id='divider' src='./divider.svg' />
-      <h1 className='sectionTitle'>What's In It For Me?</h1>
+      <h1 className='sectionTitle'>What&apos;s In It For Me?</h1>
       <div id='featuresContainer'>
         <div>
           <h1>Precision Guest Posting</h1>
           <img src='/feature_targeting.svg' alt='' />
-          <p>Select your preferred sub-niche, and SumBroo's system will select the ideal network member to boost your post. We don't just target niches; we also reach adjacent sub-niches for maximum impact.</p>
+          <p>Select your preferred sub-niche, and SumBroo&apos;s system will select the ideal network member to boost your post. We don&apos;t just target niches; we also reach adjacent sub-niches for maximum impact.</p>
         </div>
         <div>
           <h1>High-Quality Content</h1>
@@ -75,7 +75,7 @@ const Landing = () => {
         <div>
           <h1>Reach & Growth</h1>
           <img src='/feather_growth.svg' alt='' />
-          <p>Expand your influence with SumBroo's network to reach up to 1M engaged follower monthly. With our platform, audience growth isn't only about numbers, but about engaging the right people.</p>
+          <p>Expand your influence with SumBroo&apos;s network to reach up to 1M engaged follower monthly. With our platform, audience growth isn&apos;t only about numbers, but about engaging the right people.</p>
         </div>
         <div>
           <h1>Exceptional Value</h1>
@@ -85,7 +85,7 @@ const Landing = () => {
         <div>
           <h1>Analytical Reports</h1>
           <img src='/featured_analytics.svg' alt='' />
-          <p>Stay updated and plan smartly with our detailed seven-day post analytics. Gain deeper insights into your audience's preferences to refine your upcoming content and approaches.</p>
+          <p>Stay updated and plan smartly with our detailed seven-day post analytics. Gain deeper insights into your audience&apos;s preferences to refine your upcoming content and approaches.</p>
         </div>
         <div>
           <h1>Quality Assurance</h1>

@@ -60,7 +60,7 @@ const Feedback = () => {
                     </button>
                     <form onSubmit={handleSubmit} className={formVisible ? 'visible' : ''}>
                         <div className="rating-section">
-                            <span id='stars-txt'>🌟 How's your journey going with SumBroo?</span>
+                            <span id='stars-txt'>🌟 How&apos;s your journey going with SumBroo?</span>
                             <Rating
                                 size="large"
                                 name="simple-controlled"

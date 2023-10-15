@@ -81,8 +81,9 @@ const Targeting = ({ nichesAndTags, errors, chosenNicheAndTags, resetErrors, pla
     const target = nichesAndTags.find(el => el.niche === targetField.value);
 
     return ( <>
-      { target.tags.map(el => {
+      { target.tags.map((el, i) => {
         return (<span 
+          key={i}
           data-value={el} 
           onClick={handleTags} 
           style={tags.includes(el) ? selectedStyle : {}}

@@ -103,7 +103,7 @@ const Onboarding = ({ userId, status }) => {
               <h1>Step 1: Set Up a Password</h1>
               <div className='pass-holder'>
                 {
-                  passErrors ? passErrors.map(err => <p style={{ width: '100%', textAlign: 'center', marginBottom: '15px',
+                  passErrors ? passErrors.map((err, i) => <p key={i} style={{ width: '100%', textAlign: 'center', marginBottom: '15px',
                   marginTop: '0px', color: "red", fontSize: '.85em' }}>{err}</p>)  : ''
                 }
                 <div className='pass'>
@@ -122,7 +122,7 @@ const Onboarding = ({ userId, status }) => {
             </div>
           : action === 'payment' ?
             <div className='payment-container'>
-              <h1>Step 2: Let's Take Care of the Payment</h1>
+              <h1>Step 2: Let&apos;s Take Care of the Payment</h1>
               <div style={{ width: '100%', position: 'relative' }}>
                 <button type='button' className={`button ${isLoading ? 'loading' : ''}`} onClick={handlePayment} disabled={isLoading ? true : false}>
                   {isLoading ? <Tadpole width={20} color='white' /> : <>Pay Via Stripe <img src='/pinterest/external-white.svg' /></>}</button>

@@ -78,10 +78,10 @@ const PostsStatus = () => {
         <div className="postStatusContainer">
           <div className="innerContainer">
             <div className="published">
-              <div className='titles'>Published</div>
+              <div className="titles">Published</div>
               {
-                published.map(el =>
-                  <div className='body'>
+                published.map((el, i) =>
+                  <div key={i} className='body'>
                     <p>{_.startCase(el.title)}</p>
                     <div>
                       <span className='platform'><img id='smlg' src={`/sm/${el.platform}.svg`} /> <span>{_.startCase(el.platform)}</span> <img id='link' src='/linkToPost.svg' /></span>
@@ -94,8 +94,8 @@ const PostsStatus = () => {
             <div>
             <div className='titles'>In Review</div>
               {
-                inReview.map(el =>
-                  <div className='body'>
+                inReview.map((el, i) =>
+                  <div key={i} className='body'>
                     <p>{_.startCase(el.title)}</p>
                     <div>
                       <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src={`/sm/${el.platform}.svg`} /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
@@ -109,16 +109,16 @@ const PostsStatus = () => {
           <div className="titlesContainer">
               <div className='titles'>Need Revision</div>
               {
-                rejected.map(el => 
-                  <div className='body'>
+                rejected.map((el, i) => 
+                  <div key={i} className='body'>
                     <p className='postTitle'>{_.startCase(el.title)}</p>
                     <div>
                         <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src={`/sm/${el.platform}.svg`} /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
                     </div>
                     <div id="feedback-box">
                       {
-                        el.explanation.split('\n').map(elem => 
-                          <div className='feedback-points part'>{elem}</div>
+                        el.explanation.split('\n').map((elem, i) => 
+                          <div key={i} className='feedback-points part'>{elem}</div>
                         )
                       }
                       <button onClick={ () => { router.push('/dashboard/publish-a-post'); } } className="create-post-button">Create a New Post</button>

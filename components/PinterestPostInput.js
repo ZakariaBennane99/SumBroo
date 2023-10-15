@@ -57,7 +57,7 @@ export default function PinterestPostInput({ setDataForm,
 
     setPublishPost(true)
 
-    const apiUrl = 'http://localhost:4050/api/handle-post-submit/pinterest';
+    const apiUrl = 'https://sumbroo.com/api/handle-post-submit/pinterest';
 
     try {
       const formData = new FormData();
@@ -397,7 +397,7 @@ export default function PinterestPostInput({ setDataForm,
             </div>
             <div className="inputElements" style={{ position: 'relative' }}>
               <label>Pin Title</label>
-              <p>Title should be <b>40-100 characters</b>. Keep it concise and clear, ensuring it's relevant to your content.</p>
+              <p>Title should be <b>40-100 characters</b>. Keep it concise and clear, ensuring it&apos;s relevant to your content.</p>
               <input type="text" maxLength='100' placeholder="Add your pin title" value={pinTitle}
                 onChange={(e) => { setPinTitle(e.target.value); setTitleChars(e.target.value.length); setPinterestPostErrors(prev => {
                   return {
@@ -427,7 +427,7 @@ export default function PinterestPostInput({ setDataForm,
             </div>
             <div className="inputElements" style={{ position: 'relative' }}>
               <label>Pin Description</label>
-              <p>Include a description of <b>100-500 characters</b> for your Pin, along with relevant hashtags. A detailed description helps Pinterest match your content with the right audience, amplifying its visibility and significance beyond just your host's current followers.</p>
+              <p>Include a description of <b>100-500 characters</b> for your Pin, along with relevant hashtags. A detailed description helps Pinterest match your content with the right audience, amplifying its visibility and significance beyond just your host&apos;s current followers.</p>
               <textarea
                 name="text"
                 maxLength="500"

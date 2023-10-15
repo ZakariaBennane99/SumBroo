@@ -144,7 +144,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
     return (<>
       <div className="notification">
         <img src='/infotip.svg' alt="Info Tip" />
-        <p>Subscription canceled. Miss us? Hit 'Restart Subscription' below! 🌟</p>
+        <p>Subscription canceled. Miss us? Hit &apos;Restart Subscription&apos; below! 🌟</p>
         <Link href="/settings/billing">
           <button className="link-button">Restart Subscription</button>
         </Link>
@@ -179,7 +179,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
     return (<>
       <div className="notification">
         <img src='/infotip.svg' alt="Info Tip" />
-        <p>Patience is a virtue! You'll be able to publish again after the 24-hour window. 🌟</p>
+        <p>Patience is a virtue! You&apos;ll be able to publish again after the 24-hour window. 🌟</p>
       </div>
       <Modal
         isOpen={isServerError}

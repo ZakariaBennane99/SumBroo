@@ -41,15 +41,15 @@ const Requirements = ({ platform }) => {
                 <li style={{ fontWeight: 'bold', fontSize: 'large', marginBottom: '5px' }}>Image Requirements.</li>
                 <ul>
                     {
-                        reqs[platform].image.map(req => 
-                            <li>{req}</li>)
+                        reqs[platform].image.map((req, i) => 
+                            <li key={i}>{req}</li>)
                     }
                 </ul>
                 <li style={{ fontWeight: 'bold', fontSize: 'large', marginBottom: '5px' }}>Video Requirements.</li>
                 <ul>
                     {
-                        reqs[platform].video.map(req => 
-                            <li>{req}</li>) 
+                        reqs[platform].video.map((req, i) => 
+                            <li key={i}>{req}</li>) 
                     }
                 </ul>
             </ol>

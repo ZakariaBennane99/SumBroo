@@ -34,9 +34,9 @@ const Privacy = () => {
     
     <li><strong>Social Media Profile Links:</strong> This allows us to evaluate your social media presence and tailor our services to your unique profile.</li>
     
-    <li><strong>Information Needed to Link Your Account:</strong> This could include authentication tokens, user IDs, or other data required to connect your social media accounts to SumBroo. It enables the platform's core functionality.</li>
+    <li><strong>Information Needed to Link Your Account:</strong> This could include authentication tokens, user IDs, or other data required to connect your social media accounts to SumBroo. It enables the platform&apos;s core functionality.</li>
     
-    <li><strong>Your Connected Profiles' Tags:</strong> To understand your areas of interest and specialization, which helps in the targeting and recommendation of content and influencers.</li>
+    <li><strong>Your Connected Profiles&apos; Tags:</strong> To understand your areas of interest and specialization, which helps in the targeting and recommendation of content and influencers.</li>
   </ul>
 
   <h2>&#73;&#73;. Storage, Use, And Security of Data</h2>  

@@ -221,10 +221,15 @@ const SpecialOnboarding = ({ userId, status }) => {
     },
   };
 
-  function toError404() {
+  function useToError404() {
     const router = useRouter();
-    router.push('/404');
+    
+    return () => {
+        router.push('/404');
+    }
   }
+
+  const redirectTo404 = useToError404();
 
 
   return (<div className='onboarding-container'>
@@ -266,7 +271,7 @@ const SpecialOnboarding = ({ userId, status }) => {
             </div>
           : action === 'payment' ?
             <div>
-              <h1>Step 2: Let's Take Care of the Payment</h1>
+              <h1>Step 2: Let&apos;s Take Care of the Payment</h1>
                 <div className="pricingTablesContainer" style={{ marginTop: "80px" }}>
                 <div className="table1" style={{
                     outline: tableClicked === 'table1' ? '4px solid #1465e7' : '',
@@ -363,7 +368,7 @@ const SpecialOnboarding = ({ userId, status }) => {
                   </button>
                 </div>
             </div>
-          : toError404()
+          : redirectTo404()
         }
         <Modal
           isOpen={modalIsOpen}

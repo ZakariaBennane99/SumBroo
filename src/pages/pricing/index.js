@@ -162,7 +162,7 @@ const Pricing = ({ AllAccounts }) => {
             <div className="pricingParent">
                 <div className="pricingTitle">
                     <h1>Select Your Preferred Platform(s) & Choose Your Plan</h1>
-                    <p>Before moving forward, kindly review the minimum requirements for your chosen social media network(s) to ensure a successful application. Rest assured, we won't collect any payment details now. Upon approval, we'll send you a payment link via email.</p>
+                    <p>Before moving forward, kindly review the minimum requirements for your chosen social media network(s) to ensure a successful application. Rest assured, we won&apos;t collect any payment details now. Upon approval, we&apos;ll send you a payment link via email.</p>
                 </div>
                 <div className="planTypeContainer">
                     <Select

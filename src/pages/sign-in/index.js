@@ -321,8 +321,8 @@ const SignIn = () => {
                     if (OTPCorrect && !isPasswordChanged) {
                       return (
                         <div className='pass-cont' style={{ alignItems: 'flex-start', marginTop: '0px' }}>
-                          {passwordChangeErrors && passwordChangeErrors.map(err => {
-                            return <p style={{ marginTop: '0px', fontSize: '.7em' }} className='pass-error'>{err}</p>
+                          {passwordChangeErrors && passwordChangeErrors.map((err, i) => {
+                            return <p key={i} style={{ marginTop: '0px', fontSize: '.7em' }} className='pass-error'>{err}</p>
                           })}
                           <label htmlFor="password">New Password</label>
                           <div>

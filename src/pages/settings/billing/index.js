@@ -55,7 +55,7 @@ const Billing = ({ stripeCustomer }) => {
           <>
               <div className="paymentContainer">
                   <div>
-                      <p>When clicking on the button below, you'll be redirected to a secure Stripe page to manage your billing details.</p>
+                      <p>When clicking on the button below, you&apos;ll be redirected to a secure Stripe page to manage your billing details.</p>
                       <button className={`button ${isLoading ? 'loading' : ''}`} onClick={handleBilling} style={{ paddingLeft: '15px', paddingRight: '15px' }} disabled={isLoading ? true : false}>
                       {isLoading ? <Tadpole width={20} color='white' /> : <>Manage Billing <img src="/pinterest/external-white.svg" /></>}</button>
                   </div>

@@ -13,7 +13,7 @@ const SettingsMenu = ({ pathname }) => {
 
   async function signOutUser() {
 
-    const url = 'http://localhost:4050/api/sign-out-user';
+    const url = 'https://sumbroo.com/api/sign-out-user';
   
     try {
       const res = await axios.post(url, {}, {  

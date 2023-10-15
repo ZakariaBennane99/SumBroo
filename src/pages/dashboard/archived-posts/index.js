@@ -48,8 +48,8 @@ const Archive = () => {
   return (
         <div className="archiveSection">
           {
-            data.map(el =>
-              <div className='body'>
+            data.map((el, i) =>
+              <div key={i} className='body'>
                 <p>{_.startCase(el.title)}</p>
                 <div>
                   <span className='platform'><img id='smlg' src={`/sm/${el.platform}.svg`} /> <span>{_.startCase(el.platform)}</span> <img id='link' src='/linkToPost.svg' /></span>

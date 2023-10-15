@@ -66,9 +66,9 @@ const LinkedAccounts = ({ AllAccounts, isServerErr }) => {
               
   return (<>
             {
-                AllAccounts.map(acc => {
+                AllAccounts.map((acc, i) => {
                     return (
-                    <div className="smAccountsContainer">
+                    <div key={i} className="smAccountsContainer">
                         <div className="linkedAccountsWrapper"> 
                               {
                                 acc.status === 'authExpired' ? 

@@ -170,7 +170,7 @@ const GroupedBarChart = ({ data, setMetrics2 }) => {
                     ?
                   </div>
                       {showTooltip ? <div className="graphInfoTooltip">
-                      This is a Grouped Bar Chart that provides a comprehensive view of your video pin's engagement levels. It stacks various metrics together, allowing you to easily compare and analyze different aspects of viewer behavior. By selecting 'video starts' and 'video percentages viewed', you can gain insights into how long viewers are staying and engaging with your video.
+                      This is a Grouped Bar Chart that provides a comprehensive view of your video pin&apos;s engagement levels. It stacks various metrics together, allowing you to easily compare and analyze different aspects of viewer behavior. By selecting &apos;video starts&apos; and &apos;video percentages viewed&apos;, you can gain insights into how long viewers are staying and engaging with your video.
                   </div> : ''}
               </div>
             </div> 

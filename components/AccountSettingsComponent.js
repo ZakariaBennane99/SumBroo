@@ -33,7 +33,7 @@ const AccountSettingsComponent = () => {
 
       setNameClicked(true)
 
-      const apiUrl = 'http://localhost:4050/api/update-name'
+      const apiUrl = 'https://sumbroo.com/api/update-name'
 
       try {
         const res = await axios.post(apiUrl, {
@@ -67,7 +67,7 @@ const AccountSettingsComponent = () => {
     async function updateEmail() {
       setEmailClicked(true)
 
-      const apiUrl = 'http://localhost:4050/api/update-email'
+      const apiUrl = 'https://sumbroo.com/api/update-email'
 
       try {
         const res = await axios.post(apiUrl, {
@@ -106,7 +106,7 @@ const AccountSettingsComponent = () => {
 
       setPassClicked(true)
 
-      const apiUrl = 'http://localhost:4050/api/update-password'
+      const apiUrl = 'https://sumbroo.com/api/update-password'
 
       try {
         const res = await axios.post(apiUrl, {
@@ -203,8 +203,8 @@ const AccountSettingsComponent = () => {
                       </div>
                       <div className='body'>
                         {passErrs.length > 0 ?
-                            passErrs.map(elem => {
-                              return <p style={{ fontSize: '.9em', color: 'red', marginTop: '10px' }}>{elem.msg}</p>
+                            passErrs.map((elem, index) => {
+                              return <p key={index} style={{ fontSize: '.9em', color: 'red', marginTop: '10px' }}>{elem.msg}</p>
                             })
                            : ''}
                           <div>

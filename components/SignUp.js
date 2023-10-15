@@ -100,7 +100,7 @@ const SignUp = ({ lookupKey, platforms }) => {
     };
 
     // user registration URL
-    const applicationURL = 'http://localhost:4050/api/new-application'
+    const applicationURL = 'https://sumbroo.com/api/new-application'
     try {
       const res = await axios.post(applicationURL, updatedFormValues)
       // after registering the User redirect to the checkout page
@@ -155,8 +155,8 @@ const SignUp = ({ lookupKey, platforms }) => {
         <div>
           <img src="/green-check.svg" />
           <p>
-            Thank you for submitting your application! We're thrilled you're interested in joining us.
-            We'll carefully review your details and reach out to you within the next 48 hours.
+            Thank you for submitting your application! We&apos;re thrilled youre interested in joining us.
+            We&apos;ll carefully review your details and reach out to you within the next 48 hours.
             We appreciate your patience. In the meantime, you can read how to supercharge your growth 
             in our blog.
           </p>
@@ -183,7 +183,7 @@ const SignUp = ({ lookupKey, platforms }) => {
         </div>
         {
           platforms.map((el, i) => {
-            return <div className='platformCont'>
+            return <div key={i} className='platformCont'>
             <label htmlFor={el.value}>{el.label} Link</label>
             <div style={{ width: 'fit-content' }}>
               {validationErrors.profileLinks[i].profileLink ? <p style={{ width: '185px', fontSize: '.7em', marginBottom: '10px', marginTop: '0px', color: 'red' }}>Please include a valid {el.label} link</p> : "" }

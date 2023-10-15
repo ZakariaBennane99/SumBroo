@@ -48,10 +48,10 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
         </div>
         {isOpen && <div className='platformsContainer'>
             {
-                platforms.map(platform => {
+                platforms.map((platform, i) => {
                     if (platform.status === 'active') {
                         return (
-                            <div>
+                            <div key={i}>
                                 <div className="cell-content" onClick={() => handleClick('pinterest')} style={{ 
                                     backgroundColor: selectedPlatform === 'pinterest' ? '#b9b9c6' : '' }}>
                                     <img id="smicons" src='/sm/pinterest.svg' alt='pinterest-logo' style={{ borderRadius: '50%' }} /><span>Pinterest</span>
@@ -61,7 +61,7 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
                         )
                     } else if (platform.status === 'notAvailable') {
                         return (
-                        <div>
+                        <div key={i}>
                             <div className="cell-content notAvailable">
                                 <img id="smicons" src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAvailableImg' /><span>{capitalize(platform.name)}</span>
                                 <span className='tooltip'>Coming soon!</span>
@@ -70,7 +70,7 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
                         )
                     } else if (platform.status === 'available') {
                         return (
-                            <div>
+                            <div key={i}>
                                 <div className="cell-content notApplied">
                                     <img id="smicons" src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAppliedImg' /><span>{capitalize(platform.name)}</span>
                                     <span className='tooltip'><span onClick={toLinkedAccounts} className='linkAccount'>Apply</span> to connect your account</span>
@@ -79,7 +79,7 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
                             )  
                     } else if (platform.status === 'pendingAuth') {
                         return (
-                            <div>
+                            <div key={i}>
                                 <div className="cell-content notApplied">
                                     <img id="smicons" src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAppliedImg' /><span>{capitalize(platform.name)}</span>
                                     <span className='tooltip'><span onClick={toLinkedAccounts} className='linkAccount'>Link</span> your account</span>
@@ -90,7 +90,7 @@ const ActiveAccounts = ({ setPlatform, platforms }) => {
                         // don't forget to add another if-else for accounts that can't be chosen due to
                         // the time window set for them which will already be set in the publish a post
                         return (
-                            <div>
+                            <div key={i}>
                                 <div className="cell-content notApplied">
                                     <img id="smicons" src={`/sm/${platform.name}.svg`} alt={`${platform.name}-logo`} className='notAppliedImg' /><span>{capitalize(platform.name)}</span>
                                     {

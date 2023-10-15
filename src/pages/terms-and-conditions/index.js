@@ -16,7 +16,7 @@ const TermConditions = () => {
                 <li>Users manage their password and account actions.</li>
                 <li>Payments via <b>Stripe, inc.</b> after account approval.</li>
                 <li>Users must obey laws and are responsible for posted content.</li>
-                <li>Adhere to the platform's Privacy Policy and data laws.</li>
+                <li>Adhere to the platform&apos;s Privacy Policy and data laws.</li>
                 <li>Accounts can be terminated for term breaches.</li>
                 <li>Terms can be updated; check often.</li>
                 <li>All content copyrighted by Driven Dynamics Limited.</li>
@@ -52,13 +52,13 @@ const TermConditions = () => {
       <li>Showcase extreme violence, gore, self-harm, or any harmful actions.</li>
       <li>Discriminate or promote hate speech based on race, gender, religion, nationality, disability, sexual orientation, or age.</li>
       <li>Spread misleading information, falsehoods, or promote misinformation.</li>
-      <li>Infringe on someone else's intellectual property, copyright, or trademark rights.</li>
+      <li>Infringe on someone else&apos;s intellectual property, copyright, or trademark rights.</li>
       <li>Promote or glorify criminal activities or contain material that could provoke harm or danger.</li>
       <li>Consist of the personal information of others without their explicitconsent - this includes, but is not restricted to addresses, phone numbers, or email addresses.</li>
       <li>Feature excessive promotional content, spam, or solicit business activities without prior approval from SumBroo.</li>
       <li>Have any form of malicious software or links that could impair or disrupt any hardware or software devices.</li>
   </ol>
-  <p>We encourage all our users to create content that aligns with SumBroo's mission of connecting influencers and promoting high-quality engagement. Unhealthy or inappropriate content violates our terms and community values, and may lead to account deactivation or suspension. </p> 
+  <p>We encourage all our users to create content that aligns with SumBroo&apos;s mission of connecting influencers and promoting high-quality engagement. Unhealthy or inappropriate content violates our terms and community values, and may lead to account deactivation or suspension. </p> 
 
   <h2>&#86;. Automated Content Posting</h2>
   <p>By applying to join the SumBroo network, you consent to having one high-quality post from another vetted account, selected based on your chosen target audience, posted to your connected social media accounts every 24 hours. While this policy applies to all platforms, please note a different frequency applies to YouTube. For YouTube, one video will be shared on your account every week. This time restricted content sharing exercise is designed to foster community engagement and extend your social reach. Please note, this scheduled posting arrangement applies whether or not you personally post any content within the given timeframe.</p>
@@ -96,7 +96,7 @@ const TermConditions = () => {
     <li><strong>Upgrade/Downgrade Notification:</strong> If you decide to upgrade or downgrade your account or subscription, we will send you an email notification informing you of the successful upgrade, along with any changes to your account access, features, or pricing as a result of the upgrade/downgrade.</li>
     <li><strong>Canceling Notification:</strong> Should you choose to cancel your account or subscription, we will send you an email confirming your cancellation. This email will include information on the date your access to our services will be terminated, and any relevant refund or proration details, if applicable.</li>
     <li><strong>Payment Method Expiry:</strong> Before the expiration of your saved payment method, such as a credit card, we will send you a reminder email to update your payment details. This is to ensure a seamless service experience and prevent any potential payment hiccups.</li>
-    <li><strong>Subscription Payment Issues:</strong> In case there's an issue processing the payment for your subscription, we will send you an email alerting you of the problem. Please ensure to address the issue promptly to avoid service interruption.</li>
+    <li><strong>Subscription Payment Issues:</strong> In case there&apos;s an issue processing the payment for your subscription, we will send you an email alerting you of the problem. Please ensure to address the issue promptly to avoid service interruption.</li>
     <li><strong>Password Reset Email:</strong> If you forget your password or request a password reset, we will send you an email containing an OTP code to reset your password. Ensure that you only use this function if you requested it and always make sure to use a strong, unique password.</li>
     <li><strong>Product Updates:</strong> We may send you email updates regarding new features, enhancements, or changes to our service. These updates may include information on how to access and use new functionality, as well as any potential impacts on your current account or experience with our services.</li>
     <li><strong>Approval Email:</strong> We will send you an email once you are approved. The email will include a link via which you will be able to start the onboarding process.</li>

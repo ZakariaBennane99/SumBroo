@@ -205,7 +205,7 @@ const MultiLineChart = ({ data, setMetrics1 }) => {
                   ?
                 </div>
                     {showTooltip ? <div className="graphInfoTooltip">
-                    This graph provides a comprehensive view of your pin's performance. It allows you to track key metrics such as website clicks and new followers, all in one place. By comparing these metrics with the total impressions, you can easily gauge the effectiveness of your pin in driving your desired outcomes. Whether your goal is to increase website traffic or grow your follower base, this graph offers valuable insights into your conversion rates.
+                    This graph provides a comprehensive view of your pin&apos;s performance. It allows you to track key metrics such as website clicks and new followers, all in one place. By comparing these metrics with the total impressions, you can easily gauge the effectiveness of your pin in driving your desired outcomes. Whether your goal is to increase website traffic or grow your follower base, this graph offers valuable insights into your conversion rates.
                 </div> : ''}
             </div>
           </div> 
