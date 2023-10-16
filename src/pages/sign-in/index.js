@@ -101,13 +101,13 @@ const SignIn = () => {
         if (res.status === 201) {
           setIsClicked(false)
           // here save the data in the localStorage
-          console.log(res.data.userData)
           localStorage.setItem('userData', JSON.stringify(res.data.userData));
           router.push('/dashboard');
         }
         // send the user to the dashboard
       } catch (error) {
         // client error 400 or 401
+        console.log('the error', error)
         if (error.response.status === 400) {
           error.response.data.errors.forEach(error => {
             setValidationErrors((prev) => {
