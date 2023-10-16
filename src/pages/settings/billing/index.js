@@ -11,7 +11,7 @@ const Billing = ({ stripeCustomer }) => {
     async function handleBilling() {
       setIsLoading(true)
       try {
-        const response = await fetch('https://sumbroo.com/api/create-customer-portal-session', {
+        const response = await fetch('https://sumbroo.com/server-api/create-customer-portal-session', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'

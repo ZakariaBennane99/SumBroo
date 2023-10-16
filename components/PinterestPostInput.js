@@ -57,7 +57,7 @@ export default function PinterestPostInput({ setDataForm,
 
     setPublishPost(true)
 
-    const apiUrl = 'https://sumbroo.com/api/handle-post-submit/pinterest';
+    const apiUrl = 'https://sumbroo.com/server-api/handle-post-submit/pinterest';
 
     try {
       const formData = new FormData();

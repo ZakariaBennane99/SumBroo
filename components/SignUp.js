@@ -100,7 +100,7 @@ const SignUp = ({ lookupKey, platforms }) => {
     };
 
     // user registration URL
-    const applicationURL = 'https://sumbroo.com/api/new-application'
+    const applicationURL = 'https://sumbroo.com/server-api/new-application'
     try {
       const res = await axios.post(applicationURL, updatedFormValues)
       // after registering the User redirect to the checkout page

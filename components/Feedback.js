@@ -5,6 +5,7 @@ import { Tadpole } from "react-svg-spinners";
 
 
 const Feedback = () => {
+
     const [feedback, setFeedback] = useState('');
     const [submissionStatus, setSubmissionStatus] = useState(null); 
     const [formVisible, setFormVisible] = useState(false);
@@ -17,7 +18,7 @@ const Feedback = () => {
         
         try {
             // Submit the feedback to the server
-            const response = await fetch('https://sumbroo.com/api/feedback-handler', {
+            const response = await fetch('https://sumbroo.com/server-api/feedback-handler', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

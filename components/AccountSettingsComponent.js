@@ -33,7 +33,7 @@ const AccountSettingsComponent = () => {
 
       setNameClicked(true)
 
-      const apiUrl = 'https://sumbroo.com/api/update-name'
+      const apiUrl = 'https://sumbroo.com/server-api/update-name'
 
       try {
         const res = await axios.post(apiUrl, {
@@ -67,7 +67,7 @@ const AccountSettingsComponent = () => {
     async function updateEmail() {
       setEmailClicked(true)
 
-      const apiUrl = 'https://sumbroo.com/api/update-email'
+      const apiUrl = 'https://sumbroo.com/server-api/update-email'
 
       try {
         const res = await axios.post(apiUrl, {
@@ -106,7 +106,7 @@ const AccountSettingsComponent = () => {
 
       setPassClicked(true)
 
-      const apiUrl = 'https://sumbroo.com/api/update-password'
+      const apiUrl = 'https://sumbroo.com/server-api/update-password'
 
       try {
         const res = await axios.post(apiUrl, {
