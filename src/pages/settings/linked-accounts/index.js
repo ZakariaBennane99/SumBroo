@@ -16,9 +16,12 @@ const LinkedAccounts = ({ AllAccounts, isServerErr }) => {
 
   useEffect(() => {
     if (router.query.result === 'success') {
-      setIsLinked('Yes')
+      setIsLinked('Yes');
     } else if (router.query.result === 'failure') {
       setIsLinked('No');
+    } else if (router.query.result === 'account-failure') {
+      // 'acc' means account failure
+      setIsLinked('Acc')
     }
   }, [router.query]);
 
@@ -84,10 +87,15 @@ const LinkedAccounts = ({ AllAccounts, isServerErr }) => {
                                   <img src="/infotip.svg" />
                                   <span>There was an error authenticating your account. You can try again.</span> 
                                 </div> 
-                                : isLinked === 'Yes' ?
+                                : isLinked === 'acc' ? 
+                                <div className="refreshWarning"> 
+                                  <img src="/infotip.svg" />
+                                  <span>Please link the account for which you have been approved.</span> 
+                                </div> 
+                                : 
                                 <div className="refreshWarning"> 
                                   <span><b>Success!</b> Your account has been linked.</span> 
-                                </div> : ''
+                                </div>
                               }
                             <div className="linkedAccounts">
                                 <div className="account">

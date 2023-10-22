@@ -1,5 +1,6 @@
 import { PinterestAuth } from '../../../../components/auth/PinterestAuth';
 import { SpinnerCircularFixed } from 'react-svg-spinners';
+import he from 'he';
 
 
 const CallbackPage = () => {
@@ -71,6 +72,7 @@ export async function getServerSideProps(context) {
             },
           };
         }
+
     } catch (err) {
       return {
         redirect: {
@@ -96,10 +98,29 @@ export async function getServerSideProps(context) {
                 await connectDB();
                 let user = await User.findOne({ _id: sanitizedUserId });
 
+                // get the userName and check if it matches the one on 
+                // on the user's account, so the user only get accepted 
+                // to the account approved for
+                const userName = await getUserName(authData.access_token);
+                const DBUserName = he.decode(user.socialMediaLinks.find(media => media.platformName === 'pinterest').profileLink).match(/\/([^/]+)\/$/)[1];
+
+                console.log('the userName', userName)
+                console.log('the DB UserName', DBUserName)
+
+                if (userName !== DBUserName) {
+                    return {
+                        redirect: {
+                            destination: '/settings/linked-accounts?result=account-failure',
+                            permanent: false,
+                        }
+                    }
+                }
+
+
+
                 // get UTC date
                 const tokenExpiryUTCDate = getUTCDate(authData.expires_in)
                 const refreshTokenExpiryUTCDate = getUTCDate(authData.refresh_token_expires_in)
-                const userName = await getUserName(authData.access_token);
 
                 const mediaElem = user.socialMediaLinks.find(media => media.platformName === 'pinterest');
                 mediaElem.accessToken = authData.access_token;

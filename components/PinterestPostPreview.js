@@ -1,7 +1,7 @@
-import Link from 'next/link';
 import React, { useState, useRef, useEffect } from 'react';
 import ReactPlayer from "react-player";
 import _ from 'lodash';
+import he from 'he'
 
 
 const PinterestPostPreview = ({ pinTitle, pinLink, text, imgUrl, videoUrl }) => {
@@ -178,7 +178,7 @@ const PinterestPostPreview = ({ pinTitle, pinLink, text, imgUrl, videoUrl }) => 
                 </div>
                 { pinLink ? <a href={pinLink} target="_blank">{extractDomain(pinLink)}</a> : '' }
                 <p className='pinTitle' onClick={ () => {window.open(pinLink, '_blank')} }>{_.startCase(pinTitle)}</p>
-                <p className='pinDesc'>{parseText(text)} | 📌 by <span className='hashtag' onClick={ () => {window.open(`${userDtPin.link}`, '_blank')} }>#{userDtPin.userName}</span></p>
+                <p className='pinDesc'>{parseText(text)} | 📌 By <span className='hashtag' onClick={ () => {window.open(`${he.decode(userDtPin.link)}`, '_blank')} }>@{userDtPin.userName}</span></p>
                 <div className='pinnerInfo'>
                     <div>
                         <img src='/sm/pinterest.svg' />

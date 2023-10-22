@@ -313,7 +313,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
                   publishPost={publishPostClicked}
                   setPublishPost={setPublishPostClicked}
                   targetErrors={targetingErrors} // this is just to open the accordion when there are errors
-                  setSuccess={setIsSuccess} // this is only when the user has successfully sent the request
+                  setSuccess={setIsSuccess} // when the user has successfully sent the request
                 />
               <Targeting 
                   nichesAndTags={niches}
@@ -372,6 +372,8 @@ export default PublishAPost;
 
 
 export async function getServerSideProps(context) {
+
+  console.log('THE FUCK IS GOING ON')
 
   const Stripe = require('stripe');
   const connectDB = require('../../../../utils/connectUserDB');
@@ -442,6 +444,12 @@ export async function getServerSideProps(context) {
     }
   };
 
+  function isLessThan24(pubDate) {
+    const differenceInMilliseconds = getCurrentUTCDate() - pubDate;
+    const differenceInHours = differenceInMilliseconds / (1000 * 60 * 60);
+    return (differenceInHours <= 24 && differenceInHours >= 0)
+  }
+
   try {
 
     // Get cookies from the request headers
@@ -472,6 +480,7 @@ export async function getServerSideProps(context) {
     let decoded
     try {
       decoded = jwt.verify(tokenCookie, process.env.USER_JWT_SECRET);
+      console.log('The decoded', decoded)
     } catch (err) {
       return {
         redirect: {
@@ -480,6 +489,7 @@ export async function getServerSideProps(context) {
         },
       };
     }
+
 
     // if not sessiong token (user not signed in) return
     // so we can avoid unecessary payment checks
@@ -609,11 +619,8 @@ export async function getServerSideProps(context) {
         }
       }
     ]
-    console.log('The PlatformNames')
-    console.log(platformNames)
     
     const nicheRes = await User.aggregate(pipeline);
-
 
     if (!result) {
       // here where you return all of the data
@@ -627,8 +634,9 @@ export async function getServerSideProps(context) {
         }
       };
     }
+
     
-    if (result.maxPublishingDate <= getCurrentUTCDate()) {
+    if (isLessThan24(result.maxPublishingDate)) {
       // if we return this, then it still hasn't passed 24H
       // change of status in the platforms. This is only when 
       // we have multiple platforms
