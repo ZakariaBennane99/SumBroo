@@ -480,7 +480,6 @@ export async function getServerSideProps(context) {
     let decoded
     try {
       decoded = jwt.verify(tokenCookie, process.env.USER_JWT_SECRET);
-      console.log('The decoded', decoded)
     } catch (err) {
       return {
         redirect: {
