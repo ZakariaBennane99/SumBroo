@@ -8,8 +8,6 @@ import MultiLineChart from '../../../../components/viz/MultiLineChart';
 import StatsSummary from '../../../../components/viz/StatsSummary';
 
 
-// Likes & Comments (Scrapped)
-
 const Analytics = ({ windowWidth }) => {
 
 
@@ -492,6 +490,7 @@ export async function getServerSideProps(context) {
   const connectDB = require('../../../../utils/connectUserDB');
   const mongoSanitize = require('express-mongo-sanitize');
   const User = require('../../../../utils/User').default;
+  const mongoose = require('mongoose');
 
   // utils
   async function getAllPins(token) {
@@ -520,6 +519,12 @@ export async function getServerSideProps(context) {
 
   function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function getAccessToken(userId) {
+    let user = await User.findOne({ _id: userId });
+    const accToken = user.socialMediaLinks.find(link => link.platformName === "pinterest").accessToken;
+    return accToken
   }
 
 
@@ -556,6 +561,102 @@ export async function getServerSideProps(context) {
     }
   }
 
+  async function getAllAnalytics(recentPosts) {
+
+    const metricTypes = [
+      "IMPRESSION",
+      "OUTBOUND_CLICK",
+      "PIN_CLICK",
+      "SAVE",
+      "VIDEO_10S_VIEW",
+      "QUARTILE_95_PERCENT_VIEW",
+      "VIDEO_V50_WATCH_TIME",
+      "VIDEO_START",
+      "TOTAL_COMMENTS",
+      "TOTAL_REACTIONS"
+    ];
+
+    try {
+      const results = await Promise.all(recentPosts.map(async (post) => {
+        const date = new Date(post.date);
+        const formattedDate = date.toISOString().split('T')[0]; // yy-mm-dd
+  
+        // get the accessToken and the analytics
+        const accTkn = await getAccessToken(post.hostId);
+  
+        // get the metrics for the existing postId
+        const analyticsData = await getPinAnalytics(accTkn, post.postId, formattedDate, metricTypes);
+        const { TOTAL_COMMENTS, TOTAL_REACTIONS } = analyticsData.all.lifetime_metrics;
+        const dailyMetrics = analyticsData.all.daily_metrics; 
+
+        let updatedAnalytics;
+
+        // check if the analytics in the post.analytics actually exists before you proceed
+        if (post.analytics && post.analytics.data) {
+
+          updatedAnalytics = dailyMetrics.map(({ data_status, ...rest }) => {
+
+            // the total number of reactions and comments from our Database
+            const { totalReactions, totalComments } = post.analytics.data.reduce((acc, { reactions, comments }) => {
+              acc.totalReactions += reactions;
+              acc.totalComments += comments;
+              return acc;
+            }, { totalReactions: 0, totalComments: 0 });
+
+            const foundDt = post.analytics.data.find(p => p.date === rest.date)
+          
+            // if not found, then this means that the CRON job 
+            // hasn't run today's job
+            if (foundDt) {
+              return {
+                ...rest,
+                metrics: {
+                  ...rest.metrics,
+                  reactions: foundDt.reactions, 
+                  comments: foundDt.comments 
+                }
+              };
+            } else {
+              return {
+                ...rest,
+                metrics: {
+                  ...rest.metrics,
+                  reactions: TOTAL_REACTIONS - totalReactions, 
+                  comments: TOTAL_COMMENTS - totalComments
+                }
+              };
+            }
+          });
+        } else {
+          updatedAnalytics = dailyMetrics.map(({ data_status, ...rest }) => {
+            return {
+              ...rest,
+              metrics: {
+                ...rest.metrics,
+                reactions: TOTAL_REACTIONS, 
+                comments: TOTAL_COMMENTS 
+              }
+            };
+          });
+        }
+  
+        // this is for each post
+        return {
+          title: post.pinTitle,
+          date: post.date,
+          metrics: updatedAnalytics
+        };
+
+      }));
+  
+      return results;
+    } catch (error) {
+      console.error('Error fetching analytics data:', error);
+      throw error;
+    }
+  }
+  
+
 
   try {
 
@@ -590,52 +691,88 @@ export async function getServerSideProps(context) {
 
     await connectDB();
 
+    // we will need the following to update the DB later on
     const sanitizedUserId = mongoSanitize.sanitize(userId);
     let user = await User.findOne({ _id: sanitizedUserId });
 
-    const accToken = user.socialMediaLinks.find(link => link.platformName === "pinterest").accessToken
+    // here are going to pull all the recent 7 days posts, 
+    // get their pinTitle, date, and id
+    
+    const sevenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 7));
 
-    const pins = await getAllPins(accToken)
-
-    let the7Pins = pins.items.map(el => {
-      return {
-        title: el.title,
-        date: el.created_at,
-        id: el.id
+    const pipeline = [
+      { $match: { _id: new mongoose.Types.ObjectId(sanitizedUserId) } },
+      { $unwind: '$socialMediaLinks' },
+      { $match: { 'socialMediaLinks.platformName': 'pinterest' } },
+      { $unwind: '$socialMediaLinks.posts' },
+      { $match: { 'socialMediaLinks.posts.publishingDate': { $gte: sevenDaysAgo } } },
+      {
+        $project: {
+          _id: 0,
+          pinTitle: '$socialMediaLinks.posts.postTitle',
+          date: '$socialMediaLinks.posts.publishingDate',
+          postId: '$socialMediaLinks.posts.postId',
+          hostId: '$socialMediaLinks.posts.hostUserId',
+          analytics: '$socialMediaLinks.posts.analytics'
+        }
       }
-    });
-
-    const startDate = '2023-10-17';          
-    const metricTypes = [
-      "IMPRESSION",
-      "OUTBOUND_CLICK",
-      "PIN_CLICK",
-      "SAVE",
-      "VIDEO_10S_VIEW",
-      "QUARTILE_95_PERCENT_VIEW",
-      "VIDEO_V50_WATCH_TIME",
-      "VIDEO_START",
-      "TOTAL_COMMENTS",
-      "TOTAL_REACTIONS"
     ];
+    
+    const recentPosts = await User.aggregate(pipeline);
+
+    console.log(recentPosts);
 
     /*
-    1. Link clicks.
-    2. Saves.
-    3. Impressions.
-    4. video starts.
-    5. total comments.
-    6. total reactions (likes, haha, smiles...)
-    7. Pin click (pin enlargment)
-    8. QUARTILE_95_PERCENT_VIEW
-    9. VIDEO_10S_VIEW
-    10. VIDEO_V50_WATCH_TIME (total play time)
-     */
 
-    // get the data for all the data
-    const a = await getPinAnalytics(accToken, the7Pins[1].id, startDate, metricTypes)
+      [
+        {
+          pinTitle: 'The best ways to learn computer knoweldge',
+          date: 2023-10-23T17:43:34.500Z,
+          postId: '1024780090193746920',
+          hostId: '23489712348966321976',
+          analytics: { reactions: 0, comments: 0 }
+        },
+        {
+          pinTitle: '10 ways to make money online',
+          date: 2023-10-24T18:12:29.339Z,
+          postId: '1024780090193747474',
+          hostId: '23489712348966321976',
+          analytics: { reactions: 0, comments: 0 }
+        }
+      ] 
 
-    console.log('The analytics', a.all.daily_metrics)
+    */
+
+    // here we will subtract the reactions and the comments from the analytics from the 
+    // totalReactionsAndComments, the remaining will be the new reactions and comments, and 
+    // the analytics of the today.
+    let analyticsOfToday;
+
+    (async () => {
+      const array = [1, 2, 3, 4, 5];
+      const results = await Promise.all(array.map(async item => {
+        // Simulate an async operation
+        const result = await new Promise(resolve => setTimeout(() => resolve(item * 2), 1000));
+        console.log('Processed:', item);
+        return result;
+      }));
+      
+      console.log('All items processed:', results);
+    })();
+
+  
+
+    const finalAnalyticsPosts = await getAllAnalytics(recentPosts);
+
+    
+    // the following are the daily metrics from the last 7 days
+    // you can easily append them to the the 'recentPosts'
+    // but before you do, you have to add the react and comments to it
+    // so you have a complete picture of the metrics
+
+
+    // here return the final results, but it's better to do the 
+    // calculations here and send the DATA constant from here
   
 
     return {
