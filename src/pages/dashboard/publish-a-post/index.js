@@ -77,7 +77,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
 
     if (!niche && audience.length === 0) {
       errors.niche = 'Sub-field is required.'
-      errors.audience = 'At least 4 tags should be selected.'
+      errors.audience = 'At least 1 tag should be selected.'
       setTargetingErrors(errors);
       return !Object.values(errors).some(error => error);
     }
@@ -86,8 +86,8 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
       errors.niche = "Invalid niche selected.";
     }
   
-    if (audience.length < 4) {
-      errors.audience = "At least 4 tags should be selected.";
+    if (audience.length < 1) {
+      errors.audience = "At least 1 tag should be selected.";
     } else {
       if (!audience.every(tag => audience.includes(tag))) {
         errors.audience = "Some selected tags are invalid.";
@@ -321,6 +321,7 @@ const PublishAPost = ({ isServerError, platforms, windowWidth, niches, below24Ho
                   chosenNicheAndTags={setNicheAndTags}
                   resetErrors={setTargetingErrors}
                   platform={targetPlatform} 
+                  setPublishPost={setPublishPostClicked}
                 />
               <button id='publish-btn' className={`${publishPostClicked ? 'publish-btn-loading' : ''}`}
                onClick={handlePostSubmit} disabled={publishPostClicked}>

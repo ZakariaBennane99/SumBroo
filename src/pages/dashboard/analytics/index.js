@@ -489,6 +489,73 @@ export default Analytics;
 export async function getServerSideProps(context) {
 
   const jwt = require('jsonwebtoken');
+  const connectDB = require('../../../../utils/connectUserDB');
+  const mongoSanitize = require('express-mongo-sanitize');
+  const User = require('../../../../utils/User').default;
+
+  // utils
+  async function getAllPins(token) {
+    const url = `https://api.pinterest.com/v5/pins`;
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        return result
+      } else {
+        console.error('Error:', response.status, response.statusText);
+        return null
+      }
+    } catch (error) {
+      console.error('Error getting pins', error);
+      return null
+    }
+  }
+
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+
+  async function getPinAnalytics(token, pinId, startDate, metricTypes) {
+
+    const endDate = new Date().toISOString().split('T')[0];
+
+    const url = `https://api.pinterest.com/v5/pins/${pinId}/analytics?start_date=${startDate}&end_date=${endDate}&metric_types=${encodeURIComponent(metricTypes.join(','))}&app_types=ALL&split_field=NO_SPLIT`;
+
+    console.log('THE URL', url)
+
+    try {
+
+      const response = await fetch(url, { 
+        method: 'GET', 
+        headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+        }, 
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result)
+        return result
+      } else {
+
+        console.error('Error:', response);
+        return null
+      }
+    } catch (error) {
+      console.error('Error getting pins', error);
+      return null
+    }
+  }
+
 
   try {
 
@@ -513,6 +580,63 @@ export async function getServerSideProps(context) {
         },
       };
     }
+
+    // your token has already the userId
+    const userId = decoded.userId;
+
+    // here we are going to retrieve all the posts of the user 
+    // just to calibrate the data, then we swtich it with the 
+    // posts published in the last 7 days.
+
+    await connectDB();
+
+    const sanitizedUserId = mongoSanitize.sanitize(userId);
+    let user = await User.findOne({ _id: sanitizedUserId });
+
+    const accToken = user.socialMediaLinks.find(link => link.platformName === "pinterest").accessToken
+
+    const pins = await getAllPins(accToken)
+
+    let the7Pins = pins.items.map(el => {
+      return {
+        title: el.title,
+        date: el.created_at,
+        id: el.id
+      }
+    });
+
+    const startDate = '2023-10-17';          
+    const metricTypes = [
+      "IMPRESSION",
+      "OUTBOUND_CLICK",
+      "PIN_CLICK",
+      "SAVE",
+      "VIDEO_10S_VIEW",
+      "QUARTILE_95_PERCENT_VIEW",
+      "VIDEO_V50_WATCH_TIME",
+      "VIDEO_START",
+      "TOTAL_COMMENTS",
+      "TOTAL_REACTIONS"
+    ];
+
+    /*
+    1. Link clicks.
+    2. Saves.
+    3. Impressions.
+    4. video starts.
+    5. total comments.
+    6. total reactions (likes, haha, smiles...)
+    7. Pin click (pin enlargment)
+    8. QUARTILE_95_PERCENT_VIEW
+    9. VIDEO_10S_VIEW
+    10. VIDEO_V50_WATCH_TIME (total play time)
+     */
+
+    // get the data for all the data
+    const a = await getPinAnalytics(accToken, the7Pins[1].id, startDate, metricTypes)
+
+    console.log('The analytics', a.all.daily_metrics)
+  
 
     return {
       props: {

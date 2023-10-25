@@ -76,6 +76,29 @@ const PostSchema = new Schema({
     }
 });
 
+///////// Mixed Analytics /////////
+// since we will be dealing with multiple platforms, 
+// Here I'll elaborate on how each platform's analytics schema 
+// will be:
+/* 
+
+1. Pinterest:
+
+analytics: {
+    reactions: {
+        type: Number,
+        default: 0
+    },
+    comments: {
+        type: Number,
+        default: 0
+    }
+}
+
+*/
+
+
+
 const SocialMediaLinkSchema = new Schema({
     platformName: {
         type: String
@@ -106,7 +129,7 @@ const SocialMediaLinkSchema = new Schema({
     },
     lastReceivingDate: {
         type: Date,
-        default: null
+        default: new Date(0)
     },
     audience: {
         type: [String],

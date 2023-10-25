@@ -42,6 +42,8 @@ export async function getServerSideProps(context) {
         });
 
         const data = await response.json();
+
+        console.log('The data from the Pinterst', data)
         
         return data.username;
 
@@ -89,7 +91,8 @@ export async function getServerSideProps(context) {
         try {
 
             let authData;
-
+            
+            
             if (context.params.social === 'pinterest') {
 
                 authData = await PinterestAuth().handleAuthCallback(code);
@@ -102,10 +105,7 @@ export async function getServerSideProps(context) {
                 // on the user's account, so the user only get accepted 
                 // to the account approved for
                 const userName = await getUserName(authData.access_token);
-                const DBUserName = he.decode(user.socialMediaLinks.find(media => media.platformName === 'pinterest').profileLink).match(/\/([^/]+)\/$/)[1];
-
-                console.log('the userName', userName)
-                console.log('the DB UserName', DBUserName)
+                const DBUserName = he.decode(user.socialMediaLinks.find(elem => elem.platformName === 'pinterest').profileLink).match(/\/([^/]+)\/?$/)[1];
 
                 if (userName !== DBUserName) {
                     return {
