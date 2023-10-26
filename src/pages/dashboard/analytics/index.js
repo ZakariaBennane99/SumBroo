@@ -6,19 +6,19 @@ import GroupedBarChart from '../../../../components/viz/GroupedBarChart';
 import StackedBarChart from '../../../../components/viz/StackedBarChart';
 import MultiLineChart from '../../../../components/viz/MultiLineChart';
 import StatsSummary from '../../../../components/viz/StatsSummary';
+import _ from 'lodash';
 
 
-const Analytics = ({ windowWidth }) => {
+const Analytics = ({ data, options }) => {
 
-
+/*
   const DATA3 = [
       { day: 'Oct 2', 
         'pin enlargement clicks': 20,
         'destination link clicks': 30,
         'video start clicks': 5,
         saves: 23,
-        likes: 10,
-        comments: 1,
+        reactions: 12,
         'unengaged impressions': 40,
         impressions: 129 },
       { day: 'Oct 3', 
@@ -26,8 +26,7 @@ const Analytics = ({ windowWidth }) => {
         'destination link clicks': 20,
         'video start clicks': 3,
         saves: 2,
-        likes: 14,
-        comments: 10,
+        reactions: 32,
         'unengaged impressions': 35,
         impressions: 114 },
       { day: 'Oct 4', 
@@ -35,8 +34,7 @@ const Analytics = ({ windowWidth }) => {
         'destination link clicks': 10,
         'video start clicks': 30,
         saves: 25,
-        likes: 13,
-        comments: 10,
+        reactions: 40,
         'unengaged impressions': 23,
         impressions: 109 },
       { day: 'Oct 5', 
@@ -44,8 +42,7 @@ const Analytics = ({ windowWidth }) => {
         'destination link clicks': 15,
         'video start clicks': 2,
         saves: 12,
-        likes: 4,
-        comments: 0,
+        reactions: 23,
         'unengaged impressions': 19,
         impressions: 60 },
       { day: 'Oct 6', 
@@ -53,8 +50,7 @@ const Analytics = ({ windowWidth }) => {
         'destination link clicks': 10,
         'video start clicks': 20,
         saves: 9,
-        likes: 6, 
-        comments: 4,
+        reactions: 12,
         'unengaged impression': 21,
         impressions: 110 },
       { day: 'Oct 7', 
@@ -62,15 +58,13 @@ const Analytics = ({ windowWidth }) => {
         'destination link clicks': 12,
         'video start clicks': 3,
         saves: 5,
-        likes: 4, 
-        comments: 18,
+        reactions: 12,
         'unengaged impressions': 38,
         impressions: 100 }
   ];
-
-  const [data3New, setData3New] = useState(DATA3)
+*/
   
-  const [data3, setData3] = useState(data3New)
+  const [engagementsData, setEngagemensData] = useState(null)
   
   function handleMetricsData(selectedMetrics) {
     if (selectedMetrics && selectedMetrics.length > 0) {
@@ -102,7 +96,7 @@ const Analytics = ({ windowWidth }) => {
   */
 
 
-
+/*
   const DATA4 = [
     {
       day: new Date(2023, 9, 2),
@@ -153,10 +147,9 @@ const Analytics = ({ windowWidth }) => {
       }
     }
   ];
+*/
 
-  const [data4New, setData4New] = useState(DATA4)
-
-  const [data4, setData4] = useState(DATA4)
+  const [summaryData, setSummaryData] = useState(null)
   
   function handleMetricsData1(selectedMetrics) {
     if (selectedMetrics && selectedMetrics.length > 0) {
@@ -184,7 +177,7 @@ const Analytics = ({ windowWidth }) => {
     />
   */
   
-
+/*
   const DATA5 = [
     {
       day: 'Oct 2',
@@ -241,10 +234,9 @@ const Analytics = ({ windowWidth }) => {
       ],
     }
   ];
-    
-  const [data5, setData5] = useState(DATA5)
-
-  const [data5New, setData5New] = useState(DATA5)
+*/   
+  
+  const [conversionData, setConversionData] = useState(null)
   
   function handleMetricsData2(selectedMetrics) {
     if (selectedMetrics && selectedMetrics.length > 0) {
@@ -268,6 +260,7 @@ const Analytics = ({ windowWidth }) => {
     <GroupedBarChart data={data5} setMetrics2={handleMetricsData2} />
   */
 
+    /*
   const DATA6 = [
     {
       day: 'Oct 2',
@@ -312,10 +305,8 @@ const Analytics = ({ windowWidth }) => {
       'Saves': 23
     }
   ] 
-
-  const [data6, setData6] = useState(DATA6)
-
-  const [data6New, setData6New] = useState(DATA6)
+*/
+  const [videoData, setVideoData] = useState(null)
 
   function handleSummaryDays(options) {
     if (options && options.length > 0) {
@@ -332,38 +323,40 @@ const Analytics = ({ windowWidth }) => {
     }
   }
 
-  const [targetPosts, setTargetPosts] = useState(null);
+  const [targetPostKey, setTargetPostKey] = useState(null);
 
   function handlePosts(selectedOptions) {
-    setTargetPosts(selectedOptions)
+    setTargetPostKey(selectedOptions)
   }
 
-  const options = [
-    { 
-      value: 'Oct 2', 
-      label: `Food Inspiration to Spark Your Culinary Creativity - Oct 2` 
-    },
-    { 
-      value: 'Oct 3', 
-      label: 'Embracing the Bounty of Locally Sourced Ingredients - Oct 3'
-    },
-    { 
-      value: 'Oct 4', 
-      label: 'A Culinary Adventure from Every Corner of the World - Oct 4'
-    },
-    { 
-      value: 'Oct 5',
-      label: 'A Collection of Breads, Pastries, and Pies to Bake at Home - Oct 5'
-    },
-    { 
-      value: 'Oct 6',
-      label: 'Quick and Delicious Recipes for Busy Lives - Oct 6'
-    },
-    { 
-      value: 'Oct 7',
-      label: 'Feeling Great: Nutritious Choices for a Healthier You - Oct 7'
+  
+  useEffect(() => {
+
+    /****  here where you construct data based on the post requested  ****/
+
+    const vid = [
+      "VIDEO_10S_VIEW",
+      "QUARTILE_95_PERCENT_VIEW",
+      "VIDEO_V50_WATCH_TIME",
+      "VIDEO_START",
+    ]
+
+    if (targetPostKey) {
+      const selectedDate = targetPostKey.map(post => post.value);
+      const targetPost = data.filter(el => el.date === selectedDate)
+      // set the data for all 
+      setEngagemensData()
+      setSummaryData()
+      setConversionData()
+      // set videoDate only when there is a metric
+      if (targetPost.some(entry => vid.every(key => entry.metrics[key] === 0))) {
+        setVideoData()
+      }
+
     }
-  ];
+
+  }, [targetPostKey])
+
 
   const customStyles = {
     container: (provided) => ({
@@ -376,62 +369,6 @@ const Analytics = ({ windowWidth }) => {
     })
   };
 
-  
-  useEffect(() => {
-    console.log('The targetPost', targetPosts)
-    if (targetPosts) {
-      const selectedDates = targetPosts.map(post => post.value);
-      setData3New(DATA3.filter(dt => selectedDates.includes(dt.day)));
-      setData4New(DATA4.filter(dt => selectedDates.includes(dt.day.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }))));
-      setData6New(DATA6.filter(dt => selectedDates.includes(dt.day)));
-      setData5New(DATA5.filter(dt => selectedDates.includes(dt.day)))
-    }
-  }, [targetPosts])
-  
-  
-  // for DATA6: Stats summary
-  useEffect(() => {
-    if (targetPosts) {
-      setData6(data6New);
-    }
-    if (data6New && data6New.length === 0) {
-      setData6(DATA6)
-    }
-  }, [data6New])
-
-  // for DATA3: Engagement graph
-  useEffect(() => {
-    if (targetPosts) {
-      setData3(data3New);
-    }
-    if (data3New && data3New.length === 0) {
-      setData3(DATA3)
-    }
-  }, [data3New])
-
-
-  // for DATA4: Conversion Graph
-  useEffect(() => {
-    console.log('The data4 info', data4New)
-    if (targetPosts) {
-      setData4(data4New);
-    }
-    if (data4New && data4New.length === 0) {
-      setData4(DATA4)
-    }
-  }, [data4New])
-
-
-  // for DATA5: Video Statistics
-  useEffect(() => {
-    if (targetPosts) {
-      setData5(data5New);
-    }
-    if (data5New && data5New.length === 0) {
-      setData5(DATA5)
-    }
-  }, [data5New])
-
 
   return (
     <div className="rightSectionAnalytics">
@@ -440,7 +377,6 @@ const Analytics = ({ windowWidth }) => {
               value={targetPosts}
                 onChange={handlePosts}
                 options={options}
-                isMulti
                 getOptionLabel={(option) => option.label}
                 getOptionValue={(option) => option.value}
                 styles={ customStyles }
@@ -457,6 +393,9 @@ const Analytics = ({ windowWidth }) => {
           </div>
           <div className='analyticsContainer'>
             <div className='analyticsContainer1'>
+              {
+                date
+              }
               <StatsSummary 
                 data={data6}
                 setSummaryDays={handleSummaryDays}
@@ -742,43 +681,535 @@ export async function getServerSideProps(context) {
       ] 
 
     */
-
-    // here we will subtract the reactions and the comments from the analytics from the 
-    // totalReactionsAndComments, the remaining will be the new reactions and comments, and 
-    // the analytics of the today.
-    let analyticsOfToday;
-
-    (async () => {
-      const array = [1, 2, 3, 4, 5];
-      const results = await Promise.all(array.map(async item => {
-        // Simulate an async operation
-        const result = await new Promise(resolve => setTimeout(() => resolve(item * 2), 1000));
-        console.log('Processed:', item);
-        return result;
-      }));
-      
-      console.log('All items processed:', results);
-    })();
-
   
 
-    const finalAnalyticsPosts = await getAllAnalytics(recentPosts);
+    // const finalAnalyticsPosts = await getAllAnalytics(recentPosts);
 
+    // to be removed
+    const fakeConstant = [
+        {
+            "title": "The best ways to learn computer knoweldge",
+            "date": "2023-10-19"
+        },
+        {
+            "title": "10 ways to make money online",
+            "date": "2023-10-20"
+        },
+        {
+            "title": "creating the best knowledge graphs",
+            "date": "2023-10-21"
+        },
+        {
+            "title": "best ways to cook lentils",
+            "date": "2023-10-22"
+        },
+        {
+            "title": "cooking lentils without onions and other ingredients",
+            "date": "2023-10-23"
+        },
+        {
+            "title": "My moms recipe for potato chips",
+            "date": "2023-10-24"
+        },
+        {
+            "title": "the best cooking tray to grill salmon",
+            "date": "2023-10-25"
+        }
+    ]  
     
-    // the following are the daily metrics from the last 7 days
-    // you can easily append them to the the 'recentPosts'
-    // but before you do, you have to add the react and comments to it
-    // so you have a complete picture of the metrics
-
-
-    // here return the final results, but it's better to do the 
-    // calculations here and send the DATA constant from here
+    const options = fakeConstant.map(el => {
+      return {
+        value: el.date,
+        label: _.startCase(el.title)
+      }
+    })
   
+    const allPsts = [
+      {
+        title: 'The best ways to learn computer knoweldge',
+        date: '2023-10-19',
+        metrics: [
+          {
+            date: '2023-10-19',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 100,
+              OUTBOUND_CLICK: 50,
+              VIDEO_START: 20,
+              QUARTILE_95_PERCENT_VIEW: 10,
+              VIDEO_10S_VIEW: 30,
+              SAVE: 5,
+              IMPRESSION: 200,
+              PIN_CLICK: 15,
+              REACTIONS: 50,
+              COMMENTS: 10
+            }
+          },
+          {
+            date: '2023-10-20',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 150,
+              OUTBOUND_CLICK: 70,
+              VIDEO_START: 30,
+              QUARTILE_95_PERCENT_VIEW: 15,
+              VIDEO_10S_VIEW: 40,
+              SAVE: 10,
+              IMPRESSION: 250,
+              PIN_CLICK: 20,
+              REACTIONS: 70,
+              COMMENTS: 20
+            }
+          },
+          {
+            date: '2023-10-21',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 80,
+              OUTBOUND_CLICK: 40,
+              VIDEO_START: 15,
+              QUARTILE_95_PERCENT_VIEW: 8,
+              VIDEO_10S_VIEW: 25,
+              SAVE: 3,
+              IMPRESSION: 180,
+              PIN_CLICK: 12,
+              REACTIONS: 45,
+              COMMENTS: 8
+            }
+          },
+          {
+            date: '2023-10-22',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 120,
+              OUTBOUND_CLICK: 60,
+              VIDEO_START: 25,
+              QUARTILE_95_PERCENT_VIEW: 12,
+              VIDEO_10S_VIEW: 35,
+              SAVE: 8,
+              IMPRESSION: 220,
+              PIN_CLICK: 18,
+              REACTIONS: 60,
+              COMMENTS: 15
+            }
+          },
+          {
+            date: '2023-10-23',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 90,
+              OUTBOUND_CLICK: 45,
+              VIDEO_START: 18,
+              QUARTILE_95_PERCENT_VIEW: 9,
+              VIDEO_10S_VIEW: 28,
+              SAVE: 4,
+              IMPRESSION: 190,
+              PIN_CLICK: 14,
+              REACTIONS: 55,
+              COMMENTS: 12
+            }
+          },
+          {
+            date: '2023-10-24',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 130,
+              OUTBOUND_CLICK: 65,
+              VIDEO_START: 28,
+              QUARTILE_95_PERCENT_VIEW: 14,
+              VIDEO_10S_VIEW: 38,
+              SAVE: 12,
+              IMPRESSION: 270,
+              PIN_CLICK: 22,
+              REACTIONS: 75,
+              COMMENTS: 25
+            }
+          },
+          {
+            date: '2023-10-25',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 110,
+              OUTBOUND_CLICK: 55,
+              VIDEO_START: 22,
+              QUARTILE_95_PERCENT_VIEW: 11,
+              VIDEO_10S_VIEW: 32,
+              SAVE: 6,
+              IMPRESSION: 210,
+              PIN_CLICK: 16,
+              REACTIONS: 65,
+              COMMENTS: 18
+            }
+          },
+        ]
+      },
+      {
+        title: '10 ways to make money online',
+        date: '2023-10-20',
+        metrics: [
+          {
+            date: '2023-10-20',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 100,
+              OUTBOUND_CLICK: 50,
+              VIDEO_START: 20,
+              QUARTILE_95_PERCENT_VIEW: 10,
+              VIDEO_10S_VIEW: 30,
+              SAVE: 5,
+              IMPRESSION: 200,
+              PIN_CLICK: 15,
+              REACTIONS: 50,
+              COMMENTS: 10
+            }
+          },
+          {
+            date: '2023-10-21',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 150,
+              OUTBOUND_CLICK: 70,
+              VIDEO_START: 30,
+              QUARTILE_95_PERCENT_VIEW: 15,
+              VIDEO_10S_VIEW: 40,
+              SAVE: 10,
+              IMPRESSION: 250,
+              PIN_CLICK: 20,
+              REACTIONS: 70,
+              COMMENTS: 20
+            }
+          },
+          {
+            date: '2023-10-22',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 80,
+              OUTBOUND_CLICK: 40,
+              VIDEO_START: 15,
+              QUARTILE_95_PERCENT_VIEW: 8,
+              VIDEO_10S_VIEW: 25,
+              SAVE: 3,
+              IMPRESSION: 180,
+              PIN_CLICK: 12,
+              REACTIONS: 45,
+              COMMENTS: 8
+            }
+          },
+          {
+            date: '2023-10-23',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 120,
+              OUTBOUND_CLICK: 60,
+              VIDEO_START: 25,
+              QUARTILE_95_PERCENT_VIEW: 12,
+              VIDEO_10S_VIEW: 35,
+              SAVE: 8,
+              IMPRESSION: 220,
+              PIN_CLICK: 18,
+              REACTIONS: 60,
+              COMMENTS: 15
+            }
+          },
+          {
+            date: '2023-10-24',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 90,
+              OUTBOUND_CLICK: 45,
+              VIDEO_START: 18,
+              QUARTILE_95_PERCENT_VIEW: 9,
+              VIDEO_10S_VIEW: 28,
+              SAVE: 4,
+              IMPRESSION: 190,
+              PIN_CLICK: 14,
+              REACTIONS: 55,
+              COMMENTS: 12
+            }
+          },
+          {
+            date: '2023-10-25',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 130,
+              OUTBOUND_CLICK: 65,
+              VIDEO_START: 28,
+              QUARTILE_95_PERCENT_VIEW: 14,
+              VIDEO_10S_VIEW: 38,
+              SAVE: 12,
+              IMPRESSION: 270,
+              PIN_CLICK: 22,
+              REACTIONS: 75,
+              COMMENTS: 25
+            }
+          },
+        ]
+      },
+      {
+        title: 'creating the best knowledge graphs',
+        date: '2023-10-21',
+        metrics: [
+          {
+            date: '2023-10-21',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 110,
+              OUTBOUND_CLICK: 55,
+              VIDEO_START: 22,
+              QUARTILE_95_PERCENT_VIEW: 11,
+              VIDEO_10S_VIEW: 32,
+              SAVE: 6,
+              IMPRESSION: 210,
+              PIN_CLICK: 16,
+              REACTIONS: 65,
+              COMMENTS: 18
+            }
+          },
+          {
+            date: '2023-10-22',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 140,
+              OUTBOUND_CLICK: 75,
+              VIDEO_START: 35,
+              QUARTILE_95_PERCENT_VIEW: 16,
+              VIDEO_10S_VIEW: 45,
+              SAVE: 9,
+              IMPRESSION: 230,
+              PIN_CLICK: 25,
+              REACTIONS: 80,
+              COMMENTS: 20
+            }
+          },
+          {
+            date: '2023-10-23',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 95,
+              OUTBOUND_CLICK: 55,
+              VIDEO_START: 20,
+              QUARTILE_95_PERCENT_VIEW: 10,
+              VIDEO_10S_VIEW: 30,
+              SAVE: 5,
+              IMPRESSION: 190,
+              PIN_CLICK: 15,
+              REACTIONS: 50,
+              COMMENTS: 15
+            }
+          },
+          {
+            date: '2023-10-24',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 125,
+              OUTBOUND_CLICK: 65,
+              VIDEO_START: 30,
+              QUARTILE_95_PERCENT_VIEW: 14,
+              VIDEO_10S_VIEW: 40,
+              SAVE: 10,
+              IMPRESSION: 250,
+              PIN_CLICK: 20,
+              REACTIONS: 70,
+              COMMENTS: 25
+            }
+          },
+          {
+            date: '2023-10-25',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 95,
+              OUTBOUND_CLICK: 55,
+              VIDEO_START: 20,
+              QUARTILE_95_PERCENT_VIEW: 10,
+              VIDEO_10S_VIEW: 30,
+              SAVE: 5,
+              IMPRESSION: 190,
+              PIN_CLICK: 15,
+              REACTIONS: 50,
+              COMMENTS: 15
+            }
+          },
+          {
+            date: '2023-10-24',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 130,
+              OUTBOUND_CLICK: 65,
+              VIDEO_START: 28,
+              QUARTILE_95_PERCENT_VIEW: 14,
+              VIDEO_10S_VIEW: 38,
+              SAVE: 12,
+              IMPRESSION: 270,
+              PIN_CLICK: 22,
+              REACTIONS: 75,
+              COMMENTS: 25
+            }
+          },
+        ]
+      },
+      {
+        title: 'best ways to cook lentils',
+        date: '2023-10-22',
+        metrics: [
+          {
+            date: '2023-10-22',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 115,
+              OUTBOUND_CLICK: 50,
+              VIDEO_START: 25,
+              QUARTILE_95_PERCENT_VIEW: 10,
+              VIDEO_10S_VIEW: 35,
+              SAVE: 7,
+              IMPRESSION: 200,
+              PIN_CLICK: 15,
+              REACTIONS: 55,
+              COMMENTS: 12
+            }
+          },
+          {
+            date: '2023-10-23',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 85,
+              OUTBOUND_CLICK: 35,
+              VIDEO_START: 12,
+              QUARTILE_95_PERCENT_VIEW: 6,
+              VIDEO_10S_VIEW: 20,
+              SAVE: 2,
+              IMPRESSION: 160,
+              PIN_CLICK: 10,
+              REACTIONS: 40,
+              COMMENTS: 5
+            }
+          },
+          {
+            date: '2023-10-24',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 125,
+              OUTBOUND_CLICK: 65,
+              VIDEO_START: 30,
+              QUARTILE_95_PERCENT_VIEW: 14,
+              VIDEO_10S_VIEW: 40,
+              SAVE: 10,
+              IMPRESSION: 250,
+              PIN_CLICK: 20,
+              REACTIONS: 70,
+              COMMENTS: 25
+            }
+          },
+          {
+            date: '2023-10-25',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 95,
+              OUTBOUND_CLICK: 55,
+              VIDEO_START: 20,
+              QUARTILE_95_PERCENT_VIEW: 10,
+              VIDEO_10S_VIEW: 30,
+              SAVE: 5,
+              IMPRESSION: 190,
+              PIN_CLICK: 15,
+              REACTIONS: 50,
+              COMMENTS: 15
+            }
+          },
+        ]
+      },
+      {
+        title: 'cooking lentils without onions and other ingredients',
+        date: '2023-10-23',
+        metrics: [
+          {
+            date: '2023-10-23',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 140,
+              OUTBOUND_CLICK: 75,
+              VIDEO_START: 35,
+              QUARTILE_95_PERCENT_VIEW: 16,
+              VIDEO_10S_VIEW: 45,
+              SAVE: 9,
+              IMPRESSION: 230,
+              PIN_CLICK: 25,
+              REACTIONS: 80,
+              COMMENTS: 20
+            }
+          },
+          {
+            date: '2023-10-24',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 130,
+              OUTBOUND_CLICK: 65,
+              VIDEO_START: 28,
+              QUARTILE_95_PERCENT_VIEW: 14,
+              VIDEO_10S_VIEW: 38,
+              SAVE: 12,
+              IMPRESSION: 270,
+              PIN_CLICK: 22,
+              REACTIONS: 75,
+              COMMENTS: 25
+            }
+          },
+          {
+            date: '2023-10-25',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 110,
+              OUTBOUND_CLICK: 55,
+              VIDEO_START: 22,
+              QUARTILE_95_PERCENT_VIEW: 11,
+              VIDEO_10S_VIEW: 32,
+              SAVE: 6,
+              IMPRESSION: 210,
+              PIN_CLICK: 16,
+              REACTIONS: 65,
+              COMMENTS: 18
+            }
+          },
+        ]
+      },
+      {
+        title: 'My moms recipe for potato chips',
+        date: '2023-10-24',
+        metrics: [
+          {
+            date: '2023-10-24',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 120,
+              OUTBOUND_CLICK: 60,
+              VIDEO_START: 25,
+              QUARTILE_95_PERCENT_VIEW: 12,
+              VIDEO_10S_VIEW: 35,
+              SAVE: 8,
+              IMPRESSION: 220,
+              PIN_CLICK: 18,
+              REACTIONS: 60,
+              COMMENTS: 15
+            }
+          },
+          {
+            date: '2023-10-25',
+            metrics: {
+              VIDEO_V50_WATCH_TIME: 80,
+              OUTBOUND_CLICK: 40,
+              VIDEO_START: 15,
+              QUARTILE_95_PERCENT_VIEW: 8,
+              VIDEO_10S_VIEW: 25,
+              SAVE: 3,
+              IMPRESSION: 180,
+              PIN_CLICK: 12,
+              REACTIONS: 45,
+              COMMENTS: 8
+            }
+          },
+        ]
+      },
+      {
+        title: 'the best cooking tray to grill salmon',
+        date: '2023-10-25',
+        metrics: [
+          {
+            date: '2023-10-25',
+            metrics: {
+              OUTBOUND_CLICK: 70,
+              VIDEO_START: 30,
+              QUARTILE_95_PERCENT_VIEW: 15,
+              VIDEO_10S_VIEW: 40,
+              SAVE: 10,
+              IMPRESSION: 250,
+              PIN_CLICK: 20,
+              REACTIONS: 70,
+              COMMENTS: 20
+            }
+          }
+        ]
+      }
+    ]
 
     return {
       props: {
         signedIn: true,
-        dash: true
+        dash: true,
+        // return all the posts
+        data: allPsts,
+        options
       }
     };
 

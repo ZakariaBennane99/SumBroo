@@ -51,8 +51,7 @@ const StackedBarChart = ({ data, setMetrics2 }) => {
   const options = [
     { value: 'destination link clicks', label: 'Destination Link Clicks' },
     { value: 'saves', label: 'Saves' },
-    { value: 'likes', label: 'Likes' },
-    { value: 'comments', label: 'Comments' },
+    { value: 'reactions', label: 'reactions' },
     { value: 'pin enlargement clicks', label: 'Pin Enlargement Clicks' },
     { value: 'video start clicks', label: 'Video Start Clicks' },
     { value: 'unengaged impressions', label: 'Unengaged Impressions'}
@@ -89,12 +88,12 @@ const StackedBarChart = ({ data, setMetrics2 }) => {
       .append('g')
       .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-    const categories = ['destination link clicks', 'saves', 'likes', 'comments', 'pin enlargement clicks', 'video start clicks', 'unengaged impressions', 'other'];
+    const categories = ['destination link clicks', 'saves', 'reactions', 'pin enlargement clicks', 'video start clicks', 'unengaged impressions', 'other'];
 
     const x = d3.scaleBand().domain(data.map((d) => d.day)).range([0, width]).padding(0.22);
     const y = d3.scaleLinear().domain([0, d3.max(data, (d) => d3.sum(categories, (c) => d[c]))]).range([height, 0]); // #0000FF
 
-    const color = d3.scaleOrdinal().domain(categories).range(['#f4a261', '#ef233c', '#0303a3','#264653' , '#2a9d8f', '#8d99ae', '#c2c2c2', '#1c1c57']);
+    const color = d3.scaleOrdinal().domain(categories).range(['#f4a261', '#ef233c','#264653' , '#2a9d8f', '#8d99ae', '#c2c2c2', '#1c1c57']);
     
     const stack = d3.stack().keys(categories);
     const stackedData = stack(data);
