@@ -72,9 +72,9 @@ const StatsSummary = ({ data }) => {
                     </div>
                         {showTooltip0 ? <div className="graphInfoTooltip">
                             <span className='title'>Conversion Rate of Link Clicks</span><br/>
-                            <span>This metric represents the ratio of destination link clicks to the total number of impressions. It provides an understanding of how effectively your Pin is driving traffic to your linked destination.</span><br/>
+                            <span>This metric tells you how many people clicked on your Pin's link compared to how many saw it. A good goal is to aim for at least 1-2% of people clicking through.</span><br/>
                             <span className='title'>Conversion Rate of Saves</span><br/>
-                            <span>This metric indicates the ratio of the number of times your Pin was saved to the total number of impressions. It provides insight into the proportion of impressions that resulted in saves, thereby helping you understand the effectiveness of your Pin in engaging viewers and prompting them to save it for future reference.</span><br/>
+                            <span>This metric shows how often people save your Pin after seeing it, with a higher ratio indicating that more people find your content valuable enough to save for later use. Aiming for a save rate of at least 1-2% is a solid benchmark for success.</span><br/>
                     </div> : ''}
                     </div>
                 </div> 
@@ -101,8 +101,7 @@ const StatsSummary = ({ data }) => {
                           ?
                         </div>
                             {showTooltip1 ? <div className="graphInfoTooltip">
-                                This is the number of times your Pin was on screen whether it was seen or 
-                                not.
+                                This is the number of times your Pin was on screen.
                         </div> : ''}
                     </div>
                 </div>
@@ -120,7 +119,7 @@ const StatsSummary = ({ data }) => {
                       ?
                     </div>
                         {showTooltip2 ? <div className="graphInfoTooltip">
-                            Number of destination link clicks.
+                        The number of times users have clicked on the link provided in your Pin to visit an external website, such as your blog post or product page.
                     </div> : ''}
                     </div>
                 </div>

@@ -6,70 +6,35 @@ import GroupedBarChart from '../../../../components/viz/GroupedBarChart';
 import StackedBarChart from '../../../../components/viz/StackedBarChart';
 import MultiLineChart from '../../../../components/viz/MultiLineChart';
 import StatsSummary from '../../../../components/viz/StatsSummary';
-import _ from 'lodash';
+import _, { update } from 'lodash';
 
 
 const Analytics = ({ data, options }) => {
 
-/*
-  const DATA3 = [
-      { day: 'Oct 2', 
-        'pin enlargement clicks': 20,
-        'destination link clicks': 30,
-        'video start clicks': 5,
-        saves: 23,
-        reactions: 12,
-        'unengaged impressions': 40,
-        impressions: 129 },
-      { day: 'Oct 3', 
-        'pin enlargement clicks': 30,
-        'destination link clicks': 20,
-        'video start clicks': 3,
-        saves: 2,
-        reactions: 32,
-        'unengaged impressions': 35,
-        impressions: 114 },
-      { day: 'Oct 4', 
-        'pin enlargement clicks': 8,
-        'destination link clicks': 10,
-        'video start clicks': 30,
-        saves: 25,
-        reactions: 40,
-        'unengaged impressions': 23,
-        impressions: 109 },
-      { day: 'Oct 5', 
-        'pin enlargement clicks': 8,
-        'destination link clicks': 15,
-        'video start clicks': 2,
-        saves: 12,
-        reactions: 23,
-        'unengaged impressions': 19,
-        impressions: 60 },
-      { day: 'Oct 6', 
-        'pin enlargement clicks': 40,
-        'destination link clicks': 10,
-        'video start clicks': 20,
-        saves: 9,
-        reactions: 12,
-        'unengaged impression': 21,
-        impressions: 110 },
-      { day: 'Oct 7', 
-        'pin enlargement clicks': 20,
-        'destination link clicks': 12,
-        'video start clicks': 3,
-        saves: 5,
-        reactions: 12,
-        'unengaged impressions': 38,
-        impressions: 100 }
-  ];
-*/
+  const [targetPost, setTargetPost] = useState(null);
+  // this is for react-select
+  const [targetPostKey, setTargetPostKey] = useState(null);
   
-  const [engagementsData, setEngagemensData] = useState(null)
+  const [engagementsData, setEngagementsData] = useState(null)
   
-  function handleMetricsData(selectedMetrics) {
+  function engagementsDataChange(selectedMetrics) {
+    const formatedEngData = targetPost.metrics.map(post => {
+      const date = new Date(post.date);
+      const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return {
+        day: formattedDate,
+        'pin enlargement clicks': post.metrics.PIN_CLICK,
+        'destination link clicks': post.metrics.OUTBOUND_CLICK,
+        'video start clicks': post.metrics.VIDEO_START,
+        saves: post.metrics.SAVE,
+        reactions: post.metrics.REACTIONS,
+        'unengaged impressions': post.metrics.IMPRESSION - (post.metrics.PIN_CLICK + post.metrics.OUTBOUND_CLICK + post.metrics.VIDEO_START + post.metrics.SAVE + post.metrics.REACTIONS),
+        impressions: post.metrics.IMPRESSION
+      }
+    })
     if (selectedMetrics && selectedMetrics.length > 0) {
       const selectedMetricsValues = selectedMetrics.map(metric => metric.value);
-      const updatedData = data3New.map(dayData => {
+      const updatedData = formatedEngData.map(dayData => {
         let updatedDayData = { ...dayData };
         let totalSelectedMetrics = 0;
         for (let key in updatedDayData) {
@@ -82,79 +47,32 @@ const Analytics = ({ data, options }) => {
         updatedDayData['other'] = updatedDayData['impressions'] - totalSelectedMetrics;
         return updatedDayData;
       });
-      setData3(updatedData);
+      setEngagementsData(updatedData);
     } else {
-      setData3(data3New);
+      setEngagementsData(formatedEngData);
     }
   }
   
-  /*
-    <StackedBarChart
-      data={data3}
-      setMetrics2={handleMetricsData}
-    />
-  */
-
-
-/*
-  const DATA4 = [
-    {
-      day: new Date(2023, 9, 2),
-      Pinterest: {
-        'Impressions (# of times your pin was on-screen)': 220,
-        'Pin saves': 72,
-        'Destination link clicks': 96,
-      }
-    },
-    {
-      day: new Date(2023, 9, 3),
-      Pinterest: {
-        'Impressions (# of times your pin was on-screen)': 320,
-        'Pin saves': 110,
-        'Destination link clicks': 96,
-      }
-    },
-    {
-      day: new Date(2023, 9, 4),
-      Pinterest: {
-        'Impressions (# of times your pin was on-screen)': 96,
-        'Pin saves': 50,
-        'Destination link clicks': 20,
-      }
-    },
-    {
-      day: new Date(2023, 9, 5),
-      Pinterest: {
-        'Impressions (# of times your pin was on-screen)': 250,
-        'Pin saves': 82,
-        'Destination link clicks': 136,
-      }
-    },
-    {
-      day: new Date(2023, 9, 6),
-      Pinterest: {
-        'Impressions (# of times your pin was on-screen)': 420,
-        'Pin saves': 172,
-        'Destination link clicks': 230,
-      }
-    },
-    {
-      day: new Date(2023, 9, 7),
-      Pinterest: {
-        'Impressions (# of times your pin was on-screen)': 80,
-        'Pin saves': 20,
-        'Destination link clicks': 25,
-      }
-    }
-  ];
-*/
 
   const [summaryData, setSummaryData] = useState(null)
   
-  function handleMetricsData1(selectedMetrics) {
+  const [conversionData, setConversionData] = useState(null)
+  
+  function conversionDataChange(selectedMetrics) {
+    const formatedConversionData = targetPost.metrics.map(post => {
+      const strippedDate = post.date.split('-');
+      return {
+        day: new Date(parseInt(strippedDate[0]), parseInt(strippedDate[1]) - 1, parseInt(strippedDate[2])),
+        Pinterest: {
+          'Impressions (# of times your pin was on-screen)': post.metrics.IMPRESSION,
+          'Pin saves': post.metrics.SAVE,
+          'Destination link clicks': post.metrics.OUTBOUND_CLICK,
+        }
+      }
+    })
     if (selectedMetrics && selectedMetrics.length > 0) {
       const selectedMetricsValues = selectedMetrics.map(metric => metric.value);
-      const updatedData = data4New.map(dayData => {
+      const updatedData = formatedConversionData.map(dayData => {
         let updatedDayData = { day: dayData.day, Pinterest: {} };
         for (let key in dayData.Pinterest) {
           if (selectedMetricsValues.includes(key)) {
@@ -163,174 +81,56 @@ const Analytics = ({ data, options }) => {
         }
         return updatedDayData;
       });
-      setData4(updatedData);
+      setConversionData(updatedData);
     } else {
-      setData4(data4New);
-    }
-  }
-  
-  /*
-    Conversion Graph
-    <MultiLineChart
-      data={data4}
-      setMetrics1={handleMetricsData1}
-    />
-  */
-  
-/*
-  const DATA5 = [
-    {
-      day: 'Oct 2',
-      metrics: [
-        { name: '# of people who viewed 95% of the video', value: 120 },
-        { name: '# of video starts', value: 530 },
-        { name: '# of people who viewed at least 10% of the video', value: 150 },
-        { name: 'Total play time (in minutes)', value: 90 },
-      ],
-    },
-    {
-      day: 'Oct 3',
-      metrics: [
-        { name: '# of people who viewed 95% of the video', value: 130 },
-        { name: '# of video starts', value: 250 },
-        { name: '# of people who viewed at least 10% of the video', value: 160 },
-        { name: 'Total play time (in minutes)', value: 100 },
-      ],
-    },
-    {
-      day: 'Oct 4',
-      metrics: [
-        { name: '# of people who viewed 95% of the video', value: 140 },
-        { name: '# of video starts', value: 250 },
-        { name: '# of people who viewed at least 10% of the video', value: 170 },
-        { name: 'Total play time (in minutes)', value: 110 },
-      ],
-    },
-    {
-      day: 'Oct 5',
-      metrics: [
-        { name: '# of people who viewed 95% of the video', value: 150 },
-        { name: '# of video starts', value: 250 },
-        { name: '# of people who viewed at least 10% of the video', value: 180 },
-        { name: 'Total play time (in minutes)', value: 120 },
-      ],
-    },
-    {
-      day: 'Oct 6',
-      metrics: [
-        { name: '# of people who viewed 95% of the video', value: 160 },
-        { name: '# of video starts', value: 250 },
-        { name: '# of people who viewed at least 10% of the video', value: 190 },
-        { name: 'Total play time (in minutes)', value: 130 },
-      ],
-    },
-    {
-      day: 'Oct 7',
-      metrics: [
-        { name: '# of people who viewed 95% of the video', value: 170 },
-        { name: '# of video starts', value: 250 },
-        { name: '# of people who viewed at least 10% of the video', value: 200 },
-        { name: 'Total play time (in minutes)', value: 140 },
-      ],
-    }
-  ];
-*/   
-  
-  const [conversionData, setConversionData] = useState(null)
-  
-  function handleMetricsData2(selectedMetrics) {
-    if (selectedMetrics && selectedMetrics.length > 0) {
-      const selectedMetricsValues = selectedMetrics.map(metric => metric.value);
-      const updatedData = data5New.map(dayData => {
-        let updatedDayData = { day: dayData.day, metrics: [] };
-        dayData.metrics.forEach(el => {
-          if (selectedMetricsValues.includes(el.name)) {
-            updatedDayData.metrics.push(el)
-          }          
-        })
-        return updatedDayData;
-      });
-      setData5(updatedData);
-    } else {
-      setData5(data5New);
+      setConversionData(formatedConversionData);
     }
   }  
 
-  /* Video stats Grap
-    <GroupedBarChart data={data5} setMetrics2={handleMetricsData2} />
-  */
 
-    /*
-  const DATA6 = [
-    {
-      day: 'Oct 2',
-      'Impressions': 320,
-      'Destination Link Clicks': 130,
-      'User Follows (After Viewing The Pin)': 75,
-      'Saves': 210 
-    },
-    {
-      day: 'Oct 3',
-      'Impressions': 520,
-      'Destination Link Clicks': 230,
-      'User Follows (After Viewing The Pin)': 94,
-      'Saves': 410 
-    },
-    {
-      day: 'Oct 4',
-      'Impressions': 150,
-      'Destination Link Clicks': 130,
-      'User Follows (After Viewing The Pin)': 35,
-      'Saves': 87 
-    },
-    {
-      day: 'Oct 5',
-      'Impressions': 1020,
-      'Destination Link Clicks': 98,
-      'User Follows (After Viewing The Pin)': 42,
-      'Saves': 320
-    },
-    {
-      day: 'Oct 6',
-      'Impressions': 120,
-      'Destination Link Clicks': 28,
-      'User Follows (After Viewing The Pin)': 5,
-      'Saves': 32
-    },
-    {
-      day: 'Oct 7',
-      'Impressions': 70,
-      'Destination Link Clicks': 30,
-      'User Follows (After Viewing The Pin)': 5,
-      'Saves': 23
-    }
-  ] 
-*/
   const [videoData, setVideoData] = useState(null)
 
-  function handleSummaryDays(options) {
-    if (options && options.length > 0) {
-      const selectedDays = options.map(metric => metric.value);
-      const updatedData = data6New.filter(dayData => {
-        let [[firstKey, firstValue]] = Object.entries(dayData);
-        if (selectedDays.includes(firstKey)) {
-          return dayData;
-        }
+  function videoDataChange(selectedMetrics) {
+    console.log('The metric', selectedMetrics)
+    const formattedVideoData = targetPost.metrics.map(post => {
+      const date = new Date(post.date);
+      const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return {
+        day: formattedDate,
+        metrics: [
+          { name: '# of people who viewed 95% of the video', value: post.metrics.QUARTILE_95_PERCENT_VIEW },
+          { name: '# of video starts', value: post.metrics.VIDEO_START },
+          { name: '# of people who viewed at least 10% of the video', value: post.metrics.VIDEO_10S_VIEW },
+          { name: 'Total play time (in minutes)', value: post.metrics.VIDEO_V50_WATCH_TIME },
+        ]
+      }
+    });
+  
+    if (selectedMetrics && selectedMetrics.length > 0) {
+      const selectedMetricNames = selectedMetrics.map(metric => metric.value); // Assuming the label property holds the name of the metric
+      const updatedData = formattedVideoData.map(dayData => {
+        const updatedMetrics = dayData.metrics.filter(metric => selectedMetricNames.includes(metric.name));
+        return { ...dayData, metrics: updatedMetrics };
       });
-      setData6(updatedData);
+      setVideoData(updatedData);
     } else {
-      setData6(data6New);
+      setVideoData(formattedVideoData);
     }
   }
+  
+  
 
-  const [targetPostKey, setTargetPostKey] = useState(null);
 
-  function handlePosts(selectedOptions) {
-    setTargetPostKey(selectedOptions)
+  // when selecting 
+  function handlePostSelection(selectedOption) {
+    const targetPost = data.filter(el => el.date === selectedOption.value);
+    setTargetPostKey(selectedOption);
+    setTargetPost(targetPost[0]);
   }
 
   
   useEffect(() => {
+
 
     /****  here where you construct data based on the post requested  ****/
 
@@ -342,20 +142,71 @@ const Analytics = ({ data, options }) => {
     ]
 
     if (targetPostKey) {
-      const selectedDate = targetPostKey.map(post => post.value);
-      const targetPost = data.filter(el => el.date === selectedDate)
-      // set the data for all 
-      setEngagemensData()
-      setSummaryData()
-      setConversionData()
-      // set videoDate only when there is a metric
-      if (targetPost.some(entry => vid.every(key => entry.metrics[key] === 0))) {
-        setVideoData()
+
+      const formatedEngData = targetPost.metrics.map(post => {
+        const date = new Date(post.date);
+        const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        return {
+          day: formattedDate,
+          'pin enlargement clicks': post.metrics.PIN_CLICK,
+          'destination link clicks': post.metrics.OUTBOUND_CLICK,
+          'video start clicks': post.metrics.VIDEO_START,
+          saves: post.metrics.SAVE,
+          reactions: post.metrics.REACTIONS,
+          'unengaged impressions': post.metrics.IMPRESSION - (post.metrics.PIN_CLICK + post.metrics.OUTBOUND_CLICK + post.metrics.VIDEO_START + post.metrics.SAVE + post.metrics.REACTIONS),
+          impressions: post.metrics.IMPRESSION
+        }
+      })
+
+      const formatedSummaryData = targetPost.metrics.map(post => {
+        const date = new Date(post.date);
+        const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        return {
+          day: formattedDate,
+          'Impressions': post.metrics.IMPRESSION,
+          'Destination Link Clicks': post.metrics.OUTBOUND_CLICK,
+          'Saves': post.metrics.SAVE
+        }
+      })
+
+      const formatedConversionData = targetPost.metrics.map(post => {
+        const strippedDate = post.date.split('-');
+        return {
+          day: new Date(parseInt(strippedDate[0]), parseInt(strippedDate[1]) - 1, parseInt(strippedDate[2])),
+          Pinterest: {
+            'Impressions (# of times your pin was on-screen)': post.metrics.IMPRESSION,
+            'Pin saves': post.metrics.SAVE,
+            'Destination link clicks': post.metrics.OUTBOUND_CLICK,
+          }
+        }
+      })
+
+      // set the data for all
+      setEngagementsData(formatedEngData)
+      setSummaryData(formatedSummaryData)
+      setConversionData(formatedConversionData)
+
+      // set videoDate only if it is a video Pin
+      if (!targetPost.metrics.every(entry => vid.every(key => entry.metrics[key] === 0))) {
+        const formatedVideoData = targetPost.metrics.map(post => {
+          const date = new Date(post.date);
+          const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+          return {
+            day: formattedDate,
+            metrics: [
+              { name: '# of people who viewed 95% of the video', value: post.metrics.QUARTILE_95_PERCENT_VIEW },
+              { name: '# of video starts', value: post.metrics.VIDEO_START },
+              { name: '# of people who viewed at least 10% of the video', value: post.metrics.VIDEO_10S_VIEW },
+              { name: 'Total play time (in minutes)', value: post.metrics.VIDEO_V50_WATCH_TIME },
+            ]
+          }
+        })
+        setVideoData(formatedVideoData)
       }
 
     }
 
-  }, [targetPostKey])
+  }, [targetPost])
 
 
   const customStyles = {
@@ -367,15 +218,23 @@ const Analytics = ({ data, options }) => {
       ...provided,
       color: state.isSelected ? 'white' : '#1c1c57',
     })
-  };
+  }
 
 
   return (
     <div className="rightSectionAnalytics">
+          <div style={{ backgroundColor: '#f5f6f7', 
+            color: '#12123b',
+            marginBottom: '20px',
+            padding: '10px',
+            borderRadius: '5px'
+          }} className="righSectionAnalytics">
+            When you choose a post, the data displayed will range from the <b> date of publication </b> (as indicated in the dropdown) up to the <b> current day.</b>
+          </div>
           <div className='postSelectorContainer'>
             <Select
-              value={targetPosts}
-                onChange={handlePosts}
+              value={targetPostKey}
+                onChange={handlePostSelection}
                 options={options}
                 getOptionLabel={(option) => option.label}
                 getOptionValue={(option) => option.value}
@@ -388,34 +247,56 @@ const Analytics = ({ data, options }) => {
                       primary: '#1c1c57',  // color of the selected option
                     },
                 })}
-                placeholder='Select Posts Title/Titles'
+                placeholder='Select A Post'
             /> 
           </div>
-          <div className='analyticsContainer'>
-            <div className='analyticsContainer1'>
-              {
-                date
-              }
-              <StatsSummary 
-                data={data6}
-                setSummaryDays={handleSummaryDays}
-              />
-              <StackedBarChart
-                data={data3}
-                setMetrics2={handleMetricsData}
-              /> 
-            </div>
-            <div className='analyticsContainer2'>
-                <MultiLineChart
-                    data={data4}
-                    setMetrics1={handleMetricsData1}
-                  />
-                <GroupedBarChart 
-                  data={data5}
-                  setMetrics2={handleMetricsData2}
-                />
-            </div>
-          </div>
+            <div className='analyticsContainer'>
+
+              <div className='analyticsContainer1'>
+                {
+                  summaryData ? 
+                  <StatsSummary 
+                    data={summaryData}
+                  /> : 
+                  <div style={{ paddingTop: '150px', paddingBottom: '150px', color: '#12123b' }} className='statsSummary'>
+                    No data
+                  </div>
+                }
+                {
+                  engagementsData ?
+                  <StackedBarChart
+                    data={engagementsData}
+                    setEngagementData={engagementsDataChange}
+                  /> : 
+                  <div style={{ paddingTop: '150px', paddingBottom: '150px', color: '#12123b' }} className="stackedBarChart">
+                    No data
+                  </div>
+                }
+              </div>
+              <div className='analyticsContainer2'>
+                {
+                  conversionData ? 
+                  <MultiLineChart
+                    data={conversionData}
+                    setConversionData={conversionDataChange}
+                  /> : 
+                  <div style={{ paddingTop: '150px', paddingBottom: '150px', color: '#12123b' }} className='multiLineChart'>
+                    No Data
+                  </div>
+                }
+
+                {
+                  videoData ? 
+                    <GroupedBarChart 
+                      data={videoData}
+                      setVideoData={videoDataChange}
+                    /> : 
+                    <div style={{ paddingTop: '150px', paddingBottom: '150px', color: '#12123b' }} className='groupedBarChart'>
+                      No Data
+                    </div>
+                }
+              </div>
+            </div> 
     </div>)
 
 };
@@ -472,8 +353,6 @@ export async function getServerSideProps(context) {
     const endDate = new Date().toISOString().split('T')[0];
 
     const url = `https://api.pinterest.com/v5/pins/${pinId}/analytics?start_date=${startDate}&end_date=${endDate}&metric_types=${encodeURIComponent(metricTypes.join(','))}&app_types=ALL&split_field=NO_SPLIT`;
-
-    console.log('THE URL', url)
 
     try {
 
@@ -718,9 +597,11 @@ export async function getServerSideProps(context) {
     ]  
     
     const options = fakeConstant.map(el => {
+      const date = new Date(el.date);
+      const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       return {
         value: el.date,
-        label: _.startCase(el.title)
+        label: _.startCase(el.title) + ' - ' + formattedDate
       }
     })
   

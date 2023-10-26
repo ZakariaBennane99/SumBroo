@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Select from 'react-select';
 import * as d3 from 'd3';
 
-const MultiLineChart = ({ data, setMetrics1 }) => {
+const MultiLineChart = ({ data, setConversionData }) => { 
 
   const containerRef = useRef();
   const [containerWidth, setContainerWidth] = useState(0);
@@ -62,7 +62,7 @@ const MultiLineChart = ({ data, setMetrics1 }) => {
   }
   
   useEffect(() => {
-    setMetrics1(targetMetrics)
+    setConversionData(targetMetrics)
   }, [targetMetrics]);
   
   
@@ -160,20 +160,24 @@ const MultiLineChart = ({ data, setMetrics1 }) => {
             tooltip.style('visibility', 'visible')                                   // below just d.day
               .html(`${metric}<br>Value: <b>${d[platform][metric]}</b><br>Date: <b>${d.day.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</b>`)
               .style('top', `${event.pageY - 10}px`)
-              .style('left', `${event.pageX + 10}px`)
-              .style('font-family', 'Arial, Helvetica, sans-serif')
               .style('font-size', '1.1em')
               .style('visibility', 'visible')
               .style('padding', '6px')
+              .style("border", "2px solid " + fillColor)
+              .style("font-family", 'IBM Plex Sans')
+              .style('background', 'white')
+              .style("color", '#1c1c57')
               .style("box-shadow", '0px 0 2px 0.5px ' + fillColor)
-              .style('background', fillColor);
               svg.append("circle")
                 .attr("class", "halo")
                 .attr("cx", xScale(d.day))  // d.day
                 .attr("cy", yScale(d[platform][metric]))
                 .attr("r", 6)
                 .style("fill", colorMapping[metric])
-                .style("opacity", 0.3);
+                .style("opacity", 0.3)
+
+              const tooltipWidth = tooltip.node().getBoundingClientRect().width;
+              tooltip.style('left', `${event.pageX - tooltipWidth - 10}px`);   
           })
           .on("mouseout", function () {
             // Hide tooltip on mouseout

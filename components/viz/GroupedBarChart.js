@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Select from 'react-select';
 import * as d3 from 'd3';
 
-const GroupedBarChart = ({ data, setMetrics2 }) => {
+const GroupedBarChart = ({ data, setVideoData }) => {
   
     const containerRef = useRef();
     const [containerWidth, setContainerWidth] = useState(0);
@@ -64,7 +64,7 @@ const GroupedBarChart = ({ data, setMetrics2 }) => {
     };
 
     useEffect(() => {
-      setMetrics2(targetMetrics)
+      setVideoData(targetMetrics)
     }, [targetMetrics])
 
     useEffect(() => {
@@ -127,12 +127,18 @@ const GroupedBarChart = ({ data, setMetrics2 }) => {
             tooltip.style('visibility', 'visible')
               .html(`${d.name} <br> Value: <b>${d.value}</b><br>Date: ${this.parentNode.__data__.day}`)
               .style('top', `${event.pageY - 10}px`)
-              .style('left', `${event.pageX + 10}px`)
               .style('font-family', 'Arial, Helvetica, sans-serif')
               .style('font-size', '1.1em')
+              .style("border", "2px solid " + fillColor)
+              .style("font-family", 'IBM Plex Sans')
+              .style('background', 'white')
+              .style("color", '#1c1c57')
               .style('box-shadow', '0px 0 2px 0.5px ' + fillColor)
               .style('padding', '6px')
-              .style('background', fillColor);
+
+
+              const tooltipWidth = tooltip.node().getBoundingClientRect().width;
+              tooltip.style('left', `${event.pageX - tooltipWidth - 10}px`);
           })
           .on("mouseout", function () {
             // Hide tooltip on mouseout
@@ -170,7 +176,7 @@ const GroupedBarChart = ({ data, setMetrics2 }) => {
                     ?
                   </div>
                       {showTooltip ? <div className="graphInfoTooltip">
-                      This is a Grouped Bar Chart that provides a comprehensive view of your video pin&apos;s engagement levels. It stacks various metrics together, allowing you to easily compare and analyze different aspects of viewer behavior. By selecting &apos;video starts&apos; and &apos;video percentages viewed&apos;, you can gain insights into how long viewers are staying and engaging with your video.
+                      This Grouped Bar Chart displays specific engagement metrics for your video Pin, including <em>video starts</em> and <em>total play time</em>, allowing you to directly assess viewer interaction.
                   </div> : ''}
               </div>
             </div> 

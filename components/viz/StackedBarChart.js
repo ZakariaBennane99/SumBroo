@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Select from 'react-select';
 import * as d3 from 'd3';
 
-const StackedBarChart = ({ data, setMetrics2 }) => {
+const StackedBarChart = ({ data, setEngagementData }) => {
 
   const containerRef = useRef();
   const [containerWidth, setContainerWidth] = useState(0);
@@ -51,7 +51,7 @@ const StackedBarChart = ({ data, setMetrics2 }) => {
   const options = [
     { value: 'destination link clicks', label: 'Destination Link Clicks' },
     { value: 'saves', label: 'Saves' },
-    { value: 'reactions', label: 'reactions' },
+    { value: 'reactions', label: 'Reactions' },
     { value: 'pin enlargement clicks', label: 'Pin Enlargement Clicks' },
     { value: 'video start clicks', label: 'Video Start Clicks' },
     { value: 'unengaged impressions', label: 'Unengaged Impressions'}
@@ -69,7 +69,7 @@ const StackedBarChart = ({ data, setMetrics2 }) => {
   };
 
   useEffect(() => {
-    setMetrics2(targetMetrics)
+    setEngagementData(targetMetrics)
   }, [targetMetrics]);
 
   useEffect(() => {
@@ -128,13 +128,18 @@ const StackedBarChart = ({ data, setMetrics2 }) => {
         .style('font-size', '1em');
       const fillColor = d3.select(this).style('fill');
       tooltip.html(getMetricInfo(key, val, d.data.impressions))
-        .style('left', (event.pageX) + 'px')
-        .style('top', (event.pageY) + 'px')
+        .style('top', `${event.pageY - 10}px`)
         .style("padding", '5px')
-        .style("color", 'white')
-        .style("background-color", fillColor)
+        .style("color", '#1c1c57')
+        .style("font-family", 'IBM Plex Sans')
+        .style("background-color", 'white')
+        .style("border", "2px solid " + fillColor)
         .style("box-shadow", '0px 0 2px 0.5px ' + fillColor)
-        .style('text-align', 'start');
+        .style('text-align', 'start')
+
+        const tooltipWidth = tooltip.node().getBoundingClientRect().width;
+        tooltip.style('left', `${event.pageX - tooltipWidth - 10}px`);
+
     })
     .on('mouseout', function () {
       d3.select(this)
@@ -173,9 +178,7 @@ const StackedBarChart = ({ data, setMetrics2 }) => {
                   ?
                 </div>
                     {showTooltip ? <div className="graphInfoTooltip">
-                    A Stacked Bar Chart is a data visualization tool used to display and compare multiple
-                    categories of data within individual bars. The categories are stacked on top of each other
-                     in each bar, showcasing part-to-whole relationships.
+                    In a Stacked Bar Chart, each bar represents a day and is divided into colored sections for different metrics like saves, clicks, and reactions. This helps you quickly compare how each type of engagement contributes to the total daily activity on your Pin.
                 </div> : ''}
             </div>
           </div> 
