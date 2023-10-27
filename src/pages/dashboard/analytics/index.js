@@ -9,13 +9,16 @@ import StatsSummary from '../../../../components/viz/StatsSummary';
 import _, { update } from 'lodash';
 
 
-const Analytics = ({ data, options }) => {
+const Analytics = ({ dataa, options }) => {
+
+  const data = JSON.parse(dataa)
+  console.log('THE DATA parsed', data)
 
   const [targetPost, setTargetPost] = useState(null);
   // this is for react-select
   const [targetPostKey, setTargetPostKey] = useState(null);
   
-  const [engagementsData, setEngagementsData] = useState(null)
+  const [engagementsData, setEngagementsData] = useState(null);
   
   function engagementsDataChange(selectedMetrics) {
     const formatedEngData = targetPost.metrics.map(post => {
@@ -91,7 +94,6 @@ const Analytics = ({ data, options }) => {
   const [videoData, setVideoData] = useState(null)
 
   function videoDataChange(selectedMetrics) {
-    console.log('The metric', selectedMetrics)
     const formattedVideoData = targetPost.metrics.map(post => {
       const date = new Date(post.date);
       const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -312,31 +314,6 @@ export async function getServerSideProps(context) {
   const User = require('../../../../utils/User').default;
   const mongoose = require('mongoose');
 
-  // utils
-  async function getAllPins(token) {
-    const url = `https://api.pinterest.com/v5/pins`;
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-      });
-      
-      if (response.ok) {
-        const result = await response.json();
-        return result
-      } else {
-        console.error('Error:', response.status, response.statusText);
-        return null
-      }
-    } catch (error) {
-      console.error('Error getting pins', error);
-      return null
-    }
-  }
-
   function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -366,7 +343,6 @@ export async function getServerSideProps(context) {
       
       if (response.ok) {
         const result = await response.json();
-        console.log(result)
         return result
       } else {
 
@@ -399,6 +375,9 @@ export async function getServerSideProps(context) {
         const date = new Date(post.date);
         const formattedDate = date.toISOString().split('T')[0]; // yy-mm-dd
   
+        // before you start each fetch from the API, try to pause for a quarter second
+        await delay(250);
+
         // get the accessToken and the analytics
         const accTkn = await getAccessToken(post.hostId);
   
@@ -457,7 +436,7 @@ export async function getServerSideProps(context) {
             };
           });
         }
-  
+
         // this is for each post
         return {
           title: post.pinTitle,
@@ -473,8 +452,26 @@ export async function getServerSideProps(context) {
       throw error;
     }
   }
-  
 
+  function serializeApiResponse(response) {
+    // Process each article in the response
+    const serializedResponse = response.map(article => {
+      return {
+        title: article.title,
+        date: new Date(article.date).toISOString().split('T')[0], // Normalize date to ISO format
+        metrics: article.metrics.map(metric => {
+          return {
+            date: new Date(metric.date).toISOString().split('T')[0], // Normalize date to ISO format
+            metrics: metric.metrics // Assume metrics are already in correct format
+          };
+        })
+      };
+    });
+  
+    // Finally, serialize the whole response array
+    return JSON.stringify(serializedResponse);
+  }
+  
 
   try {
 
@@ -511,7 +508,6 @@ export async function getServerSideProps(context) {
 
     // we will need the following to update the DB later on
     const sanitizedUserId = mongoSanitize.sanitize(userId);
-    let user = await User.findOne({ _id: sanitizedUserId });
 
     // here are going to pull all the recent 7 days posts, 
     // get their pinTitle, date, and id
@@ -538,31 +534,8 @@ export async function getServerSideProps(context) {
     
     const recentPosts = await User.aggregate(pipeline);
 
-    console.log(recentPosts);
-
-    /*
-
-      [
-        {
-          pinTitle: 'The best ways to learn computer knoweldge',
-          date: 2023-10-23T17:43:34.500Z,
-          postId: '1024780090193746920',
-          hostId: '23489712348966321976',
-          analytics: { reactions: 0, comments: 0 }
-        },
-        {
-          pinTitle: '10 ways to make money online',
-          date: 2023-10-24T18:12:29.339Z,
-          postId: '1024780090193747474',
-          hostId: '23489712348966321976',
-          analytics: { reactions: 0, comments: 0 }
-        }
-      ] 
-
-    */
-  
-
-    // const finalAnalyticsPosts = await getAllAnalytics(recentPosts);
+    const finalAnalyticsPosts = await getAllAnalytics(recentPosts)
+    const toParse = serializeApiResponse(finalAnalyticsPosts)
 
     // to be removed
     const fakeConstant = [
@@ -595,16 +568,7 @@ export async function getServerSideProps(context) {
             "date": "2023-10-25"
         }
     ]  
-    
-    const options = fakeConstant.map(el => {
-      const date = new Date(el.date);
-      const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      return {
-        value: el.date,
-        label: _.startCase(el.title) + ' - ' + formattedDate
-      }
-    })
-  
+
     const allPsts = [
       {
         title: 'The best ways to learn computer knoweldge',
@@ -1083,13 +1047,25 @@ export async function getServerSideProps(context) {
         ]
       }
     ]
+    
+    const options = recentPosts.map(el => {
+      const dateStr = el.date.toISOString();
+      const date = new Date(dateStr);
+      const yyyyMMdd = date.toISOString().split('T')[0];
+      const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return {
+        value: yyyyMMdd,
+        label: _.startCase(el.pinTitle) + ' - ' + formattedDate
+      }
+    })
+
 
     return {
       props: {
         signedIn: true,
         dash: true,
         // return all the posts
-        data: allPsts,
+        dataa: toParse,
         options
       }
     };
