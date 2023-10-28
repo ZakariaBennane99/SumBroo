@@ -6,7 +6,7 @@ import GroupedBarChart from '../../../../components/viz/GroupedBarChart';
 import StackedBarChart from '../../../../components/viz/StackedBarChart';
 import MultiLineChart from '../../../../components/viz/MultiLineChart';
 import StatsSummary from '../../../../components/viz/StatsSummary';
-import _, { update } from 'lodash';
+import _ from 'lodash';
 
 
 const Analytics = ({ dataa, options }) => {
@@ -222,7 +222,6 @@ const Analytics = ({ dataa, options }) => {
     })
   }
 
-
   return (
     <div className="rightSectionAnalytics">
           <div style={{ backgroundColor: '#f5f6f7', 
@@ -320,14 +319,71 @@ export async function getServerSideProps(context) {
 
   async function getAccessToken(userId) {
     let user = await User.findOne({ _id: userId });
-    const accToken = user.socialMediaLinks.find(link => link.platformName === "pinterest").accessToken;
-    return accToken
+    const { accessToken, accesstokenExpirationDate, refreshToken, refreshTokenExpirationDate } = user.socialMediaLinks.find(link => link.platformName === "pinterest");
+    return { accessToken,
+      accesstokenExpirationDate, 
+      refreshToken, 
+      refreshTokenExpirationDate
+    }
   }
 
+  function getDateArray(startDate) {
+    const dateArray = [];
+    let currentDate = new Date(startDate);
+    let endDate = new Date();
+    
+    // Set the endDate to the end of the current day
+    endDate.setHours(23, 59, 59, 999);
+  
+    while (currentDate <= endDate) {
+      const formattedDate = currentDate.toISOString().slice(0, 10); // Convert date to 'yyyy-mm-dd' format
+      dateArray.push(formattedDate);
+      currentDate.setDate(currentDate.getDate() + 1); // Increment date by 1 day
+    }
+  
+    return dateArray;
+  }
 
-  async function getPinAnalytics(token, pinId, startDate, metricTypes) {
+  async function refreshTokenForUser(refToken) {
 
-    const endDate = new Date().toISOString().split('T')[0];
+    const authorization = `Basic ${Buffer.from(`1484362:${process.env.PINTEREST_APP_SECRET}`).toString('base64')}`;
+
+    try {
+        const response = await axios.post('https://api.pinterest.com/v5/oauth/token', null, {
+            headers: {
+                'Authorization': authorization,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            params: {
+                grant_type: 'refresh_token',
+                refresh_token: refToken
+            }
+        });
+
+        const data = response.data;
+        const now = new Date();
+        const currentUTCDate = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+
+        const tokenExpiryDate = new Date(currentUTCDate.getTime() + (data.expires_in * 1000));
+        const theNewToken = data.access_token;
+
+        return {
+          isError: false,
+          newToken: theNewToken,
+          expiryUTCDate: tokenExpiryDate
+        }
+
+    } catch (error) {
+        console.error('Error refreshing Pinterest token:', error.message);
+        return {
+          isError: true,
+        }
+    }
+  }
+
+  async function getPinAnalytics(token, pinId, startDate, metricTypes, sameDay) {
+
+    const endDate = sameDay ? startDate : new Date().toISOString().split('T')[0];
 
     const url = `https://api.pinterest.com/v5/pins/${pinId}/analytics?start_date=${startDate}&end_date=${endDate}&metric_types=${encodeURIComponent(metricTypes.join(','))}&app_types=ALL&split_field=NO_SPLIT`;
 
@@ -371,82 +427,111 @@ export async function getServerSideProps(context) {
     ];
 
     try {
+
       const results = await Promise.all(recentPosts.map(async (post) => {
+
         const date = new Date(post.date);
         const formattedDate = date.toISOString().split('T')[0]; // yy-mm-dd
-  
-        // before you start each fetch from the API, try to pause for a quarter second
-        await delay(250);
 
-        // get the accessToken and the analytics
-        const accTkn = await getAccessToken(post.hostId);
-  
+        // find the number of days
+        const currentDate = new Date();
+        const arrOfDaysDiff = getDateArray(post.date);
+
+        let isTknExpired = false;
+
+        const accTkn = await getAccessToken(post.hostId)
+        // check if the token/refresh token are valid
+        if (accTkn.accesstokenExpirationDate <= currentDate) {
+          // Token has expired or is about to expire
+          if (accTkn.refreshTokenExpirationDate > currentDate) {
+            for (let i = 0; i < 2; i++) {
+              newToken = await refreshTokenForUser(accTkn.refreshToken);
+              if (!newToken.isError) {
+                break; // Exit the loop if there's no error
+              }
+              if (i === 1) {
+                isTknExpired = true;
+              }
+            }
+            if (isTknExpired === false) {
+              let hostUser = await User.findOne({ _id: post.hostId });
+              let sm = hostUser.socialMediaLinks.find(link => link.platformName === "pinterest");
+              sm.accessToken = newToken.newToken;
+              sm.accesstokenExpirationDate = newToken.expiryUTCDate;
+              await hostUser.save();
+            }
+          } else {
+            // Both token and refresh token have expired, prompt user to re-authenticate
+            // here we need to deal with it a bit differently since the 
+            isTknExpired = true;
+          }
+        }
+
+        if (isTknExpired) {
+          return  {
+            title: post.pinTitle,
+            date: formattedDate,
+            metrics: arrOfDaysDiff.map(d => {
+              return {
+                  date: d,
+                  metrics: {
+                    VIDEO_V50_WATCH_TIME: 0,
+                    OUTBOUND_CLICK: 0,
+                    VIDEO_START: 0,
+                    QUARTILE_95_PERCENT_VIEW: 0,
+                    VIDEO_10S_VIEW: 0,
+                    SAVE: 0,
+                    IMPRESSION: 0,
+                    PIN_CLICK: 0,
+                    REACTIONS: 0,
+                    COMMENTS: 0
+                  }
+                }
+            })
+          }
+        }
+        
+        // before you start each fetch from the API, try to pause for a quarter second
+        await delay(150);
+
+        // here the accessToken
+        const { accessToken } = await getAccessToken(post.hostId)
+        
         // get the metrics for the existing postId
-        const analyticsData = await getPinAnalytics(accTkn, post.postId, formattedDate, metricTypes);
-        const { TOTAL_COMMENTS, TOTAL_REACTIONS } = analyticsData.all.lifetime_metrics;
+        const analyticsData = await getPinAnalytics(accessToken, post.postId, formattedDate, metricTypes, false);
+
         const dailyMetrics = analyticsData.all.daily_metrics; 
 
-        let updatedAnalytics;
-
-        // check if the analytics in the post.analytics actually exists before you proceed
-        if (post.analytics && post.analytics.data) {
-
-          updatedAnalytics = dailyMetrics.map(({ data_status, ...rest }) => {
-
-            // the total number of reactions and comments from our Database
-            const { totalReactions, totalComments } = post.analytics.data.reduce((acc, { reactions, comments }) => {
-              acc.totalReactions += reactions;
-              acc.totalComments += comments;
-              return acc;
-            }, { totalReactions: 0, totalComments: 0 });
-
-            const foundDt = post.analytics.data.find(p => p.date === rest.date)
-          
-            // if not found, then this means that the CRON job 
-            // hasn't run today's job
-            if (foundDt) {
-              return {
-                ...rest,
-                metrics: {
-                  ...rest.metrics,
-                  reactions: foundDt.reactions, 
-                  comments: foundDt.comments 
-                }
-              };
-            } else {
-              return {
-                ...rest,
-                metrics: {
-                  ...rest.metrics,
-                  reactions: TOTAL_REACTIONS - totalReactions, 
-                  comments: TOTAL_COMMENTS - totalComments
-                }
-              };
+        let updatedAnalytics = await Promise.all(dailyMetrics.map(async ({ data_status, ...rest }, index) => {
+          await delay(100);
+          const engAnalytics = await getPinAnalytics(accessToken, post.postId, arrOfDaysDiff[index], [ "TOTAL_COMMENTS", "TOTAL_REACTIONS" ], true);
+          console.log(`The dailyMetric`, dailyMetrics)
+          console.log('The arrofDays', arrOfDaysDiff)
+          let a = { TOTAL_COMMENTS: 0, TOTAL_REACTIONS: 0 }
+          if (analyticsData && analyticsData.all) {
+            a = engAnalytics.all.lifetime_metrics;
+          }
+          return {
+            ...rest,
+            metrics: {
+              ...rest.metrics,
+              reactions: a.TOTAL_REACTIONS, 
+              comments: a.TOTAL_COMMENTS 
             }
-          });
-        } else {
-          updatedAnalytics = dailyMetrics.map(({ data_status, ...rest }) => {
-            return {
-              ...rest,
-              metrics: {
-                ...rest.metrics,
-                reactions: TOTAL_REACTIONS, 
-                comments: TOTAL_COMMENTS 
-              }
-            };
-          });
-        }
+          };
+        }));
 
         // this is for each post
         return {
           title: post.pinTitle,
-          date: post.date,
+          date: formattedDate,
           metrics: updatedAnalytics
         };
 
       }));
   
       return results;
+
     } catch (error) {
       console.error('Error fetching analytics data:', error);
       throw error;
