@@ -162,7 +162,7 @@ const Pricing = ({ AllAccounts }) => {
             <div className="pricingParent">
                 <div className="pricingTitle">
                     <h1>Select Your Preferred Platform(s) & Choose Your Plan</h1>
-                    <p>Before moving forward, kindly review the minimum requirements for your chosen social media network(s) to ensure a successful application. Rest assured, we won&apos;t collect any payment details now. Upon approval, we&apos;ll send you a payment link via email.</p>
+                    <p>Before moving forward, kindly review the minimum requirements for your chosen social media network(s) to ensure a successful application. We won&apos;t collect any payment details now. Upon approval, we&apos;ll send you a payment link via email.</p>
                 </div>
                 <div className="planTypeContainer">
                     <Select
@@ -188,10 +188,9 @@ const Pricing = ({ AllAccounts }) => {
                         <span id="social-reqs" onClick={() => setModalIsOpen({ isOpen: true, 
                             text: `<h3>Pinterest Requirements:</h3>
                             <ul>
-                                <li>Minimum of 10K followers.</li>
+                                <li>Minimum of 9K followers.</li>
                                 <li>Posts must be of high quality.</li>
                                 <li>Consistent activity in a specific niche.</li>
-                                <li>At this time, we're open to profiles focusing on the "Healthy Living" niche, including both food and wellness topics.</li>
                             </ul>` })}>Minimum Requirements</span> : ''
                     }
                 </div>

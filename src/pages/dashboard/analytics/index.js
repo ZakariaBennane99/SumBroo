@@ -2,17 +2,17 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { useEffect, useState } from "react";
 import Select from 'react-select';
+import Modal from 'react-modal';
 import GroupedBarChart from '../../../../components/viz/GroupedBarChart';
 import StackedBarChart from '../../../../components/viz/StackedBarChart';
 import MultiLineChart from '../../../../components/viz/MultiLineChart';
 import StatsSummary from '../../../../components/viz/StatsSummary';
 import _ from 'lodash';
+import Feedback from "../../../../components/Feedback";
 
-
-const Analytics = ({ dataa, options }) => {
+const Analytics = ({ dataa, options, isServerError }) => {
 
   const data = JSON.parse(dataa)
-  console.log('THE DATA parsed', data)
 
   const [targetPost, setTargetPost] = useState(null);
   // this is for react-select
@@ -120,8 +120,6 @@ const Analytics = ({ dataa, options }) => {
     }
   }
   
-  
-
 
   // when selecting 
   function handlePostSelection(selectedOption) {
@@ -298,6 +296,28 @@ const Analytics = ({ dataa, options }) => {
                 }
               </div>
             </div> 
+            <Modal
+              isOpen={isServerError}
+              style={customStyles}
+              contentLabel="Example Modal"
+                >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+                <span onClick={() => location.reload()}
+                  style={{ backgroundColor: '#1465e7', 
+                  color: "white",
+                  padding: '10px', 
+                  cursor: 'pointer',
+                  fontFamily: 'Ubuntu',
+                  borderRadius: '3px',
+                  fontSize: '1.1em',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                   }}>Try again</span>
+              </div>
+            </Modal>
+        <Feedback />    
     </div>)
 
 };
@@ -596,15 +616,15 @@ export async function getServerSideProps(context) {
 
     // here are going to pull all the recent 7 days posts, 
     // get their pinTitle, date, and id
-    
-    const sevenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 7));
 
     const pipeline = [
       { $match: { _id: new mongoose.Types.ObjectId(sanitizedUserId) } },
       { $unwind: '$socialMediaLinks' },
       { $match: { 'socialMediaLinks.platformName': 'pinterest' } },
       { $unwind: '$socialMediaLinks.posts' },
-      { $match: { 'socialMediaLinks.posts.publishingDate': { $gte: sevenDaysAgo } } },
+      { $match: { 'socialMediaLinks.posts.postStatus': 'published' } },
+      { $sort: { 'socialMediaLinks.posts.publishingDate': -1 } }, // sort by publishing date in descending order
+      { $limit: 7 }, // limit to the last seven posts
       {
         $project: {
           _id: 0,
@@ -1155,13 +1175,13 @@ export async function getServerSideProps(context) {
       }
     };
 
-
   } catch (error) {
     return {
-      redirect: {
-        destination: '/sign-in',
-        permanent: false,
-      },
+      props: {
+        isServerError: true,
+        signedIn: true,
+        dash: true
+      }
     };
   }
 

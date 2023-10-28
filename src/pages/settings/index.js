@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-
+import Feedback from '../../../components/Feedback';
 
 const Settings = ({ windowWidth }) => {
 
   return (<div style={{ width: windowWidth > 1215 ? '80%' : '100%' }} className="rightSectionZenContainer">
             <img src="./zenMode.svg" alt="editing"/>
+      <Feedback />
     </div>)
 
 };

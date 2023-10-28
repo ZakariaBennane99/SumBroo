@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Modal from 'react-modal';
 import axios from 'axios';
+import Feedback from "./Feedback";
 
 
 function updateUserData(newData, currentData) {
@@ -246,6 +247,7 @@ const AccountSettingsComponent = () => {
                      }}>Try again</span>
                 </div>
               </Modal>
+        <Feedback />     
       </>)
 };
 

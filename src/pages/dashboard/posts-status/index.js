@@ -1,78 +1,40 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
 import _ from 'lodash';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
+import Modal from 'react-modal';
+import Feedback from '../../../../components/Feedback';
 
 
-const PostsStatus = () => {
- 
-  const router = useRouter()
+const PostsStatus = ({ data, isServerError }) => {
 
-  const data = [
-    {
-      title: 'Family-Friendly Foodie Fun: Recipes and Ideas for All Ages',
-      platform: 'pinterest',
-      status: 'in-review'
-    },
-    {
-      title: 'Seasonal Sensations: Celebrate Each Season with Flavorful Fare',
-      platform: 'pinterest',
-      status: 'rejected',
-      explanation: "🖼️ Opt for a more captivating title to grab attention.\n🔍 Ensure your image adheres to the recommended specifications.\n✏️ Double-check the description for clarity and accuracy."
-    },
-    {
-      title: 'Exploring the World of Vegetarian Cuisine',
-      platform: 'pinterest',
-      status: 'in-review'
-    },
-    {
-      title: 'Wholesome Meals and Culinary Delights Awaits',
-      platform: 'pinterest',
-      status: 'rejected',
-      explanation: '🎯 Ensure your content is relevant to the target audience.\n🔄 Consider optimizing your Pin for better rotation in the feed.\n🔗 Double-check any linked content for accessibility and relevance.'
-    },
-    {
-      title: 'Food Inspiration to Spark Your Culinary Creativity',
-      platform: 'pinterest',
-      date: 'October 2, 2023',
-      status: 'published'
-    },
-    {
-      title: 'Embracing the Bounty of Locally Sourced Ingredients',
-      platform: 'pinterest',
-      date: 'October 3, 2023',
-      status: 'published'
-    },
-    {
-      title: 'A Culinary Adventure from Every Corner of the World',
-      platform: 'pinterest',
-      date: 'October 4, 2023',
-      status: 'published'
-    },
-    {
-      title: 'A Collection of Breads, Pastries, and Pies to Bake at Home',
-      platform: 'pinterest',
-      date: 'October 5, 2023',
-      status: 'published'
-    },
-    {
-      title: 'Quick and Delicious Recipes for Busy Lives',
-      platform: 'pinterest',
-      date: 'October 6, 2023',
-      status: 'published'
-    },
-    {
-      title: 'Feeling Great: Nutritious Choices for a Healthier You',
-      platform: 'pinterest',
-      date: 'October 7, 2023',
-      status: 'published'
-    },
-  ]
+  const router = useRouter();
 
-  const published = data.filter(elem => elem.status === 'published');
-  const inReview = data.filter(elem => elem.status === 'in-review');
-  const rejected = data.filter(elem => elem.status === 'rejected');
 
+  if (data && data.length === 0) {
+    return (
+      <div className="postStatusContainer">
+        <div className='emptyContainer'>
+          <p>
+            Nothing's here 🤷‍♂️. Get started by publishing some posts <span onClick={() => router.push('/dashboard/publish-a-post')}> here.</span>
+          </p>
+        </div> 
+    </div>
+    )
+  }
+
+  const customStyles = {
+    content: {
+      width: '20%',
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      fontFamily: 'Ubuntu',
+    },
+  };
 
   return (
         <div className="postStatusContainer">
@@ -80,53 +42,94 @@ const PostsStatus = () => {
             <div className="published">
               <div className="titles">Published</div>
               {
-                published.map((el, i) =>
-                  <div key={i} className='body'>
-                    <p>{_.startCase(el.title)}</p>
+                data && data.publishedPosts.length > 0 ?
+                data.publishedPosts.map((el, i) => {
+                  const date = new Date(el.date);
+                  const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                  return <div key={i} className='body'>
+                    <p>{_.startCase(el.pinTitle)}</p>
                     <div>
-                      <span className='platform'><img id='smlg' src={`/sm/${el.platform}.svg`} /> <span>{_.startCase(el.platform)}</span> <img id='link' src='/linkToPost.svg' /></span>
-                      <span className='date'>{el.date}</span>
+                      <span onClick={() => window.open(el.postLink, '_blank')} className='platform'>
+                        <img id='smlg' src={`/sm/pinterest.svg`} /> 
+                        <span>Pinterest</span> 
+                        <img id='link' src='/linkToPost.svg' />
+                      </span>
+                      <span className='date'>{formattedDate}</span>
                     </div>
                   </div>
-                )
+                }) :
+                <div className='body'>
+                There are no published posts at the moment.
+              </div>
               }
             </div>
             <div>
             <div className='titles'>In Review</div>
-              {
-                inReview.map((el, i) =>
-                  <div key={i} className='body'>
-                    <p>{_.startCase(el.title)}</p>
-                    <div>
-                      <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src={`/sm/${el.platform}.svg`} /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
-                    </div>
-                  </div>
-                )
-              }
+
+            {
+              data && data.inReviewPosts.length > 0 ? 
+              data.inReviewPosts.map((el, i) =>
+              <div key={i} className='body'>
+                <p>{_.startCase(el.pinTitle)}</p>
+                <div>
+                  <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src={`/sm/pinterest.svg`} /><span style={{ marginRight: '5px' }}>Pinterest</span></span>
+                </div>
+              </div>) : 
+              <div className='body'>
+                No posts are in review at the moment.
+              </div>
+            }
             </div>
 
           </div>  
           <div className="titlesContainer">
               <div className='titles'>Need Revision</div>
               {
-                rejected.map((el, i) => 
+                data && data.inReviewPosts.length > 0 ?
+                data.rejectedPosts.map((el, i) => 
                   <div key={i} className='body'>
-                    <p className='postTitle'>{_.startCase(el.title)}</p>
+                    <p className='postTitle'>{_.startCase(el.pinTitle)}</p>
                     <div>
-                        <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src={`/sm/${el.platform}.svg`} /><span style={{ marginRight: '5px' }}>{_.startCase(el.platform)}</span></span>
+                        <span className='platform' style={{ cursor: 'default', backgroundColor: '#a4a4bb' }}><img id='smlg' src={`/sm/pinterest.svg`} /><span style={{ marginRight: '5px' }}>Pinterest</span></span>
                     </div>
                     <div id="feedback-box">
                       {
-                        el.explanation.split('\n').map((elem, i) => 
+                        el.comment.split('\n').map((elem, i) => 
                           <div key={i} className='feedback-points part'>{elem}</div>
                         )
                       }
                       <button onClick={ () => { router.push('/dashboard/publish-a-post'); } } className="create-post-button">Create a New Post</button>
                     </div>
                   </div>
-                )
+                ) : 
+                <div className='body'>
+                No post needs revision at the moment.
+              </div>
               }
             </div>
+
+        <Modal
+          isOpen={isServerError}
+          style={customStyles}
+          contentLabel="Example Modal"
+            >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2 style={{ fontFamily: 'Ubuntu', fontSize: '1.3em', color: '#1c1c57' }} >Server Error</h2>
+            <span onClick={() => location.reload()}
+              style={{ backgroundColor: '#1465e7', 
+              color: "white",
+              padding: '10px', 
+              cursor: 'pointer',
+              fontFamily: 'Ubuntu',
+              borderRadius: '3px',
+              fontSize: '1.1em',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+               }}>Try again</span>
+          </div>
+        </Modal>     
+      <Feedback />  
     </div>)
 };
 
@@ -136,6 +139,10 @@ export default PostsStatus;
 export async function getServerSideProps(context) {
 
   const jwt = require('jsonwebtoken');
+  const connectDB = require('../../../../utils/connectUserDB');
+  const mongoSanitize = require('express-mongo-sanitize');
+  const User = require('../../../../utils/User').default;
+  const mongoose = require('mongoose');
 
   try {
 
@@ -161,20 +168,87 @@ export async function getServerSideProps(context) {
       };
     }
 
+    const userId = decoded.userId;
+
+    await connectDB();
+
+    const sanitizedUserId = mongoSanitize.sanitize(userId);
+    
+    const inReview = [
+      { $match: { _id: new mongoose.Types.ObjectId(sanitizedUserId) } },
+      { $unwind: '$socialMediaLinks' },
+      { $match: { 'socialMediaLinks.platformName': 'pinterest' } },
+      { $unwind: '$socialMediaLinks.posts' },
+      { $match: { 'socialMediaLinks.posts.postStatus': 'in review' } },
+      { $sort: { 'socialMediaLinks.posts.publishingDate': -1 } }, // sort by publishing date in descending order
+      { $limit: 7 }, // limit to the last seven posts
+      {
+        $project: {
+          _id: 0,
+          pinTitle: '$socialMediaLinks.posts.postTitle',
+        }
+      }
+    ];
+
+    const rejected = [
+      { $match: { _id: new mongoose.Types.ObjectId(sanitizedUserId) } },
+      { $unwind: '$socialMediaLinks' },
+      { $match: { 'socialMediaLinks.platformName': 'pinterest' } },
+      { $unwind: '$socialMediaLinks.posts' },
+      { $match: { 'socialMediaLinks.posts.postStatus': 'rejected' } },
+      { $sort: { 'socialMediaLinks.posts.publishingDate': -1 } }, // sort by publishing date in descending order
+      { $limit: 7 },
+      {
+        $project: {
+          _id: 0,
+          pinTitle: '$socialMediaLinks.posts.postTitle',
+          comment: '$socialMediaLinks.posts.comment'
+        }
+      }
+    ];
+
+    const published = [
+      { $match: { _id: new mongoose.Types.ObjectId(sanitizedUserId) } },
+      { $unwind: '$socialMediaLinks' },
+      { $match: { 'socialMediaLinks.platformName': 'pinterest' } },
+      { $unwind: '$socialMediaLinks.posts' },
+      { $match: { 'socialMediaLinks.posts.postStatus': 'published' } },
+      { $sort: { 'socialMediaLinks.posts.publishingDate': -1 } }, // sort by publishing date in descending order
+      { $limit: 7 },
+      {
+        $project: {
+          _id: 0,
+          pinTitle: '$socialMediaLinks.posts.postTitle',
+          date: '$socialMediaLinks.posts.publishingDate',
+          postLink: '$socialMediaLinks.posts.postLink'
+        }
+      }
+    ];
+
+    const publishedPosts = await User.aggregate(published);
+    const inReviewPosts = await User.aggregate(inReview);
+    const rejectedPosts = await User.aggregate(rejected);
+
     return {
       props: {
         signedIn: true,
-        dash: true
+        dash: true,
+        data: {
+          publishedPosts: JSON.parse(JSON.stringify(publishedPosts)),
+          inReviewPosts: JSON.parse(JSON.stringify(inReviewPosts)),
+          rejectedPosts: JSON.parse(JSON.stringify(rejectedPosts))
+        }
       }
     };
 
 
   } catch (error) {
     return {
-      redirect: {
-        destination: '/sign-in',
-        permanent: false,
-      },
+      props: {
+        isServerError: true,
+        signedIn: true,
+        dash: true
+      }
     };
   }
 

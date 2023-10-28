@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import { Tadpole } from "react-svg-spinners";
+import Feedback from "../../../../components/Feedback";
 
 
 const Billing = ({ stripeCustomer }) => {
@@ -81,6 +82,7 @@ const Billing = ({ stripeCustomer }) => {
                      }}>Try again</span>
                 </div>
               </Modal>
+            <Feedback />  
           </>)
 };
 

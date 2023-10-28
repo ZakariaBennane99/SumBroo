@@ -8,7 +8,7 @@ const Home = ({ windowWidth, profileNames }) => {
 
   return (<div style={{ width: windowWidth > 1215 ? '80%' : '100%', height: windowWidth > 1215 ? 'fit-content' : '100vh' }} className="rightSectionZenContainer">
         <img src="./zenMode.svg" alt="editing"/>
-        <Feedback/>
+        <Feedback />
     </div>)
 };
 

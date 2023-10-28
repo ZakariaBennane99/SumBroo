@@ -8,30 +8,30 @@ const About = () => {
             <h1 className="sectionTitle">About</h1>
             <div className="aboutContentSection">
                 <div className="textContent">
-                <p style={{ marginTop: '0px' }}>
-                Hey 👋! I&apos;m Zakaria Bennane, hailing from the vibrant city of Casablanca <em>(that&apos;s the Atlantic Ocean behind me)</em>. Life handed me its fair share of challenges growing up, molding me into a resilient individual. Those experiences, tough as they were, shaped my perspective and drive.
-                </p>
-
-                <p>
-                Navigating the world of social media, I noticed an imbalance. Many talented creators, despite having quality content, found it hard to reach a wider audience. It struck a chord with me. Why such a disparity?
-                </p>
-
-                <p>
-                During a contemplative summer, the idea for SumBroo took root. Surprisingly, there weren&apos;t platforms addressing this specific need. So, with determination <em>(and quite a few cups of coffee)</em>, I embarked on the journey to develop SumBroo amidst my other commitments. It wasn&apos;t easy, but the vision kept me going.
-                </p>
-
-                <p>
-                At its core, SumBroo is about community. It&apos;s a platform where creators can share their work and grow together, transcending the numbers. My hope is for it to foster genuine connections and mutual support.
-                </p>
-
-                <p>
-                Thank you for taking to learn to learn about SumBroo and my journey. I&apos;m glad you&apos;re here.
-                </p>
-
-                <p>
-                Warmly, <br/>
-                Z.B.
-                </p>
+                  <p style={{ marginTop: '0px' }}>
+                  Hey 👋! I&apos;m Zakaria Bennane, I come from the lively city of Casablanca <em>(that&apos;s the Atlantic Ocean behind me)</em>. Life handed me its fair share of challenges growing up, but they made me stronger and shaped who I am today.
+                  </p>
+  
+                  <p>
+                  I've been exploring social media for a while, and I noticed a big problem. A lot of talented people who make great content are struggling to get noticed. But that's not all; it's also super difficult to team up with other creators. The whole process can be slow, risky, and even expensive.
+                  </p>
+  
+                  <p>
+                  That got me thinking. Why is it so hard? That's when the idea for SumBroo popped into my head. No one else seemed to be fixing this, so I rolled up my sleeves and got to work. Sure, it was a lot of effort, but my dream for SumBroo kept me going.
+                  </p>
+  
+                  <p>
+                  What's SumBroo all about? It's all about bringing creators together. With SumBroo, you can easily share your work on multiple social media platforms without the usual headaches. Plus, we offer useful analytics for each of your posts. This is something you might not get if you're working with other creators the old-fashioned way.
+                  </p>
+  
+                  <p>
+                  Thank you for taking to learn to learn about SumBroo and my journey. I&apos;m glad you&apos;re here.
+                  </p>
+  
+                  <p>
+                  Warmly, <br/>
+                  Z.B.
+                  </p>
                 </div>
                 <img src="/zakBen.jpeg" alt="Zakaria Bennane" className="aboutImage" />
             </div>

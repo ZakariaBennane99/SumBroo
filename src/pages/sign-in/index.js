@@ -377,6 +377,13 @@ export default SignIn;
 // to the dashboard
 export async function getServerSideProps(context) {
 
+  return {
+    redirect: {
+      destination: '/launching-soon',
+      permanent: false,
+    },
+  };
+
   const jwt = require('jsonwebtoken');
 
   try {

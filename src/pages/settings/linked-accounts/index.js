@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Modal from 'react-modal';
 import { useRouter } from "next/router";
 import { PinterestAuth } from '../../../../components/auth/PinterestAuth';
+import Feedback from "../../../../components/Feedback";
 
 
 function capitalize(wd) {
@@ -152,6 +153,7 @@ const LinkedAccounts = ({ AllAccounts, isServerErr }) => {
                  }}>Try again</span>
             </div>
           </Modal>
+    <Feedback />     
   </>)   
 };
 
