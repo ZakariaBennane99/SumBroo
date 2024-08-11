@@ -72,7 +72,7 @@ const StatsSummary = ({ data }) => {
                     </div>
                         {showTooltip0 ? <div className="graphInfoTooltip">
                             <span className='title'>Conversion Rate of Link Clicks</span><br/>
-                            <span>This metric tells you how many people clicked on your Pin's link compared to how many saw it. A good goal is to aim for at least 1-2% of people clicking through.</span><br/>
+                            <span>This metric tells you how many people clicked on your Pin&apos;s link compared to how many saw it. A good goal is to aim for at least 1-2% of people clicking through.</span><br/>
                             <span className='title'>Conversion Rate of Saves</span><br/>
                             <span>This metric shows how often people save your Pin after seeing it, with a higher ratio indicating that more people find your content valuable enough to save for later use. Aiming for a save rate of at least 1-2% is a solid benchmark for success.</span><br/>
                     </div> : ''}
